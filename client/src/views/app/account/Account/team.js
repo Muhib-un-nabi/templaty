@@ -33,17 +33,17 @@ import {
   FormGroup,
   Label,
   CustomInput,
-  Collapse,
+  Collapse
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import {
   getTeamDetails,
-  deleteUserByAdmin,
+  deleteUserByAdmin
 } from '../../../../redux/user/action';
 import {
   Colxx,
-  Separator,
+  Separator
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import ThumbnailImage from '../../../../components/cards/ThumbnailImage';
@@ -59,6 +59,10 @@ const Team = ({ match, team, getTeamDetails, history, deleteUserByAdmin }) => {
   useEffect(() => {
     getTeamDetails();
   }, []);
+  useEffect(() => {
+    if (!team.admin) return;
+    setAsignTo(team.admin._id);
+  }, [team]);
 
   useEffect(() => {
     if (modal) return;
@@ -135,8 +139,7 @@ const Team = ({ match, team, getTeamDetails, history, deleteUserByAdmin }) => {
             onClick={async () => {
               await deleteUserByAdmin(current._id, deleteUserData, asignTo);
               await setModal(false);
-            }}
-          >
+            }}>
             <IntlMessages id="button.delete-user" />
           </Button>
           <Button color="secondary" onClick={() => setModal(false)}>
@@ -156,8 +159,7 @@ const Team = ({ match, team, getTeamDetails, history, deleteUserByAdmin }) => {
               color="primary"
               size="lg"
               className="top-right-button mr-1"
-              onClick={() => history.push(`${adminRoot}/account/user/add`)}
-            >
+              onClick={() => history.push(`${adminRoot}/account/user/add`)}>
               <IntlMessages id="button.user-add" />
             </Button>
           </div>
@@ -195,8 +197,7 @@ const Team = ({ match, team, getTeamDetails, history, deleteUserByAdmin }) => {
                           setModal(true);
                           setCurrent(user);
                         }}
-                        color="primary"
-                      >
+                        color="primary">
                         <IntlMessages id="user.user-delete" />
                       </Button>
                     )}
@@ -211,9 +212,9 @@ const Team = ({ match, team, getTeamDetails, history, deleteUserByAdmin }) => {
 };
 
 const mapStateToProps = ({ user: { team } }) => ({
-  team,
+  team
 });
 export default connect(mapStateToProps, {
   getTeamDetails,
-  deleteUserByAdmin,
+  deleteUserByAdmin
 })(Team);

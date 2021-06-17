@@ -33,7 +33,7 @@ const App = ({ match }) => {
             <Redirect
               exact
               from={`${match.url}/`}
-              to={`${match.url}/placeholders`}
+              to={`${match.url}/snippets/add`}
             />
             <Route
               path={`${match.url}/snippets`}

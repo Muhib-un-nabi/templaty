@@ -12,7 +12,7 @@ import {
   UPDATE_PROFILE,
   ADD_NEW_USER_IN_TEAM,
   GET_TEAM_DETAILS,
-  DELETE_USER_BY_ADMIN,
+  DELETE_USER_BY_ADMIN
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -27,8 +27,8 @@ export const signup = (userData) => async (dispatch) => {
       type: SIGN_UP,
       payload: {
         token: data.token,
-        user: data.data.user,
-      },
+        user: data.data.user
+      }
     });
     setToken(data.token);
   } catch (err) {
@@ -50,8 +50,8 @@ export const login = (userData) => async (dispatch) => {
       type: LOG_IN,
       payload: {
         token: data.token,
-        user: data.data.user,
-      },
+        user: data.data.user
+      }
     });
     setToken(data.token);
   } catch (err) {
@@ -73,7 +73,7 @@ export const getTeamDetails = () => async (dispatch) => {
     const { data } = await serverApi.get('/team/detail', authHeader());
     dispatch({
       type: GET_TEAM_DETAILS,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
@@ -96,7 +96,7 @@ export const addNewUser = (userData) => async (dispatch) => {
     );
     dispatch({
       type: ADD_NEW_USER_IN_TEAM,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
@@ -109,28 +109,27 @@ export const addNewUser = (userData) => async (dispatch) => {
   }
 };
 //  Delete User
-export const deleteUserByAdmin = (id, deleteUserData, asignTo) => async (
-  dispatch
-) => {
-  try {
-    await serverApi.delete(
-      `/team/users/${id}?deleteUserData=${deleteUserData}&asignTo=${asignTo}`,
-      authHeader()
-    );
-    dispatch({
-      type: DELETE_USER_BY_ADMIN,
-      payload: id,
-    });
-  } catch (err) {
-    NotificationManager.error(
-      'Warning message',
-      'Somthing went Wrong , Please Try again',
-      3000,
-      null,
-      null
-    );
-  }
-};
+export const deleteUserByAdmin =
+  (id, deleteUserData, asignTo) => async (dispatch) => {
+    try {
+      await serverApi.delete(
+        `/team/users/${id}?deleteUserData=${deleteUserData}&asignTo=${asignTo}`,
+        authHeader()
+      );
+      dispatch({
+        type: DELETE_USER_BY_ADMIN,
+        payload: id
+      });
+    } catch (err) {
+      NotificationManager.error(
+        'Warning message',
+        'Somthing went Wrong , Please Try again',
+        3000,
+        null,
+        null
+      );
+    }
+  };
 
 //  Not Working
 export const forgetPassword = () => async (dispatch) => {
@@ -138,7 +137,7 @@ export const forgetPassword = () => async (dispatch) => {
     const { data } = await serverApi.post('/login');
     dispatch({
       type: SIGN_UP,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
@@ -157,7 +156,7 @@ export const logout = () => async (dispatch) => {
     const { data } = await serverApi.post('/login');
     dispatch({
       type: SIGN_UP,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
@@ -176,7 +175,7 @@ export const resetPassword = () => async (dispatch) => {
     const { data } = await serverApi.post('/login');
     dispatch({
       type: SIGN_UP,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(

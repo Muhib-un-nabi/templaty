@@ -27,6 +27,7 @@ exports.deleteUsers = catchAsync(async (req, res, next) => {
   if (!currUser) {
     return next(new AppError(`Can't Find User (in Team) with this id`, 400));
   }
+
   //  Remove User From Team
   await Team.findByIdAndUpdate(
     req.user.team,
@@ -50,7 +51,7 @@ exports.deleteUsers = catchAsync(async (req, res, next) => {
     await Snippets.deleteMany(query);
     await Contact.deleteMany(query);
   } else {
-    const asignTo = req.params.asignTo || req.user._id;
+    const asignTo = req.query.asignTo || req.user._id;
     const update = [
       { user: req.params.id },
       { user: asignTo },
