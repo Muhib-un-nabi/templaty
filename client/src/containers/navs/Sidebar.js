@@ -13,7 +13,7 @@ import {
   setContainerClassnames,
   addContainerClassname,
   changeDefaultClassnames,
-  changeSelectedMenuHasSubItems,
+  changeSelectedMenuHasSubItems
 } from '../../redux/actions';
 
 import menuItems from '../../constants/menu';
@@ -24,7 +24,7 @@ class Sidebar extends Component {
     this.state = {
       selectedParentMenu: '',
       viewingParentMenu: '',
-      collapsedMenus: [],
+      collapsedMenus: []
     };
   }
 
@@ -76,7 +76,7 @@ class Sidebar extends Component {
       return;
     }
     this.setState({
-      viewingParentMenu: '',
+      viewingParentMenu: ''
     });
     this.toggle();
   };
@@ -200,9 +200,8 @@ class Sidebar extends Component {
       selectedlink.parentElement.classList.add('active');
       this.setState(
         {
-          selectedParentMenu: selectedlink.parentElement.parentElement.getAttribute(
-            'data-parent'
-          ),
+          selectedParentMenu:
+            selectedlink.parentElement.parentElement.getAttribute('data-parent')
         },
         callback
       );
@@ -213,9 +212,8 @@ class Sidebar extends Component {
       if (selectedParentNoSubItem != null) {
         this.setState(
           {
-            selectedParentMenu: selectedParentNoSubItem.getAttribute(
-              'data-flag'
-            ),
+            selectedParentMenu:
+              selectedParentNoSubItem.getAttribute('data-flag')
           },
           callback
         );
@@ -223,7 +221,7 @@ class Sidebar extends Component {
       } else if (this.state.selectedParentMenu === '') {
         this.setState(
           {
-            selectedParentMenu: menuItems[0].id,
+            selectedParentMenu: menuItems[0].id
           },
           callback
         );
@@ -277,7 +275,7 @@ class Sidebar extends Component {
     if (!hasSubMenu) {
       this.setState({
         viewingParentMenu: selectedParent,
-        selectedParentMenu: selectedParent,
+        selectedParentMenu: selectedParent
       });
       this.toggle();
     } else {
@@ -317,7 +315,7 @@ class Sidebar extends Component {
         );
       }
       this.setState({
-        viewingParentMenu: selectedParent,
+        viewingParentMenu: selectedParent
       });
     }
   };
@@ -328,12 +326,12 @@ class Sidebar extends Component {
     const { collapsedMenus } = this.state;
     if (collapsedMenus.indexOf(menuKey) > -1) {
       this.setState({
-        collapsedMenus: collapsedMenus.filter((x) => x !== menuKey),
+        collapsedMenus: collapsedMenus.filter((x) => x !== menuKey)
       });
     } else {
       collapsedMenus.push(menuKey);
       this.setState({
-        collapsedMenus,
+        collapsedMenus
       });
     }
     return false;
@@ -351,18 +349,14 @@ class Sidebar extends Component {
   };
 
   render() {
-    const {
-      selectedParentMenu,
-      viewingParentMenu,
-      collapsedMenus,
-    } = this.state;
+    const { selectedParentMenu, viewingParentMenu, collapsedMenus } =
+      this.state;
     return (
       <div className="sidebar">
         <div className="main-menu">
           <div className="scroll">
             <PerfectScrollbar
-              options={{ suppressScrollX: true, wheelPropagation: false }}
-            >
+              options={{ suppressScrollX: true, wheelPropagation: false }}>
               <Nav vertical className="list-unstyled">
                 {menuItems &&
                   this.filteredList(menuItems).map((item) => {
@@ -373,15 +367,13 @@ class Sidebar extends Component {
                           active:
                             (selectedParentMenu === item.id &&
                               viewingParentMenu === '') ||
-                            viewingParentMenu === item.id,
-                        })}
-                      >
+                            viewingParentMenu === item.id
+                        })}>
                         {item.newWindow ? (
                           <a
                             href={item.to}
                             rel="noopener noreferrer"
-                            target="_blank"
-                          >
+                            target="_blank">
                             <i className={item.icon} />{' '}
                             <IntlMessages id={item.label} />
                           </a>
@@ -389,8 +381,7 @@ class Sidebar extends Component {
                           <NavLink
                             to={item.to}
                             onClick={(e) => this.openSubMenu(e, item)}
-                            data-flag={item.id}
-                          >
+                            data-flag={item.id}>
                             <i className={item.icon} />{' '}
                             <IntlMessages id={item.label} />
                           </NavLink>
@@ -406,8 +397,7 @@ class Sidebar extends Component {
         <div className="sub-menu">
           <div className="scroll">
             <PerfectScrollbar
-              options={{ suppressScrollX: true, wheelPropagation: false }}
-            >
+              options={{ suppressScrollX: true, wheelPropagation: false }}>
               {menuItems &&
                 this.filteredList(menuItems).map((item) => {
                   return (
@@ -420,10 +410,9 @@ class Sidebar extends Component {
                             // eslint-disable-next-line react/destructuring-assignment
                             this.state.viewingParentMenu === '') ||
                           // eslint-disable-next-line react/destructuring-assignment
-                          this.state.viewingParentMenu === item.id,
+                          this.state.viewingParentMenu === item.id
                       })}
-                      data-parent={item.id}
-                    >
+                      data-parent={item.id}>
                       {item.subs &&
                         this.filteredList(item.subs).map((sub, index) => {
                           return (
@@ -433,15 +422,13 @@ class Sidebar extends Component {
                                 sub.subs && sub.subs.length > 0
                                   ? 'has-sub-item'
                                   : ''
-                              }`}
-                            >
+                              }`}>
                               {/* eslint-disable-next-line no-nested-ternary */}
                               {sub.newWindow ? (
                                 <a
                                   href={sub.to}
                                   rel="noopener noreferrer"
-                                  target="_blank"
-                                >
+                                  target="_blank">
                                   <i className={sub.icon} />{' '}
                                   <IntlMessages id={sub.label} />
                                 </a>
@@ -462,8 +449,7 @@ class Sidebar extends Component {
                                         e,
                                         `${item.id}_${index}`
                                       )
-                                    }
-                                  >
+                                    }>
                                     <i className="simple-icon-arrow-down" />{' '}
                                     <IntlMessages id={sub.label} />
                                   </NavLink>
@@ -473,21 +459,18 @@ class Sidebar extends Component {
                                       collapsedMenus.indexOf(
                                         `${item.id}_${index}`
                                       ) === -1
-                                    }
-                                  >
+                                    }>
                                     <Nav className="third-level-menu">
                                       {this.filteredList(sub.subs).map(
                                         (thirdSub, thirdIndex) => {
                                           return (
                                             <NavItem
-                                              key={`${item.id}_${index}_${thirdIndex}`}
-                                            >
+                                              key={`${item.id}_${index}_${thirdIndex}`}>
                                               {thirdSub.newWindow ? (
                                                 <a
                                                   href={thirdSub.to}
                                                   rel="noopener noreferrer"
-                                                  target="_blank"
-                                                >
+                                                  target="_blank">
                                                   <i
                                                     className={thirdSub.icon}
                                                   />{' '}
@@ -538,7 +521,7 @@ const mapStateToProps = ({ menu }) => {
     subHiddenBreakpoint,
     menuHiddenBreakpoint,
     menuClickCount,
-    selectedMenuHasSubItems,
+    selectedMenuHasSubItems
   } = menu;
 
   return {
@@ -546,7 +529,7 @@ const mapStateToProps = ({ menu }) => {
     subHiddenBreakpoint,
     menuHiddenBreakpoint,
     menuClickCount,
-    selectedMenuHasSubItems,
+    selectedMenuHasSubItems
   };
 };
 export default withRouter(
@@ -554,6 +537,6 @@ export default withRouter(
     setContainerClassnames,
     addContainerClassname,
     changeDefaultClassnames,
-    changeSelectedMenuHasSubItems,
+    changeSelectedMenuHasSubItems
   })(Sidebar)
 );

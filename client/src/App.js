@@ -4,7 +4,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch,
-  Redirect,
+  Redirect
 } from 'react-router-dom';
 import { IntlProvider } from 'react-intl';
 import AppLocale from './lang';
@@ -51,8 +51,7 @@ class App extends React.Component {
       <div className="h-100">
         <IntlProvider
           locale={currentAppLocale.locale}
-          messages={currentAppLocale.messages}
-        >
+          messages={currentAppLocale.messages}>
           <>
             <NotificationContainer />
             {isMultiColorActive && <ColorSwitcher />}
