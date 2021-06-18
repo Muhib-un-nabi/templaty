@@ -9,7 +9,7 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Row,
   Card,
@@ -36,6 +36,7 @@ import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
 import ControlledInput from '../../../../components/custom/ControlledInput';
 import { addSnippet } from '../../../../redux/snippets/action';
+import { getPlaceholders } from '../../../../redux/placeholder/action';
 import Editor from '../Editor/index';
 
 const fields = [
@@ -152,10 +153,19 @@ const fields = [
   }
 ];
 
-const index = ({ match, intl, addSnippet, history }) => {
+const index = ({
+  getPlaceholders,
+  placeholders,
+  match,
+  intl,
+  addSnippet,
+  history
+}) => {
   const [discription, setDiscription] = useState('');
-
   const [Fields, setFields] = useState(fields);
+  useEffect(() => {
+    getPlaceholders();
+  }, []);
 
   const submitHandler = async (e) => {
     try {
@@ -171,7 +181,6 @@ const index = ({ match, intl, addSnippet, history }) => {
           Fields.find((ele) => ele.id === 'visibility-input').data.value.id ===
           'team'
       };
-      console.log(newSnippet);
       await addSnippet(newSnippet);
       history.push(`${adminRoot}/snippets/all`);
     } catch (e) {
@@ -214,7 +223,13 @@ const index = ({ match, intl, addSnippet, history }) => {
                   </FormGroup>
                 ))}
                 <div>
-                  <Editor value={discription} setValue={setDiscription} />
+                  {(placeholders.length >= 1 && (
+                    <Editor
+                      value={discription}
+                      setValue={setDiscription}
+                      list={placeholders}
+                    />
+                  )) || <div>Loading...</div>}
                 </div>
 
                 <Button color="primary" className="mt-4">
@@ -233,4 +248,6 @@ const mapStateToProps = ({ placeholders: { placeholders } }) => ({
   placeholders
 });
 
-export default connect(mapStateToProps, { addSnippet })(injectIntl(index));
+export default connect(mapStateToProps, { addSnippet, getPlaceholders })(
+  injectIntl(index)
+);

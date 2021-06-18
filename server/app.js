@@ -50,7 +50,6 @@ app.use(helmet());
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
-
 // Limit requests from same API
 const limiter = rateLimit({
   max: 1000,
@@ -58,19 +57,16 @@ const limiter = rateLimit({
   message: 'Too many requests from this IP, please try again in an hour!'
 });
 app.use('/api', limiter);
-
 // Stripe webhook, BEFORE body-parser, because stripe needs the body as stream
 // app.post(
 //   '/webhook-checkout',
 //   bodyParser.raw({ type: 'application/json' }),
 //   bookingController.webhookCheckout
 // );
-
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 app.use(cookieParser());
-
 // Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
 
@@ -89,19 +85,16 @@ app.use(mongoSanitize());
 // );
 
 app.use(compression());
-
 // Test middleware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   // console.log(req.cookies);
   next();
 });
-
 //  Snippets Routes
 app.use('/api/snippets', snippetsRouter);
 // // Data sanitization against XSS
 app.use(xss());
-
 // 3) ROUTES
 app.use('/api/team', teamRouter);
 app.use('/api/users', userRoutes);
@@ -111,10 +104,12 @@ app.use('/api/contacts/', contactRouter);
 //  Placeholders Routes
 app.use('/api/placeholders', placeholdersRouter);
 
-app.all('*', (req, res, next) => {
+app.all('/api', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });
 
-app.use(globalErrorHandler);
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+});
 
 module.exports = app;

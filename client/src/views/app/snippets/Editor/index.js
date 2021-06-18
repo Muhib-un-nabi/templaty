@@ -9,16 +9,13 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react-hooks/rules-of-hooks */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
 import { injectIntl } from 'react-intl';
 import { Card } from 'reactstrap';
-import { getPlaceholders } from '../../../../redux/placeholder/action';
 
 import { Quill } from 'react-quill';
 import getPlaceholderModule from 'quill-placeholder-module';
 import getAutocompleteModule from 'quill-placeholder-autocomplete-module';
-import Toolbar from './Toolbar';
 import './index.css';
 Quill.register(
   'modules/placeholder',
@@ -27,51 +24,69 @@ Quill.register(
   })
 );
 Quill.register('modules/autocomplete', getAutocompleteModule(Quill));
-
-const Editor = ({ placeholders, getPlaceholders, value, setValue }) => {
-  const [placeholderList, setPlaceholderList] = useState([]);
-
+const Editor = ({ value, setValue, list }) => {
+  list = list.map((ele) => ({ id: ele.name, label: ele.name }));
   useEffect(() => {
-    getPlaceholders();
-  }, []);
-
-  useEffect(() => {
-    if (!placeholders) return;
-    const list = placeholders.map((ele) => ({ id: ele.name, label: ele.name }));
-    setPlaceholderList(list);
-  }, [placeholders]);
-
-  useEffect(() => {
-    if (!placeholders && !placeholderList) return;
-    new Quill('#editor', {
+    if (!list) return;
+    const quill = new Quill('#editor', {
       modules: {
         toolbar: { container: `#toolbar` },
         placeholder: {
           delimiters: ['{{', '}}'],
-          placeholders: placeholderList
+          placeholders: list
         },
         autocomplete: {
-          getPlaceholders: () => placeholderList,
+          getPlaceholders: () => list,
           triggerKey: '{',
           endKey: '}'
         }
       },
       theme: 'snow'
     });
-  }, [placeholderList]);
+    quill.clipboard.dangerouslyPasteHTML(0, value);
+    quill.on('text-change', () => {
+      setValue(quill.root.innerHTML);
+    });
+  }, []);
 
   return (
     <Card>
-      <Toolbar placeholderList={placeholderList} />
+      <div id="toolbar">
+        <span className="ql-formats">
+          <select className="ql-header" defaultValue="">
+            <option value="1"></option>
+            <option value="2"></option>
+            <option value="3"></option>
+            <option value=""></option>
+          </select>
+          <select className="ql-font" defaultValue=""></select>
+          <select className="ql-size" defaultValue="">
+            <option value="small"></option>
+            <option value=""></option>
+            <option value="large"></option>
+            <option value="huge"></option>
+          </select>
+        </span>
+        <span className="ql-formats">
+          <button className="ql-bold"></button>
+          <button className="ql-italic"></button>
+          <button className="ql-underline"></button>
+          <button className="ql-strike"></button>
+          <button className="ql-blockquote"></button>
+        </span>
+        <span className="ql-formats">
+          <select className="ql-placeholder">
+            {list.map((ele, i) => (
+              <option key={i} value={ele.label}>
+                {ele.label}
+              </option>
+            ))}
+          </select>
+        </span>
+      </div>
       <div id="editor"></div>
     </Card>
   );
 };
 
-const mapStateToProps = ({ placeholders: { placeholders } }) => ({
-  placeholders
-});
-
-export default connect(mapStateToProps, { getPlaceholders })(
-  injectIntl(Editor)
-);
+export default injectIntl(Editor);
