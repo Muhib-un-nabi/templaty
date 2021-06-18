@@ -82,6 +82,7 @@ module.exports = {
   'form.updateContact': 'Update Contact',
   'form.addSnippets': 'Add Snippets',
   'form.discription': 'Discription',
+  'form.updateSnippets': 'Update Snippets',
 
   /* FOR Contact Setting Form */
   'button.add': 'Add',
@@ -99,5 +100,5 @@ module.exports = {
 
   /*Delete User   */
   'modal.delete-user-message': 'Are You Sure Want To delete this User?',
-  'modal.user-delete': 'Delete User',
+  'modal.user-delete': 'Delete User'
 };

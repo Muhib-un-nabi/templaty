@@ -15,3 +15,28 @@
   background-color: rgb(0, 0, 0);
   color: white;
 }
+ul.ql-autocomplete-menu.completions {
+  list-style: none;
+  padding: 5px;
+  background: #efefef;
+}
+
+ul.ql-autocomplete-menu.completions li:hover {
+  transform: scale(1.05);
+  background: #80808012;
+}
+
+ul.ql-autocomplete-menu.completions li button {
+  border: none;
+  width: 100%;
+  text-align: left;
+  border-bottom: 1px solid #8080805c;
+  padding: 3px 8px;
+  background: transparent;
+  margin-top: 3px;
+  line-height: 1.75em;
+}
+
+ul.ql-autocomplete-menu.completions li {
+  transition: all 0.5s ease;
+}

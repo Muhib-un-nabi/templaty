@@ -25,7 +25,10 @@ Quill.register(
 );
 Quill.register('modules/autocomplete', getAutocompleteModule(Quill));
 const Editor = ({ value, setValue, list }) => {
-  list = list.map((ele) => ({ id: ele.name, label: ele.name }));
+  list = list.map((ele) => ({
+    id: ele.name,
+    label: ele.name
+  }));
   useEffect(() => {
     if (!list) return;
     const quill = new Quill('#editor', {

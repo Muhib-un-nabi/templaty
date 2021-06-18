@@ -8,7 +8,7 @@ import {
   FormGroup,
   Label,
   Input,
-  Button,
+  Button
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -33,7 +33,7 @@ const Signup = ({ history, signup }) => {
         email: email,
         password: password,
         passwordConfirm: password,
-        role: 'admin',
+        role: 'admin'
       };
       await signup(userData);
       history.push(adminRoot);
@@ -113,5 +113,5 @@ const Signup = ({ history, signup }) => {
 const mapStateToProps = () => {};
 
 export default connect(null, {
-  signup,
+  signup
 })(Signup);

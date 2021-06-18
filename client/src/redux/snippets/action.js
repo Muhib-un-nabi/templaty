@@ -5,7 +5,7 @@ import {
   DELETE_SNIPPET,
   GET_SNIPPET,
   GET_SNIPPETS,
-  UPDATE_SNIPPET,
+  UPDATE_SNIPPET
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -17,7 +17,7 @@ export const getSnippets = () => async (dispatch) => {
     const { data } = await serverApi.get('/snippets', authHeader());
     dispatch({
       type: GET_SNIPPETS,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
@@ -35,7 +35,7 @@ export const getSnippet = (id) => async (dispatch) => {
     const { data } = await serverApi.get(`/snippets/${id}`, authHeader());
     dispatch({
       type: GET_SNIPPET,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
@@ -53,7 +53,7 @@ export const addSnippet = (snippets) => async (dispatch) => {
     const { data } = await serverApi.post('/snippets', snippets, authHeader());
     dispatch({
       type: ADD_SNIPPET,
-      payload: data.data.data,
+      payload: data.data.data
     });
     NotificationManager.success(
       'Success message',
@@ -83,7 +83,7 @@ export const updateSnippet = (snippet, id) => async (dispatch) => {
     );
     dispatch({
       type: UPDATE_SNIPPET,
-      payload: data.data.data,
+      payload: data.data.data
     });
     NotificationManager.success(
       'Success message',
@@ -110,7 +110,7 @@ export const deleteSnippet = (id) => async (dispatch) => {
     await serverApi.delete(`/snippets/${id}`, authHeader());
     dispatch({
       type: DELETE_SNIPPET,
-      payload: id,
+      payload: id
     });
     NotificationManager.success(
       'Success message',
@@ -132,5 +132,5 @@ export const deleteSnippet = (id) => async (dispatch) => {
 
 // Clear Current From Contact
 export const clearCurrent = () => ({
-  type: CLEAR_CURRENT,
+  type: CLEAR_CURRENT
 });

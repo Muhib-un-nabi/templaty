@@ -13,13 +13,13 @@ import {
   DropdownMenu,
   Collapse,
   ButtonDropdown,
-  CustomInput,
+  CustomInput
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import {
   Colxx,
-  Separator,
+  Separator
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
@@ -32,7 +32,7 @@ const Placeholders = ({
   getSnippets,
   deleteSnippet,
   snippets,
-  user,
+  user
 }) => {
   const [Snippets, setSnippets] = useState(snippets);
 
@@ -58,8 +58,7 @@ const Placeholders = ({
                 color="primary"
                 size="lg"
                 className="top-right-button mr-1"
-                onClick={() => history.push(`${adminRoot}/snippets/add`)}
-              >
+                onClick={() => history.push(`${adminRoot}/snippets/add`)}>
                 <IntlMessages id="menu.snippets-add" />
               </Button>
             </div>
@@ -73,8 +72,7 @@ const Placeholders = ({
               className="pt-0 pl-0 d-inline-block d-md-none"
               onClick={() => {
                 // setDisplayOptionsIsOpen(!displayOptionsIsOpen);
-              }}
-            >
+              }}>
               <IntlMessages id="display-options" />
               <i className="simple-icon-arrow-down align-middle" />
             </Button>
@@ -116,7 +114,7 @@ const Placeholders = ({
                       order={i}
                       deleteClick={(id) => deleteSnippet(id)}
                       updateClick={(id) =>
-                        history.push(`${adminRoot}/placeholders/edit/${id}`)
+                        history.push(`${adminRoot}/snippets/edit/${id}`)
                       }
                     />
                   </li>
@@ -132,7 +130,7 @@ const Placeholders = ({
 
 const mapStateToProps = ({ snippets: { snippets }, user: { user } }) => ({
   snippets,
-  user,
+  user
 });
 
 export default connect(mapStateToProps, { getSnippets, deleteSnippet })(
