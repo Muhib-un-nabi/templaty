@@ -15,14 +15,14 @@ import {
   Label,
   Form,
   Input,
-  Badge,
+  Badge
   //   CustomInput,
 } from 'reactstrap';
 import Select from 'react-select';
 import { ReactSortable } from 'react-sortablejs';
 import { v4 as uuidV4 } from 'uuid';
 import ControlledInput, {
-  defaultInputObj,
+  defaultInputObj
 } from '../../../../../components/custom/ControlledInput';
 import CustomSelectInput from '../../../../../components/common/CustomSelectInput';
 import inputTypes from '../../../../../constants/inputTypes';
@@ -34,17 +34,17 @@ const EditMode = ({ inputData, onChangeHandler }) => {
   const Key = defaultInputObj({
     name: Name.data.name,
     key: Name.data.name,
-    value: key,
+    value: key
   });
   const Options = defaultInputObj({
     name: Name.data.name,
     key: Name.data.name,
-    value: options,
+    value: options
   });
   const Type = defaultInputObj({
     name: Name.data.name,
     key: Name.data.name,
-    value: type,
+    value: type
   });
 
   return (
@@ -96,9 +96,8 @@ const EditMode = ({ inputData, onChangeHandler }) => {
           setList={(updatedList) => onChangeHandler('options', updatedList)}
           className="value"
           options={{
-            handle: '.handle',
-          }}
-        >
+            handle: '.handle'
+          }}>
           {Options.data.value.map((item) => {
             return (
               <FormGroup data-id={item.id} key={item.id} className="mb-1">
@@ -110,8 +109,8 @@ const EditMode = ({ inputData, onChangeHandler }) => {
                       key: 'key',
                       name: 'key',
                       options: '',
-                      value: item.label,
-                    },
+                      value: item.label
+                    }
                   }}
                   onChangeHandler={(inputEle, updatedVal) => {
                     const newOpntions = options.map((ele) => {
@@ -133,13 +132,11 @@ const EditMode = ({ inputData, onChangeHandler }) => {
                     color="empty"
                     pill
                     onClick={() => {
-                      console.log();
                       const newOpntions = options.filter(
                         (ele) => item.id !== ele.id
                       );
                       onChangeHandler('options', newOpntions);
-                    }}
-                  >
+                    }}>
                     <i className="simple-icon-close" />
                   </Badge>
                 </div>
@@ -158,11 +155,10 @@ const EditMode = ({ inputData, onChangeHandler }) => {
             onClick={() => {
               const newOpntions = [
                 ...options,
-                defaultInputObj({ name: 'new cxzcxfield' }),
+                defaultInputObj({ name: 'new cxzcxfield' })
               ];
               onChangeHandler('options', newOpntions);
-            }}
-          >
+            }}>
             <i className="simple-icon-plus btn-group-icon" /> Add Input Value
           </Button>
         )}

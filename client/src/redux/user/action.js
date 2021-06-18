@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-use-before-define */
 /* eslint-disable import/prefer-default-export */
@@ -12,7 +13,8 @@ import {
   UPDATE_PROFILE,
   ADD_NEW_USER_IN_TEAM,
   GET_TEAM_DETAILS,
-  DELETE_USER_BY_ADMIN
+  DELETE_USER_BY_ADMIN,
+  SET_LOADING
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -45,6 +47,7 @@ export const signup = (userData) => async (dispatch) => {
 
 export const login = (userData) => async (dispatch) => {
   try {
+    setLoading();
     const { data } = await serverApi.post('/users/login', userData);
     dispatch({
       type: LOG_IN,
@@ -83,6 +86,7 @@ export const getTeamDetails = () => async (dispatch) => {
       null,
       null
     );
+    throw new Error('Somthing went Wrong, Please Try again');
   }
 };
 
@@ -128,6 +132,7 @@ export const deleteUserByAdmin =
         null,
         null
       );
+      throw new Error('Somthing went Wrong, Please Try again');
     }
   };
 
@@ -190,3 +195,8 @@ export const resetPassword = () => async (dispatch) => {
 };
 
 const setToken = (token) => localStorage.setItem('token', token);
+
+export const setLoading = (loading = true) => ({
+  type: SET_LOADING,
+  payload: loading
+});

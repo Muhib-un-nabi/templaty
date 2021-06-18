@@ -1,16 +1,15 @@
 /* eslint-disable no-shadow */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { Formik, Form, Field } from 'formik';
-import { NotificationManager } from '../../components/common/react-notifications';
 import { adminRoot } from '../../constants/defaultValues';
 
 import { Colxx } from '../../components/common/CustomBootstrap';
 import IntlMessages from '../../helpers/IntlMessages';
-import { login } from '../../redux/user/action';
+import { login, setLoading } from '../../redux/user/action';
 
 const validatePassword = (value) => {
   let error;
@@ -32,24 +31,18 @@ const validateEmail = (value) => {
   return error;
 };
 
-const Login = ({ history, loading = false, error = [], login }) => {
+const Login = ({ history, loading = false, error = [], login, setLoading }) => {
   const [email] = useState('admin@gmail.com');
   const [password] = useState('pass1234');
 
-  // useEffect(() => {
-  //   if (error) {
-  //     NotificationManager.warning(error, 'Login Error', 3000, null, null, '');
-  //   }
-  // }, [error]);
-
   const onUserLogin = async (values) => {
     if (!values.email && !values.password) return;
-    // login(values, history);
     try {
+      await setLoading();
       await login(values);
       history.push(adminRoot);
     } catch (e) {
-      console.log(e);
+      await setLoading(false);
     }
   };
 
@@ -64,7 +57,7 @@ const Login = ({ history, loading = false, error = [], login }) => {
             <p className="white mb-0">
               Please use your credentials to login.
               <br />
-              If you are not a member, please{' '}
+              If you are not a member, please
               <NavLink to="/user/register" className="white">
                 register
               </NavLink>
@@ -117,11 +110,17 @@ const Login = ({ history, loading = false, error = [], login }) => {
                     <NavLink to="/user/forgot-password">
                       <IntlMessages id="user.forgot-password-question" />
                     </NavLink>
+                    <IntlMessages id="or" />
+                    <NavLink to="/user/register">
+                      <IntlMessages id="user.create-account" />
+                    </NavLink>
                     <Button
                       color="primary"
-                      className={`btn-shadow btn-multiple-state `}
-                      size="lg"
-                    >
+                      disabled={loading}
+                      className={`btn-shadow btn-multiple-state ${
+                        loading ? 'show-spinner' : ''
+                      }`}
+                      size="lg">
                       <span className="spinner d-inline-block">
                         <span className="bounce1" />
                         <span className="bounce2" />
@@ -141,11 +140,9 @@ const Login = ({ history, loading = false, error = [], login }) => {
     </Row>
   );
 };
-const mapStateToProps = ({ authUser }) => {
-  const { loading, error } = authUser;
-  return { loading, error };
-};
+const mapStateToProps = ({ user: { loading } }) => ({ loading });
 
-export default connect(null, {
+export default connect(mapStateToProps, {
   login,
+  setLoading
 })(Login);

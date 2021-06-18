@@ -39,7 +39,8 @@ import { connect } from 'react-redux';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import {
   getTeamDetails,
-  deleteUserByAdmin
+  deleteUserByAdmin,
+  setLoading
 } from '../../../../redux/user/action';
 import {
   Colxx,
@@ -51,16 +52,29 @@ import ThumbnailLetters from '../../../../components/cards/ThumbnailLetters';
 
 import { adminRoot } from '../../../../constants/defaultValues';
 
-const Team = ({ match, team, getTeamDetails, history, deleteUserByAdmin }) => {
+const Team = ({
+  match,
+  team,
+  getTeamDetails,
+  history,
+  deleteUserByAdmin,
+  setLoading,
+  loading
+}) => {
   const [modal, setModal] = useState(false);
   const [current, setCurrent] = useState();
   const [deleteUserData, setDeleteUserData] = useState(false);
   const [asignTo, setAsignTo] = useState();
   useEffect(() => {
-    getTeamDetails();
+    try {
+      setLoading();
+      getTeamDetails();
+    } catch (e) {
+      setLoading(false);
+    }
   }, []);
   useEffect(() => {
-    if (!team.admin) return;
+    if (!team || !team.admin) return;
     setAsignTo(team.admin._id);
   }, [team]);
 
@@ -135,12 +149,30 @@ const Team = ({ match, team, getTeamDetails, history, deleteUserByAdmin }) => {
         </ModalBody>
         <ModalFooter>
           <Button
+            disabled={loading}
             color="primary"
-            onClick={async () => {
-              await deleteUserByAdmin(current._id, deleteUserData, asignTo);
-              await setModal(false);
+            className={`btn-shadow btn-multiple-state ${
+              loading ? 'show-spinner' : ''
+            }`}
+            onClick={async (e) => {
+              try {
+                e.preventDefault();
+                await setLoading();
+                await deleteUserByAdmin(current._id, deleteUserData, asignTo);
+              } catch (e) {
+                await setLoading(false);
+              } finally {
+                setModal(false);
+              }
             }}>
-            <IntlMessages id="button.delete-user" />
+            <span className="spinner d-inline-block">
+              <span className="bounce1" />
+              <span className="bounce2" />
+              <span className="bounce3" />
+            </span>
+            <span className="label">
+              <IntlMessages id="button.delete-user" />
+            </span>
           </Button>
           <Button color="secondary" onClick={() => setModal(false)}>
             <IntlMessages id="button.cancel" />
@@ -165,7 +197,8 @@ const Team = ({ match, team, getTeamDetails, history, deleteUserByAdmin }) => {
           </div>
         </div>
       </Colxx>
-      {team.users &&
+      {team &&
+        team.users &&
         [team.admin, ...team.users].map((user) => (
           <Colxx key={user._id} className="mb-4" md="6" sm="6" lg="4" xxs="12">
             <Card className="d-flex flex-row mb-4">
@@ -211,10 +244,12 @@ const Team = ({ match, team, getTeamDetails, history, deleteUserByAdmin }) => {
   );
 };
 
-const mapStateToProps = ({ user: { team } }) => ({
-  team
+const mapStateToProps = ({ user: { team, loading } }) => ({
+  team,
+  loading
 });
 export default connect(mapStateToProps, {
   getTeamDetails,
-  deleteUserByAdmin
+  deleteUserByAdmin,
+  setLoading
 })(Team);

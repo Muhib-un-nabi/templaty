@@ -26,21 +26,21 @@ import {
   FormGroup,
   Label,
   Input,
-  Button,
+  Button
 } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { v4 } from 'uuid';
-import { addNewUser } from '../../../../redux/user/action';
+import { addNewUser, setLoading } from '../../../../redux/user/action';
 import {
   Colxx,
-  Separator,
+  Separator
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import { adminRoot } from '../../../../constants/defaultValues';
 
-const AddNewUser = ({ match, history, addNewUser }) => {
+const AddNewUser = ({ match, history, addNewUser, setLoading, loading }) => {
   const [email, setEmail] = useState(`${v4()}@gmail.com`);
   const [password, setPassword] = useState('pass1234');
   const [name, setName] = useState(`Ali ${Math.round(Math.random() * 99)}`);
@@ -54,12 +54,13 @@ const AddNewUser = ({ match, history, addNewUser }) => {
         email: email,
         password: password,
         passwordConfirm: password,
-        role: 'admin',
+        role: 'admin'
       };
+      setLoading();
       await addNewUser(userData);
       history.push(`${adminRoot}/account`);
     } catch (e) {
-      console.log(e);
+      setLoading(false);
     }
   };
   return (
@@ -112,8 +113,21 @@ const AddNewUser = ({ match, history, addNewUser }) => {
                 </FormGroup>
 
                 <div className="d-flex justify-content-end align-items-center">
-                  <Button color="primary" className="btn-shadow" size="lg">
-                    <IntlMessages id="button.user-add" />
+                  <Button
+                    disabled={loading}
+                    color="primary"
+                    className={`btn-shadow mt-4 btn-multiple-state ${
+                      loading ? 'show-spinner' : ''
+                    }`}
+                    size="lg">
+                    <span className="spinner d-inline-block">
+                      <span className="bounce1" />
+                      <span className="bounce2" />
+                      <span className="bounce3" />
+                    </span>
+                    <span className="label">
+                      <IntlMessages id="button.user-add" />
+                    </span>
                   </Button>
                 </div>
               </Form>
@@ -124,5 +138,6 @@ const AddNewUser = ({ match, history, addNewUser }) => {
     </>
   );
 };
+const mapStateToProps = ({ user: { loading } }) => ({ loading });
 
-export default connect(null, { addNewUser })(AddNewUser);
+export default connect(mapStateToProps, { addNewUser, setLoading })(AddNewUser);

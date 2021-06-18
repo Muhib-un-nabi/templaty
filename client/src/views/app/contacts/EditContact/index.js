@@ -17,7 +17,7 @@ import {
   Label,
   Input,
   Button,
-  CustomInput,
+  CustomInput
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import { v4 as uuidV4 } from 'uuid';
@@ -26,7 +26,7 @@ import { injectIntl } from 'react-intl';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import {
   Colxx,
-  Separator,
+  Separator
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
@@ -37,6 +37,7 @@ import {
   getInputField,
   getContact,
   clearCurrent,
+  setLoading
 } from '../../../../redux/contacts/action';
 
 const index = ({
@@ -48,11 +49,17 @@ const index = ({
   clearCurrent,
   history,
   loading,
+  setLoading
 }) => {
   const [inputs, setInputs] = useState();
 
   useEffect(() => {
-    getContact(match.params.id);
+    try {
+      setLoading();
+      getContact(match.params.id);
+    } catch (e) {
+      setLoading(false);
+    }
     return () => clearCurrent();
   }, []);
 
@@ -69,13 +76,14 @@ const index = ({
         data: inputs,
         visibility:
           inputs.find((ele) => ele.id === 'visibility-input').data.value.id ===
-          'team',
+          'team'
       };
+      await setLoading();
       await updateContact(newContact, match.params.id);
       await clearCurrent();
       history.push(`${adminRoot}/contacts/all`);
     } catch (e) {
-      console.log(e);
+      await setLoading(false);
     }
   };
   return (
@@ -89,49 +97,50 @@ const index = ({
       <Row className="mb-4">
         <Colxx xxs="12">
           <Card>
-            <CardBody>
-              <Form onSubmit={submitHandler}>
-                {inputs &&
-                  inputs.length !== 0 &&
-                  inputs.map((inputData) => (
-                    <FormGroup key={`customInput__${inputData.id}`}>
-                      <Label htmlFor={`customInput__${inputData.id}`}>
-                        {inputData.data.name}
-                      </Label>
-                      <ControlledInput
-                        inputData={inputData}
-                        onChangeHandler={(inputData, updatedValue) =>
-                          setInputs((prevState) => {
-                            const newInpuEle = {
-                              ...inputData,
-                              data: { ...inputData.data, value: updatedValue },
-                            };
-                            return prevState.map((ele) =>
-                              ele.id === newInpuEle.id ? newInpuEle : ele
-                            );
-                          })
-                        }
-                      />
-                    </FormGroup>
-                  ))}
+            <CardBody className={`${loading && 'loading'}`}>
+              {!loading && (
+                <Form onSubmit={submitHandler}>
+                  {inputs &&
+                    inputs.length !== 0 &&
+                    inputs.map((inputData) => (
+                      <FormGroup key={`customInput__${inputData.id}`}>
+                        <Label htmlFor={`customInput__${inputData.id}`}>
+                          {inputData.data.name}
+                        </Label>
+                        <ControlledInput
+                          inputData={inputData}
+                          onChangeHandler={(inputData, updatedValue) =>
+                            setInputs((prevState) => {
+                              const newInpuEle = {
+                                ...inputData,
+                                data: { ...inputData.data, value: updatedValue }
+                              };
+                              return prevState.map((ele) =>
+                                ele.id === newInpuEle.id ? newInpuEle : ele
+                              );
+                            })
+                          }
+                        />
+                      </FormGroup>
+                    ))}
 
-                <Button
-                  color="primary"
-                  className={`mt-4 ${
-                    loading && 'show-spinner'
-                  } btn-shadow btn-multiple-state`}
-                  disabled={loading}
-                >
-                  <span className="spinner d-inline-block">
-                    <span className="bounce1" />
-                    <span className="bounce2" />
-                    <span className="bounce3" />
-                  </span>
-                  <span className="label">
-                    <IntlMessages id="form.updateContact" />
-                  </span>
-                </Button>
-              </Form>
+                  <Button
+                    color="primary"
+                    className={`mt-4 ${
+                      loading && 'show-spinner'
+                    } btn-shadow btn-multiple-state`}
+                    disabled={loading}>
+                    <span className="spinner d-inline-block">
+                      <span className="bounce1" />
+                      <span className="bounce2" />
+                      <span className="bounce3" />
+                    </span>
+                    <span className="label">
+                      <IntlMessages id="form.updateContact" />
+                    </span>
+                  </Button>
+                </Form>
+              )}
             </CardBody>
           </Card>
         </Colxx>
@@ -143,7 +152,7 @@ const index = ({
 const mapStateToProps = ({ contacts: { inputs, current, loading } }) => ({
   inputs,
   current,
-  loading,
+  loading
 });
 
 export default connect(mapStateToProps, {
@@ -151,4 +160,5 @@ export default connect(mapStateToProps, {
   getContact,
   getInputField,
   clearCurrent,
+  setLoading
 })(injectIntl(index));

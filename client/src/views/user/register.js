@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Row,
   Card,
@@ -13,16 +13,20 @@ import {
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { v4 } from 'uuid';
-import { signup } from '../../redux/user/action';
+import { signup, setLoading } from '../../redux/user/action';
 
 import IntlMessages from '../../helpers/IntlMessages';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import { adminRoot } from '../../constants/defaultValues';
 
-const Signup = ({ history, signup }) => {
+const Signup = ({ history, signup, loading, setLoading }) => {
   const [email, setEmail] = useState(`${v4()}@gmail.com`);
   const [password, setPassword] = useState('pass12345');
   const [name, setName] = useState('admin');
+
+  useEffect(() => {
+    console.log(loading);
+  }, [loading]);
 
   const onUserRegister = async (e) => {
     e.preventDefault();
@@ -35,10 +39,11 @@ const Signup = ({ history, signup }) => {
         passwordConfirm: password,
         role: 'admin'
       };
+      await setLoading();
       await signup(userData);
       history.push(adminRoot);
     } catch (e) {
-      console.log(e);
+      await setLoading(false);
     }
   };
 
@@ -99,8 +104,21 @@ const Signup = ({ history, signup }) => {
               </FormGroup>
 
               <div className="d-flex justify-content-end align-items-center">
-                <Button color="primary" className="btn-shadow" size="lg">
-                  <IntlMessages id="user.register-button" />
+                <Button
+                  disabled={loading}
+                  color="primary"
+                  className={`btn-shadow btn-multiple-state ${
+                    loading ? 'show-spinner' : ''
+                  }`}
+                  size="lg">
+                  <span className="spinner d-inline-block">
+                    <span className="bounce1" />
+                    <span className="bounce2" />
+                    <span className="bounce3" />
+                  </span>
+                  <span className="label">
+                    <IntlMessages id="user.register-button" />
+                  </span>
                 </Button>
               </div>
             </Form>
@@ -110,8 +128,9 @@ const Signup = ({ history, signup }) => {
     </Row>
   );
 };
-const mapStateToProps = () => {};
+const mapStateToProps = ({ user: { loading } }) => ({ loading });
 
-export default connect(null, {
-  signup
+export default connect(mapStateToProps, {
+  signup,
+  setLoading
 })(Signup);

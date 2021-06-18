@@ -9,7 +9,7 @@ import {
   UPDATE_CONTACT,
   GET_CONTACT,
   CLEAR_CURRENT,
-  SET_LOADING,
+  SET_LOADING
 } from './types';
 import { NotificationManager } from '../../components/common/react-notifications';
 import serverApi, { authHeader } from '../../api/index';
@@ -17,11 +17,10 @@ import serverApi, { authHeader } from '../../api/index';
 
 export const getInputField = () => async (dispatch) => {
   try {
-    setLoading();
     const { data } = await serverApi.get('/contacts/setting/', authHeader());
     dispatch({
       type: GET_CONTACT_SETTING,
-      payload: data.data.data.setting,
+      payload: data.data.data.setting
     });
   } catch (err) {
     NotificationManager.error(
@@ -36,17 +35,16 @@ export const getInputField = () => async (dispatch) => {
 
 export const saveContactSetting = (setting) => async (dispatch) => {
   try {
-    setLoading();
     const { data } = await serverApi.patch(
       '/contacts/setting/',
       {
-        setting,
+        setting
       },
       authHeader()
     );
     dispatch({
       type: SAVE_CONTACT_SETTING,
-      payload: data.data.data.setting,
+      payload: data.data.data.setting
     });
     NotificationManager.success(
       'Success message',
@@ -70,11 +68,10 @@ export const saveContactSetting = (setting) => async (dispatch) => {
 //  get All Contacts
 export const getContacts = () => async (dispatch) => {
   try {
-    setLoading();
     const { data } = await serverApi.get('/contacts', authHeader());
     dispatch({
       type: GET_CONTACTS,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
@@ -89,11 +86,10 @@ export const getContacts = () => async (dispatch) => {
 //  get All Contacts
 export const getContact = (id) => async (dispatch) => {
   try {
-    setLoading();
     const { data } = await serverApi.get(`/contacts/${id}`, authHeader());
     dispatch({
       type: GET_CONTACT,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
@@ -108,11 +104,10 @@ export const getContact = (id) => async (dispatch) => {
 //  Add New Contact
 export const addContact = (contact) => async (dispatch) => {
   try {
-    setLoading();
     const { data } = await serverApi.post('/contacts', contact, authHeader());
     dispatch({
       type: ADD_CONTACT,
-      payload: data.data.data,
+      payload: data.data.data
     });
     NotificationManager.success(
       'Success message',
@@ -135,7 +130,6 @@ export const addContact = (contact) => async (dispatch) => {
 //  AUpdate  Contact
 export const updateContact = (contact, id) => async (dispatch) => {
   try {
-    setLoading();
     const { data } = await serverApi.patch(
       `/contacts/${id}`,
       contact,
@@ -143,7 +137,7 @@ export const updateContact = (contact, id) => async (dispatch) => {
     );
     dispatch({
       type: UPDATE_CONTACT,
-      payload: data.data.data,
+      payload: data.data.data
     });
     NotificationManager.success(
       'Success message',
@@ -167,11 +161,10 @@ export const updateContact = (contact, id) => async (dispatch) => {
 //  DELETE New Contact
 export const deleteContact = (id) => async (dispatch) => {
   try {
-    setLoading();
     await serverApi.delete(`/contacts/${id}`, authHeader());
     dispatch({
       type: DELETE_CONTACT,
-      payload: id,
+      payload: id
     });
     NotificationManager.success(
       'Success message',
@@ -194,9 +187,10 @@ export const deleteContact = (id) => async (dispatch) => {
 // Clear Current From Contact
 
 export const clearCurrent = () => ({
-  type: CLEAR_CURRENT,
+  type: CLEAR_CURRENT
 });
 
-export const setLoading = () => ({
+export const setLoading = (loading = true) => ({
   type: SET_LOADING,
+  payload: loading
 });

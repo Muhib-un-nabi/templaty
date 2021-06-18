@@ -12,13 +12,13 @@ import _ from 'lodash';
 import { v4 as uuidV4 } from 'uuid';
 import {
   Row,
-  Button,
+  Button
   // CardSubtitle,
 } from 'reactstrap';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import {
   Colxx,
-  Separator,
+  Separator
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import useDidMountEffect from '../../../../hooks/useDidMountEffect';
@@ -34,6 +34,7 @@ import InputItem from './InputItem/index';
 import {
   saveContactSetting,
   getInputField,
+  setLoading
 } from '../../../../redux/contacts/action';
 
 const ContactSetting = ({
@@ -41,8 +42,9 @@ const ContactSetting = ({
   inputs: { custom, global },
   saveContactSetting,
   getInputField,
+  loading,
+  setLoading
 }) => {
-  const [isChanged, setIsChanged] = useState(false);
   const [customInput, setCustomInput] = useState(custom);
   const onChangeHandler = (updatedInput) =>
     setCustomInput((prevState) =>
@@ -56,15 +58,21 @@ const ContactSetting = ({
   }, [custom]);
 
   useEffect(() => {
-    getInputField();
+    try {
+      setLoading();
+      getInputField();
+    } catch (e) {
+      setLoading(false);
+    }
   }, []);
 
-  const saveSetting = async () => {
+  const saveSetting = async (e) => {
     try {
+      e.preventDefault();
+      setLoading();
       await saveContactSetting(customInput);
-      // await setIsChanged(true)
     } catch (e) {
-      setIsChanged(false);
+      await setLoading(false);
     }
   };
 
@@ -80,14 +88,21 @@ const ContactSetting = ({
             <Breadcrumb heading="menu.contacts-setting" match={match} />
             <div className="text-zero top-right-button-container">
               <Button
+                disabled={loading}
                 color="primary"
-                size="sm"
-                disabled={isChanged}
-                className="top-right-button mr-1"
-                // onClick={() => setModalOpen(true)}
                 onClick={saveSetting}
-              >
-                <IntlMessages id="button.save-changes" />
+                className={`btn-shadow top-right-button mr-1 btn-multiple-state ${
+                  loading ? 'show-spinner' : ''
+                }`}
+                size="sm">
+                <span className="spinner d-inline-block">
+                  <span className="bounce1" />
+                  <span className="bounce2" />
+                  <span className="bounce3" />
+                </span>
+                <span className="label">
+                  <IntlMessages id="button.save-changes" />
+                </span>
               </Button>
             </div>
           </div>
@@ -97,39 +112,34 @@ const ContactSetting = ({
       </Row>
       <Row>
         <Colxx xxs="12" className="mb-4">
-          <ul className="list-unstyled mb-4">
-            <ReactSortable
-              list={customInput}
-              setList={(updatedList) => {
-                setCustomInput((prevstate) => {
-                  const origElementsIds = _.map(prevstate, 'id');
-                  const changedElementsIds = _.map(updatedList, 'id');
-                  if (origElementsIds.join() !== changedElementsIds.join()) {
-                    setIsChanged(false);
-                  }
-                  return updatedList;
-                });
-              }}
-            >
-              {customInput.map((item, index) => (
-                <li data-id={item.id} key={item.id}>
-                  <InputItem
-                    inputdata={item}
-                    onChangeHandler={onChangeHandler}
-                    // updataInputItem={updataInputItem}
-                    order={index}
-                    // expanded={!item.title && true}
-                    deleteClick={(id) => {
-                      setCustomInput((state) =>
-                        state.filter((ele) => ele.id !== id)
-                      );
-                      setIsChanged(false);
-                    }}
-                  />
-                </li>
-              ))}
-            </ReactSortable>
-          </ul>
+          {customInput.length !== 0 ? (
+            <ul className="list-unstyled mb-4">
+              <ReactSortable
+                list={customInput}
+                setList={(updatedList) => {
+                  setCustomInput((prevstate) => updatedList);
+                }}>
+                {customInput.map((item, index) => (
+                  <li data-id={item.id} key={item.id}>
+                    <InputItem
+                      inputdata={item}
+                      onChangeHandler={onChangeHandler}
+                      // updataInputItem={updataInputItem}
+                      order={index}
+                      // expanded={!item.title && true}
+                      deleteClick={(id) => {
+                        setCustomInput((state) =>
+                          state.filter((ele) => ele.id !== id)
+                        );
+                      }}
+                    />
+                  </li>
+                ))}
+              </ReactSortable>
+            </ul>
+          ) : (
+            <div>No Setting Field Found</div>
+          )}
         </Colxx>
         <Colxx xxs="12" className="mb-4">
           <Button
@@ -139,9 +149,7 @@ const ContactSetting = ({
             className="mb-2"
             onClick={() => {
               setCustomInput([...customInput, defaultInputObj({ name: '' })]);
-              setIsChanged(false);
-            }}
-          >
+            }}>
             Add New Field
           </Button>
         </Colxx>
@@ -150,10 +158,13 @@ const ContactSetting = ({
   );
 };
 
-const mapStateToProps = ({ contacts: { inputs } }) => ({
+const mapStateToProps = ({ contacts: { inputs, loading } }) => ({
   inputs,
+  loading
 });
 
-export default connect(mapStateToProps, { saveContactSetting, getInputField })(
-  ContactSetting
-);
+export default connect(mapStateToProps, {
+  saveContactSetting,
+  setLoading,
+  getInputField
+})(ContactSetting);

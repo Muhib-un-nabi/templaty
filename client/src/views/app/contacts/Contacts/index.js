@@ -13,17 +13,21 @@ import {
   DropdownMenu,
   Collapse,
   ButtonDropdown,
-  CustomInput,
+  CustomInput
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import {
   Colxx,
-  Separator,
+  Separator
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
-import { deleteContact, getContacts } from '../../../../redux/contacts/action';
+import {
+  deleteContact,
+  getContacts,
+  setLoading
+} from '../../../../redux/contacts/action';
 import ContactItem from './ContactItem';
 
 const Contacts = ({
@@ -33,11 +37,22 @@ const Contacts = ({
   user,
   deleteContact,
   getContacts,
+  loading,
+  setLoading
 }) => {
   const [Contacts, setContacts] = useState(contacts);
 
   useEffect(() => {
-    getContacts();
+    console.log(loading);
+  }, [loading]);
+
+  useEffect(() => {
+    try {
+      setLoading();
+      getContacts();
+    } catch (e) {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -57,8 +72,7 @@ const Contacts = ({
                 color="primary"
                 size="lg"
                 className="top-right-button mr-1"
-                onClick={() => history.push(`${adminRoot}/contacts/add`)}
-              >
+                onClick={() => history.push(`${adminRoot}/contacts/add`)}>
                 <IntlMessages id="menu.contacts-add" />
               </Button>
             </div>
@@ -72,8 +86,7 @@ const Contacts = ({
               className="pt-0 pl-0 d-inline-block d-md-none"
               onClick={() => {
                 // setDisplayOptionsIsOpen(!displayOptionsIsOpen);
-              }}
-            >
+              }}>
               <IntlMessages id="display-options" />
               <i className="simple-icon-arrow-down align-middle" />
             </Button>
@@ -104,8 +117,9 @@ const Contacts = ({
           </div>
           <Separator className="mb-5" />
           <Row>
-            <Colxx xxs="12" className="mb-4">
+            <Colxx xxs="12" className={`mb-4 ${loading && ''}`}>
               {Contacts.length === 0 && <p> No Contacts Found</p>}
+
               <ul className="list-unstyled mb-4">
                 {Contacts.map((contact, i) => (
                   <li key={contact._id}>
@@ -129,12 +143,17 @@ const Contacts = ({
   );
 };
 
-const mapStateToProps = ({ contacts: { contacts }, user: { user } }) => ({
+const mapStateToProps = ({
+  contacts: { contacts },
+  user: { user, loading }
+}) => ({
   contacts,
   user,
+  loading
 });
 
 export default connect(mapStateToProps, {
   deleteContact,
   getContacts,
+  setLoading
 })(Contacts);

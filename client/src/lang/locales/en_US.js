@@ -11,7 +11,7 @@ Table of Contents
 module.exports = {
   /* 01.General */
   'general.copyright': 'Gogo React © 2018 All Rights Reserved.',
-
+  or: 'or',
   /* 02.User Login, Logout, Register */
   'user.login-title': 'Login',
   'user.register': 'Register',
@@ -28,7 +28,7 @@ module.exports = {
   'user.user-delete': 'Delete User',
   'menu.add-user': 'Add New User',
   'menu.user': 'User',
-
+  'user.create-account': 'Create New Account',
   /* 03.Menu */
   'menu.home': 'Home',
   'menu.app': 'Home',
