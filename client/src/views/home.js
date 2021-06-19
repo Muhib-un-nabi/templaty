@@ -17,8 +17,8 @@ const slideSettings = {
   breakpoints: {
     600: { perView: 1 },
     992: { perView: 2 },
-    1200: { perView: 3 },
-  },
+    1200: { perView: 3 }
+  }
 };
 
 const slideItems = [
@@ -26,50 +26,50 @@ const slideItems = [
     icon: 'iconsminds-mouse-3',
     title: 'Right Click Menu',
     detail:
-      'Increases overall usability of the project by providing additional actions menu.',
+      'Increases overall usability of the project by providing additional actions menu.'
   },
   {
     icon: 'iconsminds-electric-guitar',
     title: 'Video Player',
     detail:
-      'Carefully themed multimedia players powered by Video.js library with Youtube support.',
+      'Carefully themed multimedia players powered by Video.js library with Youtube support.'
   },
   {
     icon: 'iconsminds-keyboard',
     title: 'Keyboard Shortcuts',
     detail:
-      'Easily configurable keyboard shortcuts plugin that highly improves user experience.',
+      'Easily configurable keyboard shortcuts plugin that highly improves user experience.'
   },
   {
     icon: 'iconsminds-three-arrow-fork ',
     title: 'Two Panels Menu',
     detail:
-      'Three states two panels icon menu that looks good, auto resizes and does the job well.',
+      'Three states two panels icon menu that looks good, auto resizes and does the job well.'
   },
   {
     icon: 'iconsminds-deer',
     title: 'Icons Mind',
     detail:
-      '1040 icons in 53 different categories, designed pixel perfect and ready for your project.',
+      '1040 icons in 53 different categories, designed pixel perfect and ready for your project.'
   },
   {
     icon: 'iconsminds-palette',
     title: '20 Color Schemes',
     detail:
-      'Colors, icons and design harmony that creates excellent themes to cover entire project.',
+      'Colors, icons and design harmony that creates excellent themes to cover entire project.'
   },
   {
     icon: 'iconsminds-air-balloon-1',
     title: '3 Applications',
     detail:
-      'Applications that mostly made of components are the way to get started to create something similar.',
+      'Applications that mostly made of components are the way to get started to create something similar.'
   },
   {
     icon: 'iconsminds-resize',
     title: 'Extra Responsive',
     detail:
-      'Custom Bootstrap 4 xxs & xxl classes delivers better experiences for smaller and larger screens.',
-  },
+      'Custom Bootstrap 4 xxs & xxl classes delivers better experiences for smaller and larger screens.'
+  }
 ];
 
 const features = [
@@ -77,92 +77,92 @@ const features = [
     title: 'Pleasant Design',
     img: '/assets/img/landing-page/features/plesant-design.png',
     detail:
-      'As a web developer we enjoy to work on something looks nice. It is not an absolute necessity but it really motivates us that final product will look good for user point of view. <br /><br />So we put a lot of work into colors, icons, composition and design harmony. Themed components and layouts with same design language. <br /><br />We kept user experience principles always at the heart of the design process.',
+      'As a web developer we enjoy to work on something looks nice. It is not an absolute necessity but it really motivates us that final product will look good for user point of view. <br /><br />So we put a lot of work into colors, icons, composition and design harmony. Themed components and layouts with same design language. <br /><br />We kept user experience principles always at the heart of the design process.'
   },
   {
     title: 'Extra Responsive',
     img: '/assets/img/landing-page/features/extra-responsive.png',
     detail:
-      'Xxs breakpoint is for smaller screens that has a resolution lower than 420px. Xs works between 576px and 420px. Xxl breakpoint is for larger screens that has a resolution higher than 1440px. Xl works between 1200px and 1440px.<br><br>With this approach we were able to create better experiences for smaller and larger screens.',
+      'Xxs breakpoint is for smaller screens that has a resolution lower than 420px. Xs works between 576px and 420px. Xxl breakpoint is for larger screens that has a resolution higher than 1440px. Xl works between 1200px and 1440px.<br><br>With this approach we were able to create better experiences for smaller and larger screens.'
   },
   {
     title: 'Superfine Charts',
     img: '/assets/img/landing-page/features/superfine-charts.png',
     detail:
-      'Using charts is a good way to visualize data but they often look ugly and break the rhythm of design. <br /><br />We concentrated on a single chart library and tried to create charts that look good with color, opacity, border and shadow. <br /><br />Used certain plugins and created some to make charts even more useful and beautiful.',
+      'Using charts is a good way to visualize data but they often look ugly and break the rhythm of design. <br /><br />We concentrated on a single chart library and tried to create charts that look good with color, opacity, border and shadow. <br /><br />Used certain plugins and created some to make charts even more useful and beautiful.'
   },
   {
     title: 'Layouts for the Job',
     img: '/assets/img/landing-page/features/layouts-for-the-job.png',
     detail:
-      'Layouts are the real thing, they need to be accurate and right for the job. They should be functional for both user and developer. <br /><br />We created lots of different layouts for different jobs.<br /><br />Listing pages with view mode changing capabilities, shift select and select all functionality, application layouts with an additional menu, authentication and error layouts which has a different design than the other pages were our main focus. We also created details page with tabs that can hold many components.',
+      'Layouts are the real thing, they need to be accurate and right for the job. They should be functional for both user and developer. <br /><br />We created lots of different layouts for different jobs.<br /><br />Listing pages with view mode changing capabilities, shift select and select all functionality, application layouts with an additional menu, authentication and error layouts which has a different design than the other pages were our main focus. We also created details page with tabs that can hold many components.'
   },
   {
     title: 'Smart Menu',
     img: '/assets/img/landing-page/features/smart-menu.png',
     detail:
-      'Instead of good old single panel menus with accordion structure that looks over complicated, we created 2 panels and categorized pages accordingly.<br><br>The default menu auto hides sub panel when resolution is under some breakpoint to open some space. You may also hide menu completely or use only main panel open only.',
-  },
+      'Instead of good old single panel menus with accordion structure that looks over complicated, we created 2 panels and categorized pages accordingly.<br><br>The default menu auto hides sub panel when resolution is under some breakpoint to open some space. You may also hide menu completely or use only main panel open only.'
+  }
 ];
 
 const layouts = [
   {
     title: 'Menu Default',
-    img: '/assets/img/landing-page/layouts/menu-default.jpg',
+    img: '/assets/img/landing-page/layouts/menu-default.jpg'
   },
   {
     title: 'Menu Subhidden',
-    img: '/assets/img/landing-page/layouts/menu-subhidden.jpg',
+    img: '/assets/img/landing-page/layouts/menu-subhidden.jpg'
   },
   {
     title: 'Menu Hidden',
-    img: '/assets/img/landing-page/layouts/menu-hidden.jpg',
+    img: '/assets/img/landing-page/layouts/menu-hidden.jpg'
   },
   {
     title: 'Image List',
-    img: '/assets/img/landing-page/layouts/image-list.jpg',
+    img: '/assets/img/landing-page/layouts/image-list.jpg'
   },
   {
     title: 'Thumb List',
-    img: '/assets/img/landing-page/layouts/thumb-list.jpg',
+    img: '/assets/img/landing-page/layouts/thumb-list.jpg'
   },
   { title: 'Data List', img: '/assets/img/landing-page/layouts/data-list.jpg' },
   { title: 'Details', img: '/assets/img/landing-page/layouts/details.jpg' },
   {
     title: 'Authentication',
-    img: '/assets/img/landing-page/layouts/authentication.jpg',
+    img: '/assets/img/landing-page/layouts/authentication.jpg'
   },
   {
     title: 'Search Results',
-    img: '/assets/img/landing-page/layouts/search-result.jpg',
+    img: '/assets/img/landing-page/layouts/search-result.jpg'
   },
   {
     title: 'Single Page Application',
-    img: '/assets/img/landing-page/layouts/spa.jpg',
+    img: '/assets/img/landing-page/layouts/spa.jpg'
   },
   {
     title: 'Data List App Menu Hidden',
-    img: '/assets/img/landing-page/layouts/data-list-app-menu-hidden.jpg',
+    img: '/assets/img/landing-page/layouts/data-list-app-menu-hidden.jpg'
   },
-  { title: 'Tabs', img: '/assets/img/landing-page/layouts/tabs.jpg' },
+  { title: 'Tabs', img: '/assets/img/landing-page/layouts/tabs.jpg' }
 ];
 
 const applications = [
   {
     title: 'Survey',
     path: `${adminRoot}/applications/survey`,
-    img: '/assets/img/landing-page/applications/survey.jpg',
+    img: '/assets/img/landing-page/applications/survey.jpg'
   },
   {
     title: 'Chat',
     path: `${adminRoot}/applications/chat`,
-    img: '/assets/img/landing-page/applications/chat.jpg',
+    img: '/assets/img/landing-page/applications/chat.jpg'
   },
   {
     title: 'Todo',
     path: `${adminRoot}/applications/todo`,
-    img: '/assets/img/landing-page/applications/todo.jpg',
-  },
+    img: '/assets/img/landing-page/applications/todo.jpg'
+  }
 ];
 
 const themes = [
@@ -175,7 +175,7 @@ const themes = [
   { title: 'Ruby Red', class: 'rubyred' },
   { title: 'Monster Purple', class: 'monsterpurple' },
   { title: 'Steel Grey', class: 'steelgrey' },
-  { title: 'Granola Yellow', class: 'granolayellow' },
+  { title: 'Granola Yellow', class: 'granolayellow' }
 ];
 
 const Home = () => {
@@ -229,7 +229,7 @@ const Home = () => {
       duration: 500,
       delay: 0,
       smooth: 'easeInOutQuart',
-      offset: -100,
+      offset: -100
     });
     return false;
   };
@@ -241,16 +241,14 @@ const Home = () => {
   return (
     <div
       className={classnames('landing-page', {
-        'show-mobile-menu': showMobileMenu,
-      })}
-    >
+        'show-mobile-menu': showMobileMenu
+      })}>
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions */}
       <div className="mobile-menu" onClick={(event) => event.stopPropagation()}>
         <a
           className="logo-mobile c-pointer"
           href="#scroll"
-          onClick={(event) => scrollTo(event, 'home')}
-        >
+          onClick={(event) => scrollTo(event, 'home')}>
           <span />
         </a>
         <ul className="navbar-nav">
@@ -258,8 +256,7 @@ const Home = () => {
             <a
               className="c-pointer"
               href="#scroll"
-              onClick={(event) => scrollTo(event, 'features')}
-            >
+              onClick={(event) => scrollTo(event, 'features')}>
               FEATURES
             </a>
           </li>
@@ -267,8 +264,7 @@ const Home = () => {
             <a
               className="c-pointer"
               href="#scroll"
-              onClick={(event) => scrollTo(event, 'layouts')}
-            >
+              onClick={(event) => scrollTo(event, 'layouts')}>
               LAYOUTS
             </a>
           </li>
@@ -276,8 +272,7 @@ const Home = () => {
             <a
               className="c-pointer"
               href="#scroll"
-              onClick={(event) => scrollTo(event, 'components')}
-            >
+              onClick={(event) => scrollTo(event, 'components')}>
               COMPONENTS
             </a>
           </li>
@@ -285,8 +280,7 @@ const Home = () => {
             <a
               className="c-pointer"
               href="#scroll"
-              onClick={(event) => scrollTo(event, 'apps')}
-            >
+              onClick={(event) => scrollTo(event, 'apps')}>
               APPS
             </a>
           </li>
@@ -294,8 +288,7 @@ const Home = () => {
             <a
               className="c-pointer"
               href="#scroll"
-              onClick={(event) => scrollTo(event, 'themes')}
-            >
+              onClick={(event) => scrollTo(event, 'themes')}>
               THEMES
             </a>
           </li>
@@ -307,8 +300,7 @@ const Home = () => {
               className="btn btn-outline-primary btn-sm mobile-menu-cta"
               target="_blank"
               rel="noopener noreferrer"
-              href={buyUrl}
-            >
+              href={buyUrl}>
               BUY
             </a>
           </li>
@@ -322,8 +314,7 @@ const Home = () => {
               <a
                 className="navbar-logo pull-left c-pointer"
                 href="#scroll"
-                onClick={(event) => scrollTo(event, 'home')}
-              >
+                onClick={(event) => scrollTo(event, 'home')}>
                 <span className="white" />
                 <span className="dark" />
               </a>
@@ -332,8 +323,7 @@ const Home = () => {
                   <a
                     className="c-pointer"
                     href="#scroll"
-                    onClick={(event) => scrollTo(event, 'features')}
-                  >
+                    onClick={(event) => scrollTo(event, 'features')}>
                     FEATURES
                   </a>
                 </li>
@@ -341,8 +331,7 @@ const Home = () => {
                   <a
                     className="c-pointer"
                     href="#scroll"
-                    onClick={(event) => scrollTo(event, 'layouts')}
-                  >
+                    onClick={(event) => scrollTo(event, 'layouts')}>
                     LAYOUTS
                   </a>
                 </li>
@@ -350,8 +339,7 @@ const Home = () => {
                   <a
                     className="c-pointer"
                     href="#scroll"
-                    onClick={(event) => scrollTo(event, 'components')}
-                  >
+                    onClick={(event) => scrollTo(event, 'components')}>
                     COMPONENTS
                   </a>
                 </li>
@@ -359,8 +347,7 @@ const Home = () => {
                   <a
                     className="c-pointer"
                     href="#scroll"
-                    onClick={(event) => scrollTo(event, 'apps')}
-                  >
+                    onClick={(event) => scrollTo(event, 'apps')}>
                     APPS
                   </a>
                 </li>
@@ -368,8 +355,7 @@ const Home = () => {
                   <a
                     className="c-pointer"
                     href="#scroll"
-                    onClick={(event) => scrollTo(event, 'themes')}
-                  >
+                    onClick={(event) => scrollTo(event, 'themes')}>
                     THEMES
                   </a>
                 </li>
@@ -378,8 +364,7 @@ const Home = () => {
                     className="btn btn-outline-semi-light btn-sm pr-4 pl-4"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href={buyUrl}
-                  >
+                    href={buyUrl}>
                     BUY
                   </a>
                 </li>
@@ -390,8 +375,7 @@ const Home = () => {
                 onClick={(event) => {
                   setShowMobileMenu(!showMobileMenu);
                   event.stopPropagation();
-                }}
-              >
+                }}>
                 <i className="simple-icon-menu" />
               </span>
             </div>
@@ -431,8 +415,7 @@ const Home = () => {
                     <a
                       className="btn btn-light btn-xl mr-2 mb-2"
                       href={adminRoot}
-                      target="_blank"
-                    >
+                      target="_blank">
                       VIEW NOW <i className="simple-icon-arrow-right" />
                     </a>
                   </div>
@@ -477,8 +460,7 @@ const Home = () => {
                 <a
                   className="btn btn-circle btn-outline-semi-light hero-circle-button"
                   href="#scroll"
-                  onClick={(event) => scrollTo(event, 'features')}
-                >
+                  onClick={(event) => scrollTo(event, 'features')}>
                   <i className="simple-icon-arrow-down" />
                 </a>
               </div>
@@ -563,8 +545,7 @@ const Home = () => {
                 {layouts.map((l, index) => (
                   <div
                     key={`layout_${index}`}
-                    className="col-12 col-xs-6 col-sm-6 col-md-4 col-lg-3 mb-5"
-                  >
+                    className="col-12 col-xs-6 col-sm-6 col-md-4 col-lg-3 mb-5">
                     <img
                       className="img-fluid border-radius depth-2 mb-3 semi-rounded"
                       alt={l.title}
@@ -624,13 +605,12 @@ const Home = () => {
                           href="#tab"
                           className={classnames({
                             'nav-link': true,
-                            active: activeTab === index,
+                            active: activeTab === index
                           })}
                           onClick={(event) => {
                             event.preventDefault();
                             toggle(index);
-                          }}
-                        >
+                          }}>
                           {app.title}
                         </a>
                       </NavItem>
@@ -712,8 +692,7 @@ const Home = () => {
                       className="btn btn-secondary btn-xl"
                       target="_blank"
                       rel="noopener noreferrer"
-                      href={buyUrl}
-                    >
+                      href={buyUrl}>
                       BUY NOW
                     </a>
                   </div>
@@ -729,8 +708,7 @@ const Home = () => {
                   <a
                     className="btn btn-circle btn-outline-semi-light footer-circle-button c-pointer"
                     href="#scroll"
-                    onClick={(event) => scrollTo(event, 'home')}
-                  >
+                    onClick={(event) => scrollTo(event, 'home')}>
                     <i className="simple-icon-arrow-up" />
                   </a>
                 </div>
@@ -738,8 +716,7 @@ const Home = () => {
                   <a
                     className="c-pointer"
                     href="#scroll"
-                    onClick={(event) => scrollTo(event, 'home')}
-                  >
+                    onClick={(event) => scrollTo(event, 'home')}>
                     <img
                       className="footer-logo"
                       alt="footer logo"

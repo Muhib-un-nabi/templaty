@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { Suspense, useEffect } from 'react';
 import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 

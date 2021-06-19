@@ -20,7 +20,6 @@ import {
 } from '../../../../redux/snippets/action';
 
 import SnippetItem from './SnippetItem';
-import Tesk from './Tesk';
 
 const BlankPage = ({
   match,
@@ -33,11 +32,25 @@ const BlankPage = ({
   user,
   placeholders
 }) => {
+  const [items, setItems] = useState([]);
+
   useEffect(() => {
     habdelGetData(getSnippets, setloadingSnippets, history);
     habdelGetData(getPlaceholders, setloadingPlaceholder, history);
   }, []);
 
+  const DATA = [
+    {
+      id: 'un-selected-list',
+      colSize: 2,
+      items: snippets
+    },
+    {
+      id: 'selected-list',
+      colSize: 3,
+      items: []
+    }
+  ];
   return (
     <>
       <Row>
@@ -46,19 +59,11 @@ const BlankPage = ({
           <Separator className="mb-5" />
         </Colxx>
       </Row>
-      {/* <Tesk /> */}
       <Row>
-        <Colxx xxs="2" className="mb-4">
-          {/* {snippets.length !== 0 &&
-            snippets.map((ele) => <SnippetItem key={ele._id} itemData={ele} />)} */}
-          {snippets.length !== 0 &&
-            snippets.map((ele) => (
-              <LeadsOverview key={ele._id} itemData={ele} />
-            ))}
-        </Colxx>
-        <Colxx xxs="3" className="mb-4">
-          <p>snippets slected</p>
-        </Colxx>
+        {snippets.length === 0 && <div className="loading"></div>}
+        {snippets.length !== 0 && (
+          <LeadsOverview items={items} setItems={setItems} data={DATA} />
+        )}
         <Colxx xxs="2" className="mb-4">
           <p>Inputs For Snippets</p>
         </Colxx>
@@ -70,45 +75,17 @@ const BlankPage = ({
   );
 };
 
-const DATA = [
-  {
-    id: 'af1',
-    label: 'Incoming leads',
-    items: [
-      { id: 'af2', label: 'Item 1' },
-      { id: 'af3', label: 'Item 2' }
-    ],
-    tint: 1
-  },
-  {
-    id: 'af4',
-    label: 'Closing leads',
-    items: [
-      { id: 'af5', label: 'Item 1' },
-      { id: 'af6', label: 'Item 2' }
-    ],
-    tint: 2
-  }
-];
-
-function LeadsOverview() {
-  const [items, setItems] = useState([]);
+function LeadsOverview({ data, items, setItems }) {
   const [groups, setGroups] = useState({});
 
   useEffect(() => {
-    // Mock an API call.
-    buildAndSave(DATA);
-  }, []);
-
-  function buildAndSave(items) {
-    const groups = Object.keys(items).reduce(
-      (accum, _, i) => ({ ...accum, [items[i].id]: i }),
+    const groups = Object.keys(data).reduce(
+      (accum, _, i) => ({ ...accum, [data[i].id]: i }),
       {}
     );
-    setItems(items);
-
+    setItems(data);
     setGroups(groups);
-  }
+  }, []);
 
   return (
     <DragDropContext
@@ -155,30 +132,32 @@ function LeadsOverview() {
   );
 }
 
-function DroppableList({ id, items, tint }) {
+function DroppableList({ id, items, colSize }) {
   return (
     <Droppable droppableId={id}>
       {(provided) => (
-        <div {...provided.droppableProps} ref={provided.innerRef}>
-          <ul className="list">
-            {items.map((item, index) => (
-              <li className="list__item" key={item.id}>
-                <Draggable draggableId={item.id} index={index}>
-                  {(provided) => (
-                    <div
-                      className="card"
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      ref={provided.innerRef}>
-                      {item.label}
-                    </div>
-                  )}
-                </Draggable>
-              </li>
-            ))}
-            {provided.placeholder}
-          </ul>
-        </div>
+        <Colxx xxs={colSize} className="mb-4">
+          <div {...provided.droppableProps} ref={provided.innerRef}>
+            <div>
+              {items.map((item, index) => (
+                <div key={item._id} className="py-2">
+                  <Draggable draggableId={item._id} index={index}>
+                    {(provided) => (
+                      <div
+                        className="card"
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}>
+                        <SnippetItem itemData={item} />
+                      </div>
+                    )}
+                  </Draggable>
+                </div>
+              ))}
+              {provided.placeholder}
+            </div>
+          </div>
+        </Colxx>
       )}
     </Droppable>
   );
