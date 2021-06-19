@@ -13,17 +13,16 @@ const ProtectedRoute = ({
   ...rest
 }) => {
   const setComponent = (props) => {
-    const currentUser = user && token;
-    if (currentUser) {
+    if (sessionStorage.getItem('token')) {
       if (roles) {
-        if (roles.includes(currentUser.role)) {
+        if (roles.includes(user.role)) {
           return <Component {...props} />;
         }
         return (
           <Redirect
             to={{
               pathname: '/unauthorized',
-              state: { from: props.location },
+              state: { from: props.location }
             }}
           />
         );
@@ -34,7 +33,7 @@ const ProtectedRoute = ({
       <Redirect
         to={{
           pathname: '/user/login',
-          state: { from: props.location },
+          state: { from: props.location }
         }}
       />
     );

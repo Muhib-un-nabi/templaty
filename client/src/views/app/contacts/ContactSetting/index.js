@@ -36,6 +36,7 @@ import {
   getInputField,
   setLoading
 } from '../../../../redux/contacts/action';
+import habdelGetData from '../../../../helpers/habdelGetData';
 
 const ContactSetting = ({
   match,
@@ -43,6 +44,7 @@ const ContactSetting = ({
   saveContactSetting,
   getInputField,
   loading,
+  history,
   setLoading
 }) => {
   const [customInput, setCustomInput] = useState(custom);
@@ -58,12 +60,7 @@ const ContactSetting = ({
   }, [custom]);
 
   useEffect(() => {
-    try {
-      setLoading();
-      getInputField();
-    } catch (e) {
-      setLoading(false);
-    }
+    habdelGetData(getInputField, setLoading, history);
   }, []);
 
   const saveSetting = async (e) => {

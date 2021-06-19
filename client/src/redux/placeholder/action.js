@@ -6,6 +6,7 @@ import {
   GET_PLACEHOLDER,
   GET_PLACEHOLDERS,
   UPDATE_PLACEHOLDER,
+  SET_LOADING
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -17,7 +18,7 @@ export const getPlaceholders = () => async (dispatch) => {
     const { data } = await serverApi.get('/placeholders', authHeader());
     dispatch({
       type: GET_PLACEHOLDERS,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
@@ -35,7 +36,7 @@ export const getPlaceholder = (id) => async (dispatch) => {
     const { data } = await serverApi.get(`/placeholders/${id}`, authHeader());
     dispatch({
       type: GET_PLACEHOLDER,
-      payload: data.data.data,
+      payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
@@ -57,7 +58,7 @@ export const addPlaceholder = (placeholders) => async (dispatch) => {
     );
     dispatch({
       type: ADD_PLACEHOLDER,
-      payload: data.data.data,
+      payload: data.data.data
     });
     NotificationManager.success(
       'Success message',
@@ -87,7 +88,7 @@ export const updatePlaceholder = (placeholder, id) => async (dispatch) => {
     );
     dispatch({
       type: UPDATE_PLACEHOLDER,
-      payload: data.data.data,
+      payload: data.data.data
     });
     NotificationManager.success(
       'Success message',
@@ -114,7 +115,7 @@ export const deletePlaceholder = (id) => async (dispatch) => {
     await serverApi.delete(`/placeholders/${id}`, authHeader());
     dispatch({
       type: DELETE_PLACEHOLDER,
-      payload: id,
+      payload: id
     });
     NotificationManager.success(
       'Success message',
@@ -136,5 +137,10 @@ export const deletePlaceholder = (id) => async (dispatch) => {
 
 // Clear Current From Contact
 export const clearCurrent = () => ({
-  type: CLEAR_CURRENT,
+  type: CLEAR_CURRENT
+});
+
+export const setLoading = (loading = true) => ({
+  type: SET_LOADING,
+  payload: loading
 });

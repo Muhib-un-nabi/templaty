@@ -29,6 +29,7 @@ import {
   setLoading
 } from '../../../../redux/contacts/action';
 import ContactItem from './ContactItem';
+import habdelGetData from '../../../../helpers/habdelGetData';
 
 const Contacts = ({
   match,
@@ -43,16 +44,7 @@ const Contacts = ({
   const [Contacts, setContacts] = useState(contacts);
 
   useEffect(() => {
-    console.log(loading);
-  }, [loading]);
-
-  useEffect(() => {
-    try {
-      setLoading();
-      getContacts();
-    } catch (e) {
-      setLoading(false);
-    }
+    habdelGetData(getContacts, setLoading, history);
   }, []);
 
   useEffect(() => {

@@ -14,7 +14,9 @@ import {
   ADD_NEW_USER_IN_TEAM,
   GET_TEAM_DETAILS,
   DELETE_USER_BY_ADMIN,
-  SET_LOADING
+  SET_LOADING,
+  IS_LOGGED_IN,
+  GET_ME
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -86,10 +88,32 @@ export const getTeamDetails = () => async (dispatch) => {
       null,
       null
     );
-    throw new Error('Somthing went Wrong, Please Try again');
+    // throw new Error('Somthing went Wrong, Please Try again');
   }
 };
 
+export const getMe = () => async (dispatch) => {
+  try {
+    const { data } = await serverApi.get('/users/me', authHeader());
+    console.log(data.data.data);
+    dispatch({
+      type: GET_ME,
+      payload: {
+        token: sessionStorage.getItem('token'),
+        user: data.data.data
+      }
+    });
+  } catch (err) {
+    NotificationManager.error(
+      'Success message',
+      'Somthing went Wrong, Team  was not Load.',
+      3000,
+      null,
+      null
+    );
+    throw new Error(err.response.status);
+  }
+};
 //  Add New User
 export const addNewUser = (userData) => async (dispatch) => {
   try {
@@ -101,6 +125,29 @@ export const addNewUser = (userData) => async (dispatch) => {
     dispatch({
       type: ADD_NEW_USER_IN_TEAM,
       payload: data.data.data
+    });
+  } catch (err) {
+    NotificationManager.error(
+      'Warning message',
+      'Somthing went Wrong, Please Try again',
+      3000,
+      null,
+      null
+    );
+  }
+};
+
+//  Add New User
+export const isLogin = () => async (dispatch) => {
+  try {
+    const { data } = await serverApi.post('/users/islogin', authHeader());
+    console.log(data);
+    dispatch({
+      type: IS_LOGGED_IN,
+      payload: {
+        user: data.data.data,
+        token: data.token
+      }
     });
   } catch (err) {
     NotificationManager.error(
@@ -194,7 +241,9 @@ export const resetPassword = () => async (dispatch) => {
   }
 };
 
-const setToken = (token) => localStorage.setItem('token', token);
+const setToken = (token) => {
+  sessionStorage.setItem('token', token);
+};
 
 export const setLoading = (loading = true) => ({
   type: SET_LOADING,

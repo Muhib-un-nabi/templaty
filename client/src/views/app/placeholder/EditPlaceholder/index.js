@@ -16,7 +16,7 @@ import {
   Label,
   Input,
   Button,
-  CustomInput,
+  CustomInput
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import { v4 as uuidV4, v4 } from 'uuid';
@@ -25,7 +25,7 @@ import { injectIntl } from 'react-intl';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import {
   Colxx,
-  Separator,
+  Separator
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
@@ -35,7 +35,9 @@ import {
   getPlaceholder,
   updatePlaceholder,
   clearCurrent,
+  setLoading
 } from '../../../../redux/placeholder/action';
+import habdelGetData from '../../../../helpers/habdelGetData';
 
 const index = ({
   match,
@@ -45,11 +47,17 @@ const index = ({
   updatePlaceholder,
   current,
   clearCurrent,
+  setLoading
 }) => {
   const [Fields, setFields] = useState('');
 
   useEffect(() => {
-    getPlaceholder(match.params.id);
+    try {
+      setLoading();
+      getPlaceholder(match.params.id);
+    } catch (e) {
+      setLoading(false);
+    }
     return () => clearCurrent();
   }, []);
 
@@ -69,7 +77,7 @@ const index = ({
         data: Fields,
         visibility:
           Fields.find((ele) => ele.id === 'visibility-input').data.value.id ===
-          'team',
+          'team'
       };
       await updatePlaceholder(newPlaceholders, match.params.id);
       await clearCurrent();
@@ -103,7 +111,7 @@ const index = ({
                           setFields((prevState) => {
                             const newInpuEle = {
                               ...inputData,
-                              data: { ...inputData.data, value: updatedValue },
+                              data: { ...inputData.data, value: updatedValue }
                             };
                             return prevState.map((ele) =>
                               ele.id === newInpuEle.id ? newInpuEle : ele
@@ -126,11 +134,12 @@ const index = ({
 };
 
 const mapStateToProps = ({ placeholders: { current } }) => ({
-  current,
+  current
 });
 
 export default connect(mapStateToProps, {
   getPlaceholder,
   updatePlaceholder,
   clearCurrent,
+  setLoading
 })(injectIntl(index));

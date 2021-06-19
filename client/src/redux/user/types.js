@@ -2,6 +2,7 @@
 /* eslint-disable import/prefer-default-export */
 export const SIGN_UP = 'SIGN_UP';
 
+export const IS_LOGGED_IN = 'IS_LOGGED_IN';
 export const LOG_IN = 'LOG_IN';
 export const LOG_OUT = 'LOG_OUT';
 
@@ -19,3 +20,4 @@ export const ADD_NEW_USER_IN_TEAM = 'ADD_NEW_USER_IN_TEAM';
 export const DELETE_USER_BY_ADMIN = 'DELETE_USER_BY_ADMIN';
 
 export const SET_LOADING = 'SET_LOADING';
+export const GET_ME = 'GET_ME';

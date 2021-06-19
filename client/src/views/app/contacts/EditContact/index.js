@@ -39,6 +39,7 @@ import {
   clearCurrent,
   setLoading
 } from '../../../../redux/contacts/action';
+import habdelGetData from '../../../../helpers/habdelGetData';
 
 const index = ({
   match,

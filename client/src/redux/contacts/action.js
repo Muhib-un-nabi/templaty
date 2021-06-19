@@ -30,6 +30,7 @@ export const getInputField = () => async (dispatch) => {
       null,
       null
     );
+    throw new Error(err.response.status);
   }
 };
 
@@ -81,6 +82,7 @@ export const getContacts = () => async (dispatch) => {
       null,
       null
     );
+    throw new Error(err.response.status);
   }
 };
 //  get All Contacts

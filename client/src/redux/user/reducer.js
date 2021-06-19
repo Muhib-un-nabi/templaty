@@ -14,31 +14,38 @@ import {
   ADD_NEW_USER_IN_TEAM,
   GET_TEAM_DETAILS,
   DELETE_USER_BY_ADMIN,
-  SET_LOADING
+  SET_LOADING,
+  IS_LOGGED_IN,
+  GET_ME
 } from './types';
 
 const INITIAL_STATE = {
   user: null,
   token: null,
   team: {},
-  loading: false
+  loading: false,
+  isloggedin: true
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case LOG_IN:
     case SIGN_UP:
+    case GET_ME:
       return {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
-        loading: false
+        loading: false,
+        isloggedin: true
       };
+
     case LOG_OUT:
       return {
         user: null,
         token: null,
-        loading: false
+        loading: false,
+        isloggedin: false
       };
     case ADD_NEW_USER_IN_TEAM:
     case GET_TEAM_DETAILS:
@@ -60,6 +67,13 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         loading: action.payload
+      };
+    case IS_LOGGED_IN:
+      return {
+        ...state,
+        user: action.payload.user,
+        loading: false,
+        isloggedin: true
       };
     default:
       return state;

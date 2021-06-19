@@ -161,6 +161,7 @@ exports.isLoggedIn = async (req, res, next) => {
 
       // THERE IS A LOGGED IN USER
       res.locals.user = currentUser;
+      res.token = req.cookies.jwt;
       return next();
     } catch (err) {
       return next();
@@ -260,4 +261,14 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 
   // 4) Log user in, send JWT
   createSendToken(user, 200, req, res);
+});
+
+exports.sendUser = catchAsync(async (req, res, next) => {
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: res.locals.user,
+      token: res.token
+    }
+  });
 });

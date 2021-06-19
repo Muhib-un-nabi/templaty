@@ -21,7 +21,7 @@ import { adminRoot } from '../../constants/defaultValues';
 
 const Signup = ({ history, signup, loading, setLoading }) => {
   const [email, setEmail] = useState(`${v4()}@gmail.com`);
-  const [password, setPassword] = useState('pass12345');
+  const [password, setPassword] = useState('pass1234');
   const [name, setName] = useState('admin');
 
   useEffect(() => {
