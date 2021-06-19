@@ -100,5 +100,9 @@ module.exports = {
 
   /*Delete User   */
   'modal.delete-user-message': 'Are You Sure Want To delete this User?',
-  'modal.user-delete': 'Delete User'
+  'modal.user-delete': 'Delete User',
+
+  template: 'Template',
+  'template.add': 'Add Template',
+  'template.delete': 'Delete Template'
 };

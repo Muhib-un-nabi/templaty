@@ -1,7 +1,10 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 
 import AppLayout from '../../layout/AppLayout';
+import habdelGetData from '../../helpers/habdelGetData';
+import { getMe, setLoading } from '../../redux/user/action';
+import { connect } from 'react-redux';
 
 const Template = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './Template')
@@ -24,7 +27,11 @@ const Account = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './account')
 );
 
-const App = ({ match }) => {
+const App = ({ match, history, getMe, setLoading }) => {
+  useEffect(() => {
+    habdelGetData(getMe, setLoading, history);
+  }, []);
+
   return (
     <AppLayout>
       <div className="dashboard-wrapper">
@@ -67,4 +74,4 @@ const App = ({ match }) => {
   );
 };
 
-export default withRouter(App);
+export default connect(null, { getMe, setLoading })(withRouter(App));

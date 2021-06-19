@@ -9,3 +9,5 @@ export const CLEAR_CURRENT = 'CLEAR_CURRENT';
 export const ADD_SNIPPET = 'ADD_SNIPPET';
 export const UPDATE_SNIPPET = 'UPDATE_SNIPPET';
 export const DELETE_SNIPPET = 'DELETE_SNIPPET';
+
+export const SET_LOADING = 'SET_LOADING';

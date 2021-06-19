@@ -36,14 +36,8 @@ import ThumbnailImage from '../../../../components/cards/ThumbnailImage';
 import { adminRoot } from '../../../../constants/defaultValues';
 import { getMe, setLoading } from '../../../../redux/user/action';
 import Team from './team';
-import habdelGetData from '../../../../helpers/habdelGetData';
 
 const Account = ({ match, user, history, getMe, setLoading }) => {
-  useEffect(() => {
-    if (user) return;
-    habdelGetData(getMe, setLoading, history);
-  }, []);
-
   return (
     <>
       <Row>

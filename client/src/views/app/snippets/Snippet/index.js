@@ -104,21 +104,22 @@ const Placeholders = ({
           <Separator className="mb-5" />
           <Row>
             <Colxx xxs="12" className="mb-4">
-              {Snippets.length === 0 && <p> No Snippets Found</p>}
+              {(Snippets.length === 0 || !user) && <p> No Snippets Found</p>}
               <ul className="list-unstyled mb-4">
-                {Snippets.map((snippet, i) => (
-                  <li key={snippet._id}>
-                    <SnippetsItem
-                      user={user}
-                      itemData={snippet}
-                      order={i}
-                      deleteClick={(id) => deleteSnippet(id)}
-                      updateClick={(id) =>
-                        history.push(`${adminRoot}/snippets/edit/${id}`)
-                      }
-                    />
-                  </li>
-                ))}
+                {user &&
+                  Snippets.map((snippet, i) => (
+                    <li key={snippet._id}>
+                      <SnippetsItem
+                        user={user}
+                        itemData={snippet}
+                        order={i}
+                        deleteClick={(id) => deleteSnippet(id)}
+                        updateClick={(id) =>
+                          history.push(`${adminRoot}/snippets/edit/${id}`)
+                        }
+                      />
+                    </li>
+                  ))}
               </ul>
             </Colxx>
           </Row>

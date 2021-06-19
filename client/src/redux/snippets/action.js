@@ -5,7 +5,8 @@ import {
   DELETE_SNIPPET,
   GET_SNIPPET,
   GET_SNIPPETS,
-  UPDATE_SNIPPET
+  UPDATE_SNIPPET,
+  SET_LOADING
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -133,4 +134,9 @@ export const deleteSnippet = (id) => async (dispatch) => {
 // Clear Current From Contact
 export const clearCurrent = () => ({
   type: CLEAR_CURRENT
+});
+
+export const setLoading = (loading = true) => ({
+  type: SET_LOADING,
+  payload: loading
 });
