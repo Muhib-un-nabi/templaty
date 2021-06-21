@@ -1,5 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import { Row } from 'reactstrap';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  Row,
+  Form,
+  FormGroup,
+  Card,
+  CardBody,
+  Label,
+  Input,
+  FormText
+} from 'reactstrap';
 import { connect } from 'react-redux';
 // import IntlMessages from '../../../../helpers/IntlMessages';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
@@ -21,7 +30,7 @@ import {
 
 import SnippetItem from './SnippetItem';
 
-const BlankPage = ({
+const Template = ({
   match,
   getSnippets,
   setloadingSnippets,
@@ -33,7 +42,9 @@ const BlankPage = ({
   placeholders
 }) => {
   const [items, setItems] = useState([]);
-
+  const [selectedPlaceholder, setSelectedPlaceholder] = useState();
+  const [inputItems, setInputItems] = useState([]);
+  const snippetHrmlRef = useRef();
   useEffect(() => {
     habdelGetData(getSnippets, setloadingSnippets, history);
     habdelGetData(getPlaceholders, setloadingPlaceholder, history);
@@ -51,6 +62,43 @@ const BlankPage = ({
       items: []
     }
   ];
+
+  useEffect(() => {
+    if (!items[1]) return;
+    let HTML = items[1].items.map((ele) => ele.discription).join('');
+    let currPlaceholders = items[1].items.flatMap((ele) => ele.placeholders);
+
+    //  Remove Dublicate InputItems Placeholders
+    currPlaceholders = currPlaceholders.reduce((preValue, currValue) => {
+      if (!preValue.length) {
+        return [currValue];
+      }
+      if (!preValue.some((ele) => ele._id === currValue._id)) {
+        return [...preValue, currValue];
+      }
+      return preValue;
+    }, []);
+
+    setInputItems(() => {
+      return currPlaceholders.map((ele) => {
+        const isAvaliable = inputItems.find(
+          (inputItem) => ele._id === inputItem._id
+        );
+        if (isAvaliable) {
+          return isAvaliable;
+        }
+        return ele;
+      });
+    });
+
+    setSelectedPlaceholder(currPlaceholders);
+    snippetHrmlRef.current.innerHTML = HTML;
+  }, [items]);
+
+  useEffect(() => {
+    replacePlacehlders(snippetHrmlRef, selectedPlaceholder);
+  }, [inputItems]);
+
   return (
     <>
       <Row>
@@ -59,20 +107,61 @@ const BlankPage = ({
           <Separator className="mb-5" />
         </Colxx>
       </Row>
-      <Row>
-        {snippets.length === 0 && <div className="loading"></div>}
-        {snippets.length !== 0 && (
-          <LeadsOverview items={items} setItems={setItems} data={DATA} />
-        )}
-        <Colxx xxs="2" className="mb-4">
-          <p>Inputs For Snippets</p>
-        </Colxx>
-        <Colxx xxs="5" className="mb-4">
-          <p>Live Preview</p>
-        </Colxx>
-      </Row>
+      <Card>
+        <CardBody>
+          <Row style={{ minHeight: '50vh' }}>
+            {snippets.length === 0 && <div className="loading"></div>}
+            {snippets.length !== 0 && (
+              <LeadsOverview items={items} setItems={setItems} data={DATA} />
+            )}
+            <Colxx xxs="2" className="mb-4">
+              <Form>
+                {inputItems.map((ele) => (
+                  <FormGroup key={ele._id}>
+                    <Label for="exampleEmail">{ele.name}</Label>
+                    <Input
+                      onChange={(e) => {
+                        const updatedState = inputItems.map((ele) => {
+                          if (ele._id === e.target.id) {
+                            ele.value = e.target.value;
+                          }
+                          return ele;
+                        });
+                        setInputItems(updatedState);
+                      }}
+                      value={ele.value || ele.defaultValue}
+                      type="text"
+                      name={ele.name}
+                      id={ele._id}
+                      data-placeholder={`{{${ele.name}}}`}
+                    />
+                  </FormGroup>
+                ))}
+              </Form>
+            </Colxx>
+            <Colxx xxs="5" className="mb-4">
+              <div ref={snippetHrmlRef}></div>
+            </Colxx>
+          </Row>
+        </CardBody>
+      </Card>
     </>
   );
+};
+
+const replacePlacehlders = (snippetHrmlRef, placeholders) => {
+  const slectedDOMPlaceholder = snippetHrmlRef.current.querySelectorAll(
+    '.ql-placeholder-content'
+  );
+  if (!slectedDOMPlaceholder) return;
+
+  slectedDOMPlaceholder.forEach((DOMEle) => {
+    const currPlaceholder = placeholders.find(
+      (ele) => ele.name === DOMEle.dataset.id
+    );
+    console.log(currPlaceholder.value);
+    DOMEle.innerHTML = currPlaceholder.value || currPlaceholder.defaultValue;
+  });
 };
 
 function LeadsOverview({ data, items, setItems }) {
@@ -136,26 +225,21 @@ function DroppableList({ id, items, colSize }) {
   return (
     <Droppable droppableId={id}>
       {(provided) => (
-        <Colxx xxs={colSize} className="mb-4">
+        <Colxx xxs={colSize}>
           <div {...provided.droppableProps} ref={provided.innerRef}>
-            <div>
-              {items.map((item, index) => (
-                <div key={item._id} className="py-2">
-                  <Draggable draggableId={item._id} index={index}>
-                    {(provided) => (
-                      <div
-                        className="card"
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}>
-                        <SnippetItem itemData={item} />
-                      </div>
-                    )}
-                  </Draggable>
-                </div>
-              ))}
-              {provided.placeholder}
-            </div>
+            {items.map((item, index) => (
+              <Draggable draggableId={item._id} index={index} key={item._id}>
+                {(provided) => (
+                  <div
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    ref={provided.innerRef}>
+                    <SnippetItem itemData={item} />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
           </div>
         </Colxx>
       )}
@@ -178,4 +262,4 @@ export default connect(mapStateToProps, {
   getPlaceholders,
   setloadingPlaceholder,
   setloadingSnippets
-})(BlankPage);
+})(Template);

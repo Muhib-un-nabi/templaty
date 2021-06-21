@@ -14,7 +14,7 @@ const PlaceholdersItem = ({
   deleteClick,
   updateClick,
   order,
-  user,
+  user
 }) => {
   const [collapse, setCollapse] = useState(false);
   const descriptionRef = useRef();
@@ -26,7 +26,6 @@ const PlaceholdersItem = ({
       '<b>Discription</b> : ' + itemData.discription;
   }, [itemData]);
   // return null;
-  console.log(itemData.discription);
   const renderValue = (element) => {
     switch (element.type.id) {
       case 1:
@@ -67,8 +66,7 @@ const PlaceholdersItem = ({
             <span
               className={`badge badge-${
                 itemData.visibility ? 'primary' : 'secondary'
-              } badge-pill`}
-            >
+              } badge-pill`}>
               {itemData.visibility ? 'Team' : 'Private'}
             </span>
           </div>
@@ -89,8 +87,7 @@ const PlaceholdersItem = ({
             className={`icon-button ml-1 rotate-icon-click ${
               collapse ? 'rotate' : ''
             }`}
-            onClick={() => setCollapse(!collapse)}
-          >
+            onClick={() => setCollapse(!collapse)}>
             <i className="simple-icon-arrow-down" />
           </Button>
           {(itemData.user === user._id || user.role === 'admin') && (
@@ -98,8 +95,7 @@ const PlaceholdersItem = ({
               outline
               color="theme-3"
               className="icon-button ml-1"
-              onClick={() => updateClick(itemData._id)}
-            >
+              onClick={() => updateClick(itemData._id)}>
               <i className="simple-icon-pencil" />
             </Button>
           )}
@@ -108,8 +104,7 @@ const PlaceholdersItem = ({
               outline
               color="theme-3"
               className="icon-button ml-1"
-              onClick={() => deleteClick(itemData._id)}
-            >
+              onClick={() => deleteClick(itemData._id)}>
               <i className="simple-icon-ban" />
             </Button>
           )}

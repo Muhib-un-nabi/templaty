@@ -11,10 +11,7 @@
   > span.ql-picker-item::before {
   content: attr(data-label);
 }
-.ql-placeholder-content {
-  background-color: rgb(0, 0, 0);
-  color: white;
-}
+
 ul.ql-autocomplete-menu.completions {
   list-style: none;
   padding: 5px;

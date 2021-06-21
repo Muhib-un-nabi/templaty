@@ -3,7 +3,7 @@ const AppError = require('../utils/appError');
 const Snippets = require('../models/snippetsModule');
 const factory = require('./handlerFactory');
 
-exports.getSnippets = factory.getAllFromTeam(Snippets);
+exports.getSnippets = factory.getAllFromTeam(Snippets, 'placeholders');
 
 exports.getSnippet = factory.getOne(Snippets);
 

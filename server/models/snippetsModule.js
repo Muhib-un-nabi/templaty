@@ -13,6 +13,12 @@ const snippetsSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Snippet must belong to a User']
   },
+  placeholders: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Placeholders'
+    }
+  ],
   team: {
     type: mongoose.Schema.ObjectId,
     ref: 'Team',

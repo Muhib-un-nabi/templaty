@@ -19,7 +19,7 @@ const PlaceholdersItem = ({ itemData }) => {
   }, [itemData]);
 
   return (
-    <Card className={`key d-flex mb-4 `}>
+    <Card className={`key d-flex mb-2 `}>
       <div className="d-flex flex-grow-1 min-width-zero">
         <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center px-2 py-2">
           <div className="list-item-heading mb-0 truncate w-80 mb-1 mt-1">

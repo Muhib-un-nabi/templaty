@@ -13,6 +13,9 @@ const placeholdersSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Placeholder must belong to a User']
   },
+  defaultValue: {
+    type: String
+  },
   team: {
     type: mongoose.Schema.ObjectId,
     ref: 'Team',

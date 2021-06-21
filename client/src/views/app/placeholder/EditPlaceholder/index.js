@@ -74,6 +74,8 @@ const index = ({
         category: Fields.find((ele) => ele.id === 'category').data.value.split(
           ','
         ),
+        defaultValue: Fields.find((ele) => ele.id === 'default-value').data
+          .value,
         data: Fields,
         visibility:
           Fields.find((ele) => ele.id === 'visibility-input').data.value.id ===

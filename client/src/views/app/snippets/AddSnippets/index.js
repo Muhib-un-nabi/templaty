@@ -170,6 +170,13 @@ const index = ({
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
+      let placeholderInSnippet = [
+        ...new Set(discription.match(/{{.+?}}/g))
+      ].map((ele) => ele.replaceAll('{', '').replaceAll('}', ''));
+
+      placeholderInSnippet = placeholders
+        .filter((ele) => placeholderInSnippet.includes(ele.name))
+        .map((ele) => ele._id);
       const newSnippet = {
         name: Fields.find((ele) => ele.id === 'name-input').data.value,
         category: Fields.find((ele) => ele.id === 'category').data.value.split(
@@ -177,10 +184,12 @@ const index = ({
         ),
         data: Fields,
         discription: discription,
+        placeholders: placeholderInSnippet,
         visibility:
           Fields.find((ele) => ele.id === 'visibility-input').data.value.id ===
           'team'
       };
+
       await addSnippet(newSnippet);
       history.push(`${adminRoot}/snippets/all`);
     } catch (e) {

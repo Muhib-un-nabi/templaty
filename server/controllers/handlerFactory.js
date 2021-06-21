@@ -89,7 +89,7 @@ exports.getAll = Model =>
     });
   });
 
-exports.getAllFromTeam = Model =>
+exports.getAllFromTeam = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     let query;
     if (req.user.role === 'user') {
@@ -109,11 +109,9 @@ exports.getAllFromTeam = Model =>
       query = { team: req.user.team };
     }
 
-    const doc = await Model.aggregate([
-      {
-        $match: query
-      }
-    ]);
+    let moduleDoc = Model.find(query);
+    if (popOptions) moduleDoc = moduleDoc.populate(popOptions);
+    const doc = await moduleDoc;
 
     res.status(200).json({
       status: 'success',

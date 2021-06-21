@@ -14,6 +14,8 @@ import { isMultiColorActive, adminRoot } from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 import ProtectedRoute from './views/user/ProtectedRoute';
 
+import './views/app/app.css';
+
 // const ViewHome = React.lazy(() =>
 //   import(/* webpackChunkName: "views" */ './views/home')
 // );
