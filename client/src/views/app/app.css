@@ -2,3 +2,8 @@
   background-color: rgb(0, 0, 0);
   color: white;
 }
+
+.normal-style .ql-placeholder-content {
+  background-color: inherit;
+  color: inherit;
+}

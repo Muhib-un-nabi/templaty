@@ -1,17 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Row,
-  Form,
-  FormGroup,
-  Card,
-  CardBody,
-  Label,
-  Input,
-  FormText
-} from 'reactstrap';
+import { Row, Card, CardBody } from 'reactstrap';
 import { connect } from 'react-redux';
 // import IntlMessages from '../../../../helpers/IntlMessages';
-import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 
 import {
   Colxx,
@@ -19,49 +9,29 @@ import {
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import habdelGetData from '../../../../helpers/habdelGetData';
-import {
-  getPlaceholders,
-  setLoading as setloadingPlaceholder
-} from '../../../../redux/placeholder/action';
-import {
-  getSnippets,
-  setLoading as setloadingSnippets
-} from '../../../../redux/snippets/action';
 
-import SnippetItem from './SnippetItem';
+import { getSnippets, setLoading } from '../../../../redux/snippets/action';
+
+import SnippetsGroups from './SnippetsGroups';
+import InputItems from './InputItems';
+import LivePreview from './livePreview';
 
 const Template = ({
   match,
   getSnippets,
-  setloadingSnippets,
-  getPlaceholders,
-  setloadingPlaceholder,
+  setLoading,
   history,
   snippets,
-  user,
-  placeholders
+  user
 }) => {
   const [items, setItems] = useState([]);
   const [selectedPlaceholder, setSelectedPlaceholder] = useState();
   const [inputItems, setInputItems] = useState([]);
   const snippetHrmlRef = useRef();
+  const [debugPlaceholders, setDebugPlaceholders] = useState(true);
   useEffect(() => {
-    habdelGetData(getSnippets, setloadingSnippets, history);
-    habdelGetData(getPlaceholders, setloadingPlaceholder, history);
+    habdelGetData(getSnippets, setLoading, history);
   }, []);
-
-  const DATA = [
-    {
-      id: 'un-selected-list',
-      colSize: 2,
-      items: snippets
-    },
-    {
-      id: 'selected-list',
-      colSize: 3,
-      items: []
-    }
-  ];
 
   useEffect(() => {
     if (!items[1]) return;
@@ -99,49 +69,60 @@ const Template = ({
     replacePlacehlders(snippetHrmlRef, selectedPlaceholder);
   }, [inputItems]);
 
+  const replacePlacehlders = (snippetHrmlRef, placeholders) => {
+    if (debugPlaceholders) {
+      snippetHrmlRef.current.classList.add('normal-style');
+    }
+    const slectedDOMPlaceholder = snippetHrmlRef.current.querySelectorAll(
+      '.ql-placeholder-content'
+    );
+    if (!slectedDOMPlaceholder) return;
+
+    slectedDOMPlaceholder.forEach((DOMEle) => {
+      const currPlaceholder = placeholders.find(
+        (ele) => ele.name === DOMEle.dataset.id
+      );
+      console.log(currPlaceholder.value);
+      DOMEle.innerHTML = currPlaceholder.value || currPlaceholder.defaultValue;
+    });
+  };
+
+  const DATA = [
+    {
+      id: 'un-selected-list',
+      colSize: 2,
+      items: snippets
+    },
+    {
+      id: 'selected-list',
+      colSize: 2,
+      items: []
+    }
+  ];
+
   return (
     <>
       <Row>
         <Colxx xxs="12">
           <Breadcrumb heading="template" match={match} />
-          <Separator className="mb-5" />
+          <div
+            style={{ minHeight: '10vh' }}
+            onClick={(e) => {
+              setDebugPlaceholders(!debugPlaceholders);
+            }}>
+            <Separator className="mb-5" />
+          </div>
         </Colxx>
       </Row>
       <Card>
         <CardBody>
           <Row style={{ minHeight: '50vh' }}>
-            {snippets.length === 0 && <div className="loading"></div>}
             {snippets.length !== 0 && (
-              <LeadsOverview items={items} setItems={setItems} data={DATA} />
+              <SnippetsGroups items={items} setItems={setItems} data={DATA} />
             )}
-            <Colxx xxs="2" className="mb-4">
-              <Form>
-                {inputItems.map((ele) => (
-                  <FormGroup key={ele._id}>
-                    <Label for="exampleEmail">{ele.name}</Label>
-                    <Input
-                      onChange={(e) => {
-                        const updatedState = inputItems.map((ele) => {
-                          if (ele._id === e.target.id) {
-                            ele.value = e.target.value;
-                          }
-                          return ele;
-                        });
-                        setInputItems(updatedState);
-                      }}
-                      value={ele.value || ele.defaultValue}
-                      type="text"
-                      name={ele.name}
-                      id={ele._id}
-                      data-placeholder={`{{${ele.name}}}`}
-                    />
-                  </FormGroup>
-                ))}
-              </Form>
-            </Colxx>
-            <Colxx xxs="5" className="mb-4">
-              <div ref={snippetHrmlRef}></div>
-            </Colxx>
+            <InputItems inputs={inputItems} setInputes={setInputItems} />
+            <LivePreview refrance={snippetHrmlRef} />
+            {snippets.length === 0 && <div className="loading" />}
           </Row>
         </CardBody>
       </Card>
@@ -149,117 +130,12 @@ const Template = ({
   );
 };
 
-const replacePlacehlders = (snippetHrmlRef, placeholders) => {
-  const slectedDOMPlaceholder = snippetHrmlRef.current.querySelectorAll(
-    '.ql-placeholder-content'
-  );
-  if (!slectedDOMPlaceholder) return;
-
-  slectedDOMPlaceholder.forEach((DOMEle) => {
-    const currPlaceholder = placeholders.find(
-      (ele) => ele.name === DOMEle.dataset.id
-    );
-    console.log(currPlaceholder.value);
-    DOMEle.innerHTML = currPlaceholder.value || currPlaceholder.defaultValue;
-  });
-};
-
-function LeadsOverview({ data, items, setItems }) {
-  const [groups, setGroups] = useState({});
-
-  useEffect(() => {
-    const groups = Object.keys(data).reduce(
-      (accum, _, i) => ({ ...accum, [data[i].id]: i }),
-      {}
-    );
-    setItems(data);
-    setGroups(groups);
-  }, []);
-
-  return (
-    <DragDropContext
-      onDragEnd={(result) => {
-        const { destination, source } = result;
-        if (!destination) {
-          return;
-        }
-        if (
-          destination.droppableId === source.droppableId &&
-          destination.index === source.index
-        ) {
-          return;
-        }
-
-        const sourceDroppableIndex = groups[source.droppableId];
-        const targetDroppableIndex = groups[destination.droppableId];
-        const sourceItems = items[sourceDroppableIndex].items.slice();
-        const targetItems =
-          source.droppableId !== destination.droppableId
-            ? items[targetDroppableIndex].items.slice()
-            : sourceItems;
-
-        // Pull the item from the source.
-        const [deletedItem] = sourceItems.splice(source.index, 1);
-        targetItems.splice(destination.index, 0, deletedItem);
-
-        const workValue = items.slice();
-        workValue[sourceDroppableIndex] = {
-          ...items[sourceDroppableIndex],
-          items: sourceItems
-        };
-        workValue[targetDroppableIndex] = {
-          ...items[targetDroppableIndex],
-          items: targetItems
-        };
-
-        setItems(workValue);
-      }}>
-      {items.map((item) => (
-        <DroppableList key={item.id} {...item} />
-      ))}
-    </DragDropContext>
-  );
-}
-
-function DroppableList({ id, items, colSize }) {
-  return (
-    <Droppable droppableId={id}>
-      {(provided) => (
-        <Colxx xxs={colSize}>
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            {items.map((item, index) => (
-              <Draggable draggableId={item._id} index={index} key={item._id}>
-                {(provided) => (
-                  <div
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    ref={provided.innerRef}>
-                    <SnippetItem itemData={item} />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        </Colxx>
-      )}
-    </Droppable>
-  );
-}
-
-const mapStateToProps = ({
-  snippets: { snippets },
-  user: { user },
-  placeholders: { placeholders }
-}) => ({
+const mapStateToProps = ({ snippets: { snippets }, user: { user } }) => ({
   snippets,
-  user,
-  placeholders
+  user
 });
 
 export default connect(mapStateToProps, {
   getSnippets,
-  getPlaceholders,
-  setloadingPlaceholder,
-  setloadingSnippets
+  setLoading
 })(Template);
