@@ -1,18 +1,6 @@
 import React from 'react';
-import {
-  Row,
-  Form,
-  FormGroup,
-  Card,
-  CardBody,
-  Label,
-  Input,
-  FormText
-} from 'reactstrap';
-import {
-  Colxx,
-  Separator
-} from '../../../../components/common/CustomBootstrap';
+import { Form, FormGroup, Label, Input } from 'reactstrap';
+import { Colxx } from '../../../../components/common/CustomBootstrap';
 
 const InputItems = ({ inputs, setInputes }) => {
   return (
@@ -25,13 +13,15 @@ const InputItems = ({ inputs, setInputes }) => {
             </Label>
             <Input
               onChange={(e) => {
+                let updatedEleName;
                 const updatedState = inputs.map((ele) => {
                   if (ele._id === e.target.id) {
+                    updatedEleName = ele.name;
                     ele.value = e.target.value;
                   }
                   return ele;
                 });
-                setInputes(updatedState);
+                setInputes(updatedState, updatedEleName);
               }}
               value={ele.value || ele.defaultValue}
               type="text"

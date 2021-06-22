@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
-import { Row, Card, CardBody } from 'reactstrap';
+import { Row, Card, CardBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
 // import IntlMessages from '../../../../helpers/IntlMessages';
 
@@ -22,23 +23,26 @@ const Template = ({
   setLoading,
   history,
   snippets,
+  loading,
   user
 }) => {
   const [items, setItems] = useState([]);
+  const [debugPlaceholders, setDebugPlaceholders] = useState(true);
+  const snippetHrmlRef = useRef();
+
+  const [placeholders, setPlaceholders] = useState();
+
   const [selectedPlaceholder, setSelectedPlaceholder] = useState();
   const [inputItems, setInputItems] = useState([]);
-  const snippetHrmlRef = useRef();
-  const [debugPlaceholders, setDebugPlaceholders] = useState(true);
+
   useEffect(() => {
     habdelGetData(getSnippets, setLoading, history);
   }, []);
 
   useEffect(() => {
-    if (!items[1]) return;
-    let HTML = items[1].items.map((ele) => ele.discription).join('');
-    let currPlaceholders = items[1].items.flatMap((ele) => ele.placeholders);
-
-    //  Remove Dublicate InputItems Placeholders
+    //  Exptract And Remove Dublicate Placeholders
+    if (snippets.length === 0) return;
+    let currPlaceholders = snippets.flatMap((ele) => ele.placeholders);
     currPlaceholders = currPlaceholders.reduce((preValue, currValue) => {
       if (!preValue.length) {
         return [currValue];
@@ -48,43 +52,37 @@ const Template = ({
       }
       return preValue;
     }, []);
-
-    setInputItems(() => {
-      return currPlaceholders.map((ele) => {
-        const isAvaliable = inputItems.find(
-          (inputItem) => ele._id === inputItem._id
-        );
-        if (isAvaliable) {
-          return isAvaliable;
-        }
-        return ele;
-      });
-    });
-
-    setSelectedPlaceholder(currPlaceholders);
-    snippetHrmlRef.current.innerHTML = HTML;
-  }, [items]);
+    setPlaceholders(currPlaceholders);
+  }, [snippets]);
 
   useEffect(() => {
-    replacePlacehlders(snippetHrmlRef, selectedPlaceholder);
-  }, [inputItems]);
-
-  const replacePlacehlders = (snippetHrmlRef, placeholders) => {
-    if (debugPlaceholders) {
-      snippetHrmlRef.current.classList.add('normal-style');
-    }
-    const slectedDOMPlaceholder = snippetHrmlRef.current.querySelectorAll(
-      '.ql-placeholder-content'
-    );
-    if (!slectedDOMPlaceholder) return;
-
-    slectedDOMPlaceholder.forEach((DOMEle) => {
-      const currPlaceholder = placeholders.find(
-        (ele) => ele.name === DOMEle.dataset.id
-      );
-      console.log(currPlaceholder.value);
-      DOMEle.innerHTML = currPlaceholder.value || currPlaceholder.defaultValue;
+    if (!items[1]) return;
+    let HTML = items[1].items.map((ele) => ele.discription).join('');
+    snippetHrmlRef.current.innerHTML = HTML;
+    // current Placeholders
+    let currPlaceholders = items[1].items
+      .flatMap((ele) => ele.placeholders)
+      .map((ele) => ele.name);
+    // remove Dublicate
+    currPlaceholders = [...new Set(currPlaceholders)];
+    currPlaceholders = currPlaceholders.map((ele) => {
+      return placeholders.find((placeholder) => placeholder.name === ele);
     });
+    setInputItems(currPlaceholders);
+    updateLivePreview(currPlaceholders);
+  }, [items]);
+
+  const updateLivePreview = (updatedState, updatedEle) => {
+    const query = updatedEle
+      ? `[data-id="${updatedEle}"]`
+      : '.ql-placeholder-content';
+    snippetHrmlRef.current.querySelectorAll(query).forEach((DomEle) => {
+      const selected = updatedState.find(
+        (ele) => ele.name === DomEle.dataset.id
+      );
+      DomEle.innerHTML = selected.value || selected.defaultValue;
+    });
+    setInputItems(updatedState);
   };
 
   const DATA = [
@@ -105,24 +103,28 @@ const Template = ({
       <Row>
         <Colxx xxs="12">
           <Breadcrumb heading="template" match={match} />
-          <div
-            style={{ minHeight: '10vh' }}
-            onClick={(e) => {
-              setDebugPlaceholders(!debugPlaceholders);
-            }}>
-            <Separator className="mb-5" />
-          </div>
+          <Separator className="mb-5" />
         </Colxx>
       </Row>
       <Card>
         <CardBody>
+          <Button
+            onClick={() => setDebugPlaceholders(!debugPlaceholders)}
+            color="primary"
+            className="mt-4">
+            Debug Mode
+          </Button>
           <Row style={{ minHeight: '50vh' }}>
             {snippets.length !== 0 && (
               <SnippetsGroups items={items} setItems={setItems} data={DATA} />
             )}
-            <InputItems inputs={inputItems} setInputes={setInputItems} />
-            <LivePreview refrance={snippetHrmlRef} />
-            {snippets.length === 0 && <div className="loading" />}
+            <InputItems inputs={inputItems} setInputes={updateLivePreview} />
+            {snippets.length === 0 && <p>No Snippet Is Found</p>}
+            <LivePreview
+              debugMode={debugPlaceholders}
+              refrance={snippetHrmlRef}
+            />
+            {loading && <div className="loading" />}
           </Row>
         </CardBody>
       </Card>
@@ -130,9 +132,13 @@ const Template = ({
   );
 };
 
-const mapStateToProps = ({ snippets: { snippets }, user: { user } }) => ({
+const mapStateToProps = ({
+  snippets: { snippets, loading },
+  user: { user }
+}) => ({
   snippets,
-  user
+  user,
+  loading
 });
 
 export default connect(mapStateToProps, {

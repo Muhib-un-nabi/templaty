@@ -41,7 +41,7 @@ const App = ({ match, history, getMe, setLoading }) => {
             <Redirect
               exact
               from={`${match.url}/`}
-              to={`${match.url}/account`}
+              to={`${match.url}/templates`}
             />
             <Route
               path={`${match.url}/snippets`}
