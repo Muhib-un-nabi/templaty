@@ -9,7 +9,7 @@ import {
   DropdownItem,
   DropdownToggle,
   DropdownMenu,
-  Input,
+  Input
 } from 'reactstrap';
 
 import { NavLink } from 'react-router-dom';
@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import {
   setContainerClassnames,
   clickOnMobileMenu,
-  changeLocale,
+  changeLocale
 } from '../../redux/actions';
 
 import {
@@ -26,7 +26,7 @@ import {
   searchPath,
   localeOptions,
   isDarkSwitchActive,
-  adminRoot,
+  adminRoot
 } from '../../constants/defaultValues';
 
 import { MobileMenuIcon, MenuIcon } from '../../components/svg';
@@ -46,6 +46,7 @@ const TopNav = ({
   setContainerClassnamesAction,
   clickOnMobileMenuAction,
   changeLocaleAction,
+  user
 }) => {
   const [isInFullScreen, setIsInFullScreen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
@@ -207,16 +208,14 @@ const TopNav = ({
           className="menu-button d-none d-md-block"
           onClick={(e) =>
             menuButtonClick(e, menuClickCount, containerClassnames)
-          }
-        >
+          }>
           <MenuIcon />
         </NavLink>
         <NavLink
           to="#"
           location={{}}
           className="menu-button-mobile d-xs-block d-sm-block d-md-none"
-          onClick={(e) => mobileMenuButtonClick(e, containerClassnames)}
-        >
+          onClick={(e) => mobileMenuButtonClick(e, containerClassnames)}>
           <MobileMenuIcon />
         </NavLink>
 
@@ -231,8 +230,7 @@ const TopNav = ({
           />
           <span
             className="search-icon"
-            onClick={(e) => handleSearchIconClick(e)}
-          >
+            onClick={(e) => handleSearchIconClick(e)}>
             <i className="simple-icon-magnifier" />
           </span>
         </div>
@@ -243,8 +241,7 @@ const TopNav = ({
               caret
               color="light"
               size="sm"
-              className="language-button"
-            >
+              className="language-button">
               <span className="name">{locale.toUpperCase()}</span>
             </DropdownToggle>
             <DropdownMenu className="mt-3" right>
@@ -252,8 +249,7 @@ const TopNav = ({
                 return (
                   <DropdownItem
                     onClick={() => handleChangeLocale(l.id, l.direction)}
-                    key={l.id}
-                  >
+                    key={l.id}>
                     {l.name}
                   </DropdownItem>
                 );
@@ -276,8 +272,7 @@ const TopNav = ({
             className="header-icon btn btn-empty d-none d-sm-inline-block"
             type="button"
             id="fullScreenButton"
-            onClick={toggleFullScreen}
-          >
+            onClick={toggleFullScreen}>
             {isInFullScreen ? (
               <i className="simple-icon-size-actual d-block" />
             ) : (
@@ -287,12 +282,14 @@ const TopNav = ({
         </div>
         <div className="user d-inline-block">
           <UncontrolledDropdown className="dropdown-menu-right">
-            <DropdownToggle className="p-0" color="empty">
-              <span className="name mr-1">Sarah Kortney</span>
-              <span>
-                <img alt="Profile" src="/assets/img/profiles/l-1.jpg" />
-              </span>
-            </DropdownToggle>
+            {user && (
+              <DropdownToggle className="p-0" color="empty">
+                <span className="name mr-1">{user.name}</span>
+                <span>
+                  <img alt="Profile" src="/assets/img/profiles/l-1.jpg" />
+                </span>
+              </DropdownToggle>
+            )}
             <DropdownMenu className="mt-3" right>
               <DropdownItem>Account</DropdownItem>
               <DropdownItem>Features</DropdownItem>
@@ -310,7 +307,7 @@ const TopNav = ({
   );
 };
 
-const mapStateToProps = ({ menu, settings }) => {
+const mapStateToProps = ({ menu, settings, user: { user } }) => {
   const { containerClassnames, menuClickCount, selectedMenuHasSubItems } = menu;
   const { locale } = settings;
   return {
@@ -318,12 +315,13 @@ const mapStateToProps = ({ menu, settings }) => {
     menuClickCount,
     selectedMenuHasSubItems,
     locale,
+    user
   };
 };
 export default injectIntl(
   connect(mapStateToProps, {
     setContainerClassnamesAction: setContainerClassnames,
     clickOnMobileMenuAction: clickOnMobileMenu,
-    changeLocaleAction: changeLocale,
+    changeLocaleAction: changeLocale
   })(TopNav)
 );

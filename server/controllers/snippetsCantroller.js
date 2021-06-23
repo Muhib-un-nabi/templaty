@@ -5,7 +5,7 @@ const factory = require('./handlerFactory');
 
 exports.getSnippets = factory.getAllFromTeam(Snippets, 'placeholders');
 
-exports.getSnippet = factory.getOne(Snippets);
+exports.getSnippet = factory.getOne(Snippets, 'placeholders');
 
 exports.updateSnippet = factory.updateOne(Snippets);
 

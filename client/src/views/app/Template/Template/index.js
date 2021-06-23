@@ -1,14 +1,13 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import { Row, Card, CardBody, Button } from 'reactstrap';
 import { connect } from 'react-redux';
-// import IntlMessages from '../../../../helpers/IntlMessages';
 
 import {
   Colxx,
   Separator
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
+import IntlMessages from '../../../../helpers/IntlMessages';
 import habdelGetData from '../../../../helpers/habdelGetData';
 
 import { getSnippets, setLoading } from '../../../../redux/snippets/action';
@@ -102,32 +101,53 @@ const Template = ({
     <>
       <Row>
         <Colxx xxs="12">
-          <Breadcrumb heading="template" match={match} />
+          <div className="mb-2">
+            <h1>
+              <IntlMessages id="menu.snippets" />
+            </h1>
+
+            <div className="text-zero top-right-button-container">
+              <div
+                className="glyph"
+                type="button"
+                onClick={() => setDebugPlaceholders(!debugPlaceholders)}>
+                <i className={`glyph-icon simple-icon-eye`} />
+              </div>
+            </div>
+
+            <Breadcrumb match={match} />
+          </div>
+
           <Separator className="mb-5" />
+          <Row>
+            <Colxx xxs="12" className="mb-4">
+              <Card>
+                <CardBody>
+                  <Row style={{ minHeight: '50vh' }}>
+                    {snippets.length !== 0 && (
+                      <SnippetsGroups
+                        items={items}
+                        setItems={setItems}
+                        data={DATA}
+                      />
+                    )}
+                    <InputItems
+                      inputs={inputItems}
+                      setInputes={updateLivePreview}
+                    />
+                    {snippets.length === 0 && <p>No Snippet Is Found</p>}
+                    <LivePreview
+                      debugMode={debugPlaceholders}
+                      refrance={snippetHrmlRef}
+                    />
+                    {loading && <div className="loading" />}
+                  </Row>
+                </CardBody>
+              </Card>
+            </Colxx>
+          </Row>
         </Colxx>
       </Row>
-      <Card>
-        <CardBody>
-          <Button
-            onClick={() => setDebugPlaceholders(!debugPlaceholders)}
-            color="primary"
-            className="mt-4">
-            Debug Mode
-          </Button>
-          <Row style={{ minHeight: '50vh' }}>
-            {snippets.length !== 0 && (
-              <SnippetsGroups items={items} setItems={setItems} data={DATA} />
-            )}
-            <InputItems inputs={inputItems} setInputes={updateLivePreview} />
-            {snippets.length === 0 && <p>No Snippet Is Found</p>}
-            <LivePreview
-              debugMode={debugPlaceholders}
-              refrance={snippetHrmlRef}
-            />
-            {loading && <div className="loading" />}
-          </Row>
-        </CardBody>
-      </Card>
     </>
   );
 };
