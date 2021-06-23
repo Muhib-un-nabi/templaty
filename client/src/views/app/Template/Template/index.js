@@ -93,8 +93,7 @@ const Template = ({
   };
 
   let loadTemplate = () => {
-    console.log(loadTemplateids);
-    return [
+    const data =  [
       {
         id: 'un-selected-list',
         colSize: 2,
@@ -106,6 +105,12 @@ const Template = ({
         items: snippets.filter((ele) => loadTemplateids.includes(ele._id))
       }
     ];
+    if (loadTemplateids.length !== 0) {
+      setItems(data);
+      setLoadTemplateids([]);
+      setModal(false)
+    }
+    return data;
   };
 
   return (
