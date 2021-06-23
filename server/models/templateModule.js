@@ -18,14 +18,18 @@ const TemplateSchema = new mongoose.Schema({
     ref: 'Team',
     required: [true, 'Template must belong to a Team']
   },
-  data: {
-    type: Object
-  },
+  snippets: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Snippets'
+    }
+  ],
   visibility: {
     type: Boolean,
     required: [true, 'visibility Option Is Required']
   }
 });
+
 
 const Template = mongoose.model('Template', TemplateSchema);
 

@@ -10,6 +10,7 @@ import user from './user/reducer';
 import contacts from './contacts/reducer';
 import placeholders from './placeholder/reducer';
 import snippets from './snippets/reducer';
+import template from './template/reducer';
 
 const reducers = combineReducers({
   menu,
@@ -18,6 +19,7 @@ const reducers = combineReducers({
   contacts,
   placeholders,
   snippets,
+  template,
   account: () => ({ setting: [] }),
 });
 

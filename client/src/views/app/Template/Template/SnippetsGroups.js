@@ -14,6 +14,8 @@ function SnippetsGroups({ data, items, setItems }) {
     );
     setItems(data);
     setGroups(groups);
+
+    return () => setItems([]);
   }, []);
 
   return (

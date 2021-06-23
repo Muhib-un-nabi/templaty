@@ -19,10 +19,39 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case ADD_TEMPLATE:
+        case GET_TEMPLATES:
       return {
         ...state,
         template: action.payload,
+        loading: false
+      };
+      case GET_TEMPLATE:
+      return {
+        ...state,
+        current: action.payload,
+        loading: false
+      };
+    case ADD_TEMPLATE:
+      return {
+        ...state,
+        template: [...state.template,action.payload],
+        loading: false
+      };
+    case DELETE_TEMPLATE:
+    return {
+      ...state,
+      template: state.template.filter((ele) => ele._id !== action.payload),
+      loading: false
+    };
+    case SET_LOADING:
+      return {
+        ...state,
+        loading: action.payload
+      };
+        case CLEAR_CURRENT:
+      return {
+        ...state,
+        current: {},
         loading: false
       };
     default:

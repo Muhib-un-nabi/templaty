@@ -12,28 +12,28 @@ import {
 import { NotificationManager } from '../../components/common/react-notifications';
 import serverApi, { authHeader } from '../../api/index';
 
-// //  get All placeholders
-// export const getPlaceholders = () => async (dispatch) => {
-//   try {
-//     const { data } = await serverApi.get('/placeholders', authHeader());
-//     dispatch({
-//       type: GET_PLACEHOLDERS,
-//       payload: data.data.data
-//     });
-//   } catch (err) {
-//     NotificationManager.error(
-//       'Success message',
-//       'Somthing went Wrong, placeholders  was not Load.',
-//       3000,
-//       null,
-//       null
-//     );
-//   }
-// };
-// //  get All placeholders
+// //  get All Template
+export const getTemplates = () => async (dispatch) => {
+  try {
+    const { data } = await serverApi.get('/templates', authHeader());
+    dispatch({
+      type: GET_TEMPLATES,
+      payload: data.data.data
+    });
+  } catch (err) {
+    NotificationManager.error(
+      'Success message',
+      'Somthing went Wrong, Template was not Load.',
+      3000,
+      null,
+      null
+    );
+  }
+};
+// //  get  Template
 // export const getPlaceholder = (id) => async (dispatch) => {
 //   try {
-//     const { data } = await serverApi.get(`/placeholders/${id}`, authHeader());
+//     const { data } = await serverApi.get(`/templates/${id}`, authHeader());
 //     dispatch({
 //       type: GET_PLACEHOLDER,
 //       payload: data.data.data
@@ -41,19 +41,19 @@ import serverApi, { authHeader } from '../../api/index';
 //   } catch (err) {
 //     NotificationManager.error(
 //       'Success message',
-//       'Somthing went Wrong, placeholders  was not Load.',
+//       'Somthing went Wrong, Template  was not Load.',
 //       3000,
 //       null,
 //       null
 //     );
 //   }
 // };
-//  Add New placeholders
-export const addPlaceholder = (placeholders) => async (dispatch) => {
+//  Add New Template
+export const addTemplate = (Template) => async (dispatch) => {
   try {
     const { data } = await serverApi.post(
-      '/placeholders',
-      placeholders,
+      '/templates',
+      Template,
       authHeader()
     );
     dispatch({
@@ -62,7 +62,7 @@ export const addPlaceholder = (placeholders) => async (dispatch) => {
     });
     NotificationManager.success(
       'Success message',
-      'placeholders Added successfully',
+      'Template Added successfully',
       3000,
       null,
       null
@@ -70,19 +70,19 @@ export const addPlaceholder = (placeholders) => async (dispatch) => {
   } catch (err) {
     NotificationManager.error(
       'Warning message',
-      'Somthing Wrong, placeholders  was not added',
+      'Somthing Wrong, Template  was not added',
       3000,
       null,
       null
     );
-    throw new Error(err);
+    // throw new Error(err);
   }
 };
-// //  Update placeholders
+// //  Update Template
 // export const updatePlaceholder = (placeholder, id) => async (dispatch) => {
 //   try {
 //     const { data } = await serverApi.patch(
-//       `/placeholders/${id}`,
+//       `/templates/${id}`,
 //       placeholder,
 //       authHeader()
 //     );
@@ -92,7 +92,7 @@ export const addPlaceholder = (placeholders) => async (dispatch) => {
 //     });
 //     NotificationManager.success(
 //       'Success message',
-//       'placeholders Updated successfully',
+//       'Template Updated successfully',
 //       3000,
 //       null,
 //       null
@@ -100,7 +100,7 @@ export const addPlaceholder = (placeholders) => async (dispatch) => {
 //   } catch (err) {
 //     NotificationManager.error(
 //       'Success message',
-//       'Somthing Wrong, placeholders  was not Updated',
+//       'Somthing Wrong, Template  was not Updated',
 //       3000,
 //       null,
 //       null
@@ -109,31 +109,31 @@ export const addPlaceholder = (placeholders) => async (dispatch) => {
 //   }
 // };
 
-// //  DELETE New placeholders
-// export const deletePlaceholder = (id) => async (dispatch) => {
-//   try {
-//     await serverApi.delete(`/placeholders/${id}`, authHeader());
-//     dispatch({
-//       type: DELETE_PLACEHOLDER,
-//       payload: id
-//     });
-//     NotificationManager.success(
-//       'Success message',
-//       'placeholders Deleted  successfully',
-//       3000,
-//       null,
-//       null
-//     );
-//   } catch (err) {
-//     NotificationManager.error(
-//       'Warning message',
-//       'Somthing Wrong. placeholders  was not Deleted',
-//       3000,
-//       null,
-//       null
-//     );
-//   }
-// };
+//  DELETE New Template
+export const deletePlaceholder = (id) => async (dispatch) => {
+  try {
+    await serverApi.delete(`/templates/${id}`, authHeader());
+    dispatch({
+      type: DELETE_TEMPLATE,
+      payload: id
+    });
+    NotificationManager.success(
+      'Success message',
+      'Template Deleted successfully',
+      3000,
+      null,
+      null
+    );
+  } catch (err) {
+    NotificationManager.error(
+      'Warning message',
+      'Somthing Wrong. Template  was not Deleted',
+      3000,
+      null,
+      null
+    );
+  }
+};
 
 // Clear Current From Contact
 export const clearCurrent = () => ({

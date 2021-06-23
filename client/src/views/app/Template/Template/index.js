@@ -16,6 +16,9 @@ import SnippetsGroups from './SnippetsGroups';
 import InputItems from './InputItems';
 import LivePreview from './livePreview';
 
+import HandelTemplate from '../handelTemplate/index';
+import AddTemplate from '../handelTemplate/addTemplate';
+
 const Template = ({
   match,
   getSnippets,
@@ -33,6 +36,11 @@ const Template = ({
 
   const [selectedPlaceholder, setSelectedPlaceholder] = useState();
   const [inputItems, setInputItems] = useState([]);
+
+  const [modal, setModal] = useState(false);
+  const [formVisible, setFormVisible] = useState(false);
+  const [loadingSnippet, setLoadingSnippet] = useState(false);
+  const [loadTemplateids, setLoadTemplateids] = useState([]);
 
   useEffect(() => {
     habdelGetData(getSnippets, setLoading, history);
@@ -84,18 +92,21 @@ const Template = ({
     setInputItems(updatedState);
   };
 
-  const DATA = [
-    {
-      id: 'un-selected-list',
-      colSize: 2,
-      items: snippets
-    },
-    {
-      id: 'selected-list',
-      colSize: 2,
-      items: []
-    }
-  ];
+  let loadTemplate = () => {
+    console.log(loadTemplateids);
+    return [
+      {
+        id: 'un-selected-list',
+        colSize: 2,
+        items: snippets.filter((ele) => !loadTemplateids.includes(ele._id))
+      },
+      {
+        id: 'selected-list',
+        colSize: 2,
+        items: snippets.filter((ele) => loadTemplateids.includes(ele._id))
+      }
+    ];
+  };
 
   return (
     <>
@@ -106,41 +117,71 @@ const Template = ({
               <IntlMessages id="menu.snippets" />
             </h1>
 
-            <div className="text-zero top-right-button-container">
+            <div className="text-zero top-right-button-container mr-2 d-flex">
               <div
                 className="glyph"
                 type="button"
                 onClick={() => setDebugPlaceholders(!debugPlaceholders)}>
-                <i className={`glyph-icon simple-icon-eye`} />
+                <i className="glyph-icon simple-icon-eye h4 text-primary mx-3" />
+              </div>
+              <div
+                className="glyph"
+                type="button"
+                onClick={() => setFormVisible(!formVisible)}>
+                <i className="glyph-icon simple-icon-plus h4 text-primary mx-3" />
+              </div>
+              <div
+                className="glyph"
+                type="button"
+                onClick={() => setModal(!modal)}>
+                <i className="glyph-icon simple-icon-layers h4 text-primary ml-3" />
               </div>
             </div>
-
             <Breadcrumb match={match} />
           </div>
-
+          <HandelTemplate
+            modal={modal}
+            snippets={items[1]}
+            setModal={setModal}
+            history={history}
+            formVisible={formVisible}
+            loadTemplate={setLoadTemplateids}
+            setFormVisible={setFormVisible}
+          />
+          <AddTemplate
+            setModal={setModal}
+            formVisible={formVisible}
+            setFormVisible={setFormVisible}
+            snippets={items[1]}
+          />
           <Separator className="mb-5" />
           <Row>
             <Colxx xxs="12" className="mb-4">
               <Card>
                 <CardBody>
                   <Row style={{ minHeight: '50vh' }}>
-                    {snippets.length !== 0 && (
-                      <SnippetsGroups
-                        items={items}
-                        setItems={setItems}
-                        data={DATA}
-                      />
+                    {!loadingSnippet && (
+                      <>
+                        {snippets.length !== 0 && (
+                          <SnippetsGroups
+                            items={items}
+                            setItems={setItems}
+                            // data={dataGroup}
+                            data={loadTemplate()}
+                          />
+                        )}
+                        <InputItems
+                          inputs={inputItems}
+                          setInputes={updateLivePreview}
+                        />
+                        {snippets.length === 0 && <p>No Snippet Is Found</p>}
+                        <LivePreview
+                          debugMode={debugPlaceholders}
+                          refrance={snippetHrmlRef}
+                        />
+                        {/* {loading && <div className="loading" />} */}
+                      </>
                     )}
-                    <InputItems
-                      inputs={inputItems}
-                      setInputes={updateLivePreview}
-                    />
-                    {snippets.length === 0 && <p>No Snippet Is Found</p>}
-                    <LivePreview
-                      debugMode={debugPlaceholders}
-                      refrance={snippetHrmlRef}
-                    />
-                    {loading && <div className="loading" />}
                   </Row>
                 </CardBody>
               </Card>

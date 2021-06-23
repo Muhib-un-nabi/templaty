@@ -103,6 +103,7 @@ module.exports = {
   'modal.user-delete': 'Delete User',
 
   template: 'Template',
+  'template.all': 'All Template',
   'template.add': 'Add Template',
   'template.delete': 'Delete Template'
 };
