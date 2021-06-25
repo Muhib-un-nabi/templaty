@@ -24,12 +24,16 @@ const TemplateSchema = new mongoose.Schema({
       ref: 'Snippets'
     }
   ],
+  placeholders: [
+    {
+      type: Object
+    }
+  ],
   visibility: {
     type: Boolean,
     required: [true, 'visibility Option Is Required']
   }
 });
-
 
 const Template = mongoose.model('Template', TemplateSchema);
 

@@ -6,7 +6,8 @@ import {
   DELETE_TEMPLATE,
   GET_TEMPLATE,
   GET_TEMPLATES,
-  SET_LOADING
+  SET_LOADING,
+  UPDATE_TEMPLATE
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -51,11 +52,7 @@ export const getTemplates = () => async (dispatch) => {
 //  Add New Template
 export const addTemplate = (Template) => async (dispatch) => {
   try {
-    const { data } = await serverApi.post(
-      '/templates',
-      Template,
-      authHeader()
-    );
+    const { data } = await serverApi.post('/templates', Template, authHeader());
     dispatch({
       type: ADD_TEMPLATE,
       payload: data.data.data
@@ -78,36 +75,36 @@ export const addTemplate = (Template) => async (dispatch) => {
     // throw new Error(err);
   }
 };
-// //  Update Template
-// export const updatePlaceholder = (placeholder, id) => async (dispatch) => {
-//   try {
-//     const { data } = await serverApi.patch(
-//       `/templates/${id}`,
-//       placeholder,
-//       authHeader()
-//     );
-//     dispatch({
-//       type: UPDATE_PLACEHOLDER,
-//       payload: data.data.data
-//     });
-//     NotificationManager.success(
-//       'Success message',
-//       'Template Updated successfully',
-//       3000,
-//       null,
-//       null
-//     );
-//   } catch (err) {
-//     NotificationManager.error(
-//       'Success message',
-//       'Somthing Wrong, Template  was not Updated',
-//       3000,
-//       null,
-//       null
-//     );
-//     throw new Error(err);
-//   }
-// };
+//  Update Template
+export const updateTemplate = (template, id) => async (dispatch) => {
+  try {
+    const { data } = await serverApi.patch(
+      `/templates/${id}`,
+      template,
+      authHeader()
+    );
+    dispatch({
+      type: UPDATE_TEMPLATE,
+      payload: data.data.data
+    });
+    NotificationManager.success(
+      'Success message',
+      'Template Updated successfully',
+      3000,
+      null,
+      null
+    );
+  } catch (err) {
+    NotificationManager.error(
+      'Success message',
+      'Somthing Wrong, Template  was not Updated',
+      3000,
+      null,
+      null
+    );
+    // throw new Error(err);
+  }
+};
 
 //  DELETE New Template
 export const deletePlaceholder = (id) => async (dispatch) => {

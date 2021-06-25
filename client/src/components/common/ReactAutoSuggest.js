@@ -40,7 +40,7 @@ const ReactAutoSuggest = ({ data, value, placeholder, onChange }) => {
   const inputProps = {
     placeholder: placeholder || '',
     value: valueState,
-    onChange: changeInput,
+    onChange: changeInput
   };
 
   return (
@@ -62,7 +62,7 @@ const ReactAutoSuggest = ({ data, value, placeholder, onChange }) => {
           suggestions.length ? 'show' : ''
         }`,
         suggestionFocused: 'active',
-        suggestion: 'react-autosuggest__suggestion',
+        suggestion: 'react-autosuggest__suggestion'
       }}
     />
   );

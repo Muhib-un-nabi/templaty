@@ -38,15 +38,19 @@ const TemplateItem = ({ itemData, user, deleteClick, loadTemplate }) => {
           </div>
         )}
         <div className="custom-control custom-checkbox pl-1 align-self-center pr-4">
-          {(itemData.user === user._id || user.role === 'admin') && (
-            <Button
-              outline
-              color="theme-3"
-              className="icon-button ml-1"
-              onClick={() => loadTemplate(itemData.snippets)}>
-              <i className="simple-icon-arrow-down-circle" />
-            </Button>
-          )}
+          <Button
+            outline
+            color="theme-3"
+            className="icon-button ml-1"
+            onClick={() =>
+              loadTemplate({
+                snippets: itemData.snippets,
+                placeholders: itemData.placeholders
+              })
+            }>
+            <i className="simple-icon-arrow-down-circle" />
+          </Button>
+
           {(itemData.user === user._id || user.role === 'admin') && (
             <Button
               outline

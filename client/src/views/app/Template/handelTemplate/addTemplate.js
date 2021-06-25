@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from 'react';
 import {
@@ -13,7 +14,14 @@ import {
 } from 'reactstrap';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import { connect } from 'react-redux';
-import { setLoading, addTemplate } from '../../../../redux/template/action';
+import {
+  setLoading,
+  addTemplate,
+  getTemplates,
+  updateTemplate
+} from '../../../../redux/template/action';
+import habdelGetData from '../../../../helpers/habdelGetData';
+import ReactAutoSuggest from '../../../../components/common/ReactAutoSuggest';
 
 // import SnippetItem from '../Template/SnippetItem';
 
@@ -26,16 +34,26 @@ const AddTemplate = ({
   setModal,
   addTemplate,
   loading,
-  setLoading
+  setLoading,
+  placeholders,
+  getTemplates,
+  history,
+  updateTemplate
 }) => {
   const [isvisible, setIsvisible] = useState(true);
   const [name, setName] = useState();
-
+  const [dataList, setDataList] = useState([]);
   useEffect(() => {
-     setLoading(false);
+    if (formVisible) {
+      console.log(getTemplates);
+      habdelGetData(getTemplates, setLoading, history);
+    }
+    setDataList(() => template.map((ele) => ({ name: ele.name })));
+    console.log(dataList);
     setIsvisible(true);
     setName('');
   }, [formVisible]);
+
   const handelAddSnippet = async (e) => {
     try {
       if (!snippets.items.length) return;
@@ -44,9 +62,19 @@ const AddTemplate = ({
       const newTemplate = {
         name,
         snippets: snippets.items.map((ele) => ele._id),
-        visibility: isvisible
+        visibility: isvisible,
+        placeholders: placeholders.map(({ name, value, defaultValue }) => ({
+          name,
+          value: value || defaultValue
+        }))
       };
-      await addTemplate(newTemplate);
+      const findExistingTemplate = template.find((ele) => ele.name === name);
+      if (findExistingTemplate) {
+        updateTemplate(newTemplate, findExistingTemplate._id);
+      } else {
+        await addTemplate(newTemplate);
+      }
+
       await setFormVisible(false);
     } catch (e) {
       await setLoading(false);
@@ -66,14 +94,16 @@ const AddTemplate = ({
         ) : (
           <>
             <FormGroup>
-              <Label for="exampleEmail">Name</Label>
-              <Input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                type="text"
-                name="name"
-                id="name"
-              />
+              <Label for="exampleEmail">
+                Name <b>(if template name is same then template is updated) </b>
+              </Label>
+              {!loading && (
+                <ReactAutoSuggest
+                  value={name}
+                  onChange={(val) => setName(val)}
+                  data={dataList}
+                />
+              )}
             </FormGroup>
 
             <div className="m-2">
@@ -98,6 +128,25 @@ const AddTemplate = ({
                   defaultChecked={isvisible}
                 />
               </FormGroup>
+            </div>
+            <div className="my-2">
+              <h4 className="py-1">Placeholder List</h4>
+              {placeholders.length !== 0 &&
+                placeholders.map(({ _id, name, value, defaultValue }) => (
+                  <div className="not-over-expand" key={_id}>
+                    <Card className="d-flex mb-2 px-2 snippet-item ">
+                      <div className="d-flex flex-grow-1 min-width-zero">
+                        <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center p-1 ">
+                          <div className="list-item-heading mb-0 truncate w-80 mb-1 mt-1">
+                            <span>
+                              {name}: <b>{value || defaultValue}</b>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                ))}
             </div>
             <div className="my-2">
               <h4 className="py-1">Snippet List</h4>
@@ -148,6 +197,9 @@ const mapStateToProps = ({
   loading
 });
 
-export default connect(mapStateToProps, { setLoading, addTemplate })(
-  AddTemplate
-);
+export default connect(mapStateToProps, {
+  setLoading,
+  addTemplate,
+  getTemplates,
+  updateTemplate
+})(AddTemplate);

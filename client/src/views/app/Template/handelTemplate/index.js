@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from 'react';
 import {
@@ -20,7 +21,7 @@ import {
 import habdelGetData from '../../../../helpers/habdelGetData';
 
 import TemplateItem from './templateItem';
-import AddTemplate from '../handelTemplate/addTemplate';
+// import AddTemplate from '../handelTemplate/addTemplate';
 
 const index = ({
   modal,
@@ -39,7 +40,6 @@ const index = ({
 }) => {
   useEffect(() => {
     if (!modal) return;
-
     habdelGetData(getTemplates, setLoading, history);
   }, [modal]);
 

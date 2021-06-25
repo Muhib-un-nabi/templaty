@@ -34,13 +34,12 @@ const Template = ({
 
   const [placeholders, setPlaceholders] = useState();
 
-  const [selectedPlaceholder, setSelectedPlaceholder] = useState();
+  // const [selectedPlaceholder, setSelectedPlaceholder] = useState();
   const [inputItems, setInputItems] = useState([]);
 
   const [modal, setModal] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
-  const [loadingSnippet, setLoadingSnippet] = useState(false);
-  const [loadTemplateids, setLoadTemplateids] = useState([]);
+  const [loadTemplateData, setLoadTemplateData] = useState({});
 
   useEffect(() => {
     habdelGetData(getSnippets, setLoading, history);
@@ -93,22 +92,54 @@ const Template = ({
   };
 
   let loadTemplate = () => {
-    const data =  [
+    const data = [
       {
         id: 'un-selected-list',
         colSize: 2,
-        items: snippets.filter((ele) => !loadTemplateids.includes(ele._id))
+        items: snippets
       },
       {
         id: 'selected-list',
         colSize: 2,
-        items: snippets.filter((ele) => loadTemplateids.includes(ele._id))
+        items: []
       }
     ];
-    if (loadTemplateids.length !== 0) {
+
+    // If Template Is Loaded Then Manage Their State
+    const { snippets: templateSnippets, placeholders: templatePlaceholders } =
+      loadTemplateData;
+    if (templateSnippets && templateSnippets.length !== 0) {
+      const unselectedList = snippets.filter(
+        (ele) => !templateSnippets.includes(ele._id)
+      );
+      const selectedList = templateSnippets.map((snippetId) =>
+        snippets.find((ele) => ele._id === snippetId)
+      );
+      data[0].items = unselectedList;
+      data[1].items = selectedList;
+
+      //  Replace Placeholder Values
+      const newInputItems = inputItems.map((placeholder) => {
+        const placeholderValue = templatePlaceholders.find(
+          (ele) => ele.name === placeholder.name
+        );
+        placeholder.value = placeholderValue.value || placeholder.value;
+        return placeholder;
+      });
+      //  Set All The State
+      setItems(newInputItems);
       setItems(data);
-      setLoadTemplateids([]);
-      setModal(false)
+      setLoadTemplateData({});
+      setModal(false);
+    }
+    if (loadTemplateData.reset) {
+      const newInputItems = inputItems.map((placeholder) => {
+        placeholder.value = '';
+        return placeholder;
+      });
+      setInputItems(newInputItems);
+      setItems(data);
+      setLoadTemplateData({});
     }
     return data;
   };
@@ -139,7 +170,13 @@ const Template = ({
                 className="glyph"
                 type="button"
                 onClick={() => setModal(!modal)}>
-                <i className="glyph-icon simple-icon-layers h4 text-primary ml-3" />
+                <i className="glyph-icon simple-icon-layers h4 text-primary mx-3" />
+              </div>
+              <div
+                className="glyph"
+                type="button"
+                onClick={() => setLoadTemplateData({ reset: true })}>
+                <i className="glyph-icon simple-icon-reload h4 text-primary ml-3" />
               </div>
             </div>
             <Breadcrumb match={match} />
@@ -150,7 +187,7 @@ const Template = ({
             setModal={setModal}
             history={history}
             formVisible={formVisible}
-            loadTemplate={setLoadTemplateids}
+            loadTemplate={setLoadTemplateData}
             setFormVisible={setFormVisible}
           />
           <AddTemplate
@@ -158,6 +195,8 @@ const Template = ({
             formVisible={formVisible}
             setFormVisible={setFormVisible}
             snippets={items[1]}
+            history={history}
+            placeholders={inputItems}
           />
           <Separator className="mb-5" />
           <Row>
@@ -165,27 +204,25 @@ const Template = ({
               <Card>
                 <CardBody>
                   <Row style={{ minHeight: '50vh' }}>
-                    {!loadingSnippet && (
-                      <>
-                        {snippets.length !== 0 && (
-                          <SnippetsGroups
-                            items={items}
-                            setItems={setItems}
-                            // data={dataGroup}
-                            data={loadTemplate()}
-                          />
-                        )}
-                        <InputItems
-                          inputs={inputItems}
-                          setInputes={updateLivePreview}
-                        />
-                        {snippets.length === 0 && <p>No Snippet Is Found</p>}
-                        <LivePreview
-                          debugMode={debugPlaceholders}
-                          refrance={snippetHrmlRef}
-                        />
-                        {/* {loading && <div className="loading" />} */}
-                      </>
+                    {snippets.length !== 0 && (
+                      <SnippetsGroups
+                        items={items}
+                        setItems={setItems}
+                        // data={dataGroup}
+                        data={loadTemplate()}
+                      />
+                    )}
+                    <InputItems
+                      inputs={inputItems}
+                      setInputes={updateLivePreview}
+                    />
+                    {snippets.length === 0 && <p>No Snippet Is Found</p>}
+                    <LivePreview
+                      debugMode={debugPlaceholders}
+                      refrance={snippetHrmlRef}
+                    />
+                    {loading && snippets.length === 0 && (
+                      <div className="loading" />
                     )}
                   </Row>
                 </CardBody>
