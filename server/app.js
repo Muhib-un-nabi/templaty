@@ -21,6 +21,7 @@ const placeholdersRouter = require('./routes/placeholdersRouter');
 const snippetsRouter = require('./routes/snippetsRouter');
 const teamRouter = require('./routes/teamRouter');
 const templateRouter = require('./routes/templateRouter');
+const typesRouter = require('./routes/typesRouter');
 // Start express app
 const app = express();
 
@@ -106,6 +107,7 @@ app.use('/api/contacts/', contactRouter);
 app.use('/api/placeholders', placeholdersRouter);
 //  Template Routes
 app.use('/api/templates', templateRouter);
+app.use('/api/types', typesRouter);
 
 app.all('/api', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

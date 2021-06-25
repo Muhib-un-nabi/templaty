@@ -6,7 +6,7 @@ const data = [
     id: 'templates',
     icon: 'simple-icon-notebook',
     label: 'menu.templates',
-    to: `${adminRoot}/templates`,
+    to: `${adminRoot}/templates`
   },
   {
     id: 'snippets',
@@ -17,14 +17,14 @@ const data = [
       {
         icon: 'simple-icon-list',
         label: 'menu.snippets-List',
-        to: `${adminRoot}/snippets/all`,
+        to: `${adminRoot}/snippets/all`
       },
       {
         icon: 'simple-icon-plus',
         label: 'menu.snippets-add',
-        to: `${adminRoot}/snippets/add`,
-      },
-    ],
+        to: `${adminRoot}/snippets/add`
+      }
+    ]
   },
   {
     id: 'placeholder',
@@ -35,14 +35,14 @@ const data = [
       {
         icon: 'simple-icon-list',
         label: 'menu.placeholders-List',
-        to: `${adminRoot}/placeholders/all`,
+        to: `${adminRoot}/placeholders/all`
       },
       {
         icon: 'simple-icon-plus',
         label: 'menu.placeholders-add',
-        to: `${adminRoot}/placeholders/add`,
-      },
-    ],
+        to: `${adminRoot}/placeholders/add`
+      }
+    ]
   },
   {
     id: 'contacts',
@@ -54,26 +54,32 @@ const data = [
       {
         icon: 'simple-icon-list',
         label: 'menu.contacts-List',
-        to: `${adminRoot}/contacts/all`,
+        to: `${adminRoot}/contacts/all`
       },
       {
         icon: 'simple-icon-plus',
         label: 'menu.contacts-add',
-        to: `${adminRoot}/contacts/add`,
+        to: `${adminRoot}/contacts/add`
       },
       {
         icon: 'simple-icon-settings',
         label: 'menu.contacts-setting',
-        to: `${adminRoot}/contacts/setting`,
-      },
-    ],
+        to: `${adminRoot}/contacts/setting`
+      }
+    ]
+  },
+  {
+    id: 'types',
+    icon: 'simple-icon-grid',
+    label: 'menu.types',
+    to: `${adminRoot}/types`
   },
   {
     id: 'account',
     icon: 'simple-icon-user',
     label: 'menu.account',
-    to: `${adminRoot}/account`,
-  },
+    to: `${adminRoot}/account`
+  }
   // {
   //   id: 'gogo',
   //   icon: 'iconsminds-air-balloon-1',

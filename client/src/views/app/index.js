@@ -24,6 +24,10 @@ const Placeholder = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './placeholder')
 );
 
+const Types = React.lazy(() =>
+  import(/* webpackChunkName: "viwes-gogo" */ './types')
+);
+
 const Account = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './account')
 );
@@ -61,6 +65,11 @@ const App = ({ match, history, getMe, setLoading }) => {
             <Route
               path={`${match.url}/templates`}
               render={(props) => <Template {...props} />}
+            />
+
+            <Route
+              path={`${match.url}/types`}
+              render={(props) => <Types {...props} />}
             />
             <Route
               path={`${match.url}/account`}

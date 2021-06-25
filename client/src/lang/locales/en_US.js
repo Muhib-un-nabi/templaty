@@ -69,6 +69,7 @@ module.exports = {
   'menu.snippets-List': 'Snippets List',
   'menu.snippets-add': 'Add Snippets',
   'menu.snippets': 'Snippets',
+  'menu.types': 'Types',
 
   /* FOR Contact Setting Form */
   'display-options': 'Display Options',

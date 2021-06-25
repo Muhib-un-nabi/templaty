@@ -49,7 +49,6 @@ const AddTemplate = ({
       habdelGetData(getTemplates, setLoading, history);
     }
     setDataList(() => template.map((ele) => ({ name: ele.name })));
-    console.log(dataList);
     setIsvisible(true);
     setName('');
   }, [formVisible]);
@@ -152,12 +151,12 @@ const AddTemplate = ({
               <h4 className="py-1">Snippet List</h4>
               {snippets.items.length !== 0 &&
                 snippets.items.map((ele) => (
-                  <div className="not-over-expand" key={ele._id}>
+                  <div className="not-over-expand" key={ele?._id}>
                     <Card className="d-flex mb-2 px-2 snippet-item ">
                       <div className="d-flex flex-grow-1 min-width-zero">
                         <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center p-1 ">
                           <div className="list-item-heading mb-0 truncate w-80 mb-1 mt-1">
-                            {ele.name}
+                            {ele?.name}
                           </div>
                         </div>
                       </div>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { Card, CardBody, CardTitle } from 'reactstrap';
 
 import SnippetItem from './SnippetItem';
 import { Colxx } from '../../../../components/common/CustomBootstrap';
@@ -63,29 +64,37 @@ function SnippetsGroups({ data, items, setItems }) {
   );
 }
 
-function DroppableList({ id, items, colSize }) {
+function DroppableList({ id, items, colSize, label }) {
   return (
     <Droppable droppableId={id}>
       {(provided) => (
-        <Colxx xxs={colSize} className="d-flex">
-          <div
-            className=" bg-light bg-gradient w-100"
-            {...provided.droppableProps}
-            ref={provided.innerRef}>
-            {items.map((item, index) => (
-              <Draggable draggableId={item._id} index={index} key={item._id}>
-                {(provided) => (
-                  <div
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                    ref={provided.innerRef}>
-                    <SnippetItem itemData={item} />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
+        <Colxx xxs={colSize} className="">
+          <Card className="height__100">
+            <CardBody className="p-2 height__100">
+              <CardTitle className="p-2 mb-2">{label}</CardTitle>
+              <div
+                className=" height__100"
+                {...provided.droppableProps}
+                ref={provided.innerRef}>
+                {items.map((item, index) => (
+                  <Draggable
+                    draggableId={item._id}
+                    index={index}
+                    key={item._id}>
+                    {(provided) => (
+                      <div
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                        ref={provided.innerRef}>
+                        <SnippetItem itemData={item} />
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+                {provided.placeholder}
+              </div>
+            </CardBody>
+          </Card>
         </Colxx>
       )}
     </Droppable>

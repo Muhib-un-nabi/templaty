@@ -96,12 +96,14 @@ const Template = ({
       {
         id: 'un-selected-list',
         colSize: 2,
-        items: snippets
+        items: snippets,
+        label: 'Un-Selected Snippets'
       },
       {
         id: 'selected-list',
         colSize: 2,
-        items: []
+        items: [],
+        label: 'Selected Snippets'
       }
     ];
 
@@ -112,16 +114,15 @@ const Template = ({
       const unselectedList = snippets.filter(
         (ele) => !templateSnippets.includes(ele._id)
       );
-      const selectedList = templateSnippets.map((snippetId) =>
-        snippets.find((ele) => ele._id === snippetId)
-      );
+      const selectedList = templateSnippets
+        .map((snippetId) => snippets.find((ele) => ele._id === snippetId))
+        .filter((ele) => ele);
       data[0].items = unselectedList;
       data[1].items = selectedList;
-
       //  Replace Placeholder Values
       const newInputItems = inputItems.map((placeholder) => {
         const placeholderValue = templatePlaceholders.find(
-          (ele) => ele.name === placeholder.name
+          (ele) => ele?.name === placeholder?.name
         );
         placeholder.value = placeholderValue.value || placeholder.value;
         return placeholder;
@@ -164,7 +165,7 @@ const Template = ({
                 className="glyph"
                 type="button"
                 onClick={() => setFormVisible(!formVisible)}>
-                <i className="glyph-icon simple-icon-plus h4 text-primary mx-3" />
+                <i className="glyph-icon iconsminds-save h4 text-primary mx-3" />
               </div>
               <div
                 className="glyph"
@@ -201,32 +202,46 @@ const Template = ({
           <Separator className="mb-5" />
           <Row>
             <Colxx xxs="12" className="mb-4">
-              <Card>
-                <CardBody>
-                  <Row style={{ minHeight: '50vh' }}>
-                    {snippets.length !== 0 && (
-                      <SnippetsGroups
-                        items={items}
-                        setItems={setItems}
-                        // data={dataGroup}
-                        data={loadTemplate()}
-                      />
-                    )}
-                    <InputItems
-                      inputs={inputItems}
-                      setInputes={updateLivePreview}
-                    />
-                    {snippets.length === 0 && <p>No Snippet Is Found</p>}
-                    <LivePreview
-                      debugMode={debugPlaceholders}
-                      refrance={snippetHrmlRef}
-                    />
-                    {loading && snippets.length === 0 && (
-                      <div className="loading" />
-                    )}
-                  </Row>
-                </CardBody>
-              </Card>
+              {/* <Card>
+                <CardBody> */}
+              <Row style={{ minHeight: '50vh' }}>
+                {snippets.length !== 0 && (
+                  <SnippetsGroups
+                    items={items}
+                    setItems={setItems}
+                    // data={dataGroup}
+                    data={loadTemplate()}
+                  />
+                )}
+                {snippets.length === 0 && (
+                  <>
+                    <Colxx xxs="2">
+                      <Card className="height__100">
+                        <CardBody className="height__100">Loading...</CardBody>
+                      </Card>
+                    </Colxx>
+                    <Colxx xxs="2">
+                      <Card className="height__100">
+                        <CardBody className="height__100">Loading...</CardBody>
+                      </Card>
+                    </Colxx>
+                  </>
+                )}
+                <InputItems
+                  inputs={inputItems}
+                  setInputes={updateLivePreview}
+                />
+
+                <LivePreview
+                  debugMode={debugPlaceholders}
+                  refrance={snippetHrmlRef}
+                />
+                {loading && snippets.length === 0 && (
+                  <div className="loading" />
+                )}
+              </Row>
+              {/* </CardBody>
+              </Card> */}
             </Colxx>
           </Row>
         </Colxx>
