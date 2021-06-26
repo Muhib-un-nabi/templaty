@@ -15,7 +15,7 @@ const InputItems = ({ inputs, setInputes }) => {
     <Colxx xxs="2">
       <Card className="height__100">
         <CardBody className="p-2 height__100">
-          <CardTitle className="p-2 mb-2">Live Preview</CardTitle>
+          <CardTitle className="p-2 mb-2">Placeholders</CardTitle>
           <Form>
             {inputs.map((ele) => (
               <FormGroup key={ele._id}>

@@ -5,7 +5,7 @@ import { Card, CardBody, CardTitle } from 'reactstrap';
 import SnippetItem from './SnippetItem';
 import { Colxx } from '../../../../components/common/CustomBootstrap';
 
-function SnippetsGroups({ data, items, setItems }) {
+function SnippetsGroups({ data, items, setItems, filter }) {
   const [groups, setGroups] = useState({});
 
   useEffect(() => {
@@ -58,17 +58,17 @@ function SnippetsGroups({ data, items, setItems }) {
         setItems(workValue);
       }}>
       {items.map((item) => (
-        <DroppableList key={item.id} {...item} />
+        <DroppableList key={item.id} {...item} filter={filter} />
       ))}
     </DragDropContext>
   );
 }
 
-function DroppableList({ id, items, colSize, label }) {
+function DroppableList({ id, items, colSize, label, filter }) {
   return (
     <Droppable droppableId={id}>
       {(provided) => (
-        <Colxx xxs={colSize} className="">
+        <Colxx xxs={colSize} className={id}>
           <Card className="height__100">
             <CardBody className="p-2 height__100">
               <CardTitle className="p-2 mb-2">{label}</CardTitle>
@@ -76,21 +76,32 @@ function DroppableList({ id, items, colSize, label }) {
                 className=" height__100"
                 {...provided.droppableProps}
                 ref={provided.innerRef}>
-                {items.map((item, index) => (
-                  <Draggable
-                    draggableId={item._id}
-                    index={index}
-                    key={item._id}>
-                    {(provided) => (
-                      <div
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}>
-                        <SnippetItem itemData={item} />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
+                {items.map((item, index) => {
+                  let isDisplay;
+                  if (filter) {
+                    isDisplay = item.category
+                      .map((ele) => ele.key)
+                      .includes(filter._id);
+                  } else {
+                    isDisplay = true;
+                  }
+                  return (
+                    <Draggable
+                      draggableId={item._id}
+                      index={index}
+                      key={item._id}>
+                      {(provided) => (
+                        <div
+                          data-display={isDisplay}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          ref={provided.innerRef}>
+                          <SnippetItem itemData={item} />
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
                 {provided.placeholder}
               </div>
             </CardBody>

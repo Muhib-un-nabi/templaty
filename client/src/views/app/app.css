@@ -37,3 +37,11 @@
 .height__100 {
   height: 100%;
 }
+
+.un-selected-list.col-2 [data-display='true'] {
+  width: 0;
+  height: 0;
+  opacity: 0;
+  visibility: 0;
+  display: none !important;
+}

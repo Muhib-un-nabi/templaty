@@ -18,7 +18,7 @@ export const getTypes = () => async (dispatch) => {
   try {
     const { data } = await serverApi.get('/types', authHeader());
     dispatch({
-      type: GET_TYPE,
+      type: GET_TYPES,
       payload: data.data.data
     });
   } catch (err) {
@@ -29,6 +29,7 @@ export const getTypes = () => async (dispatch) => {
       null,
       null
     );
+    throw new Error(err);
   }
 };
 // //  get  Types

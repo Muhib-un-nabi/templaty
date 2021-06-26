@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Row, Card, CardBody, Button } from 'reactstrap';
+import { Row, Card, CardBody, Button, Nav, NavItem, NavLink } from 'reactstrap';
 import { connect } from 'react-redux';
 
 import {
@@ -10,7 +10,14 @@ import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import habdelGetData from '../../../../helpers/habdelGetData';
 
-import { getSnippets, setLoading } from '../../../../redux/snippets/action';
+import {
+  getSnippets,
+  setLoading as setSnippetLoading
+} from '../../../../redux/snippets/action';
+import {
+  getTypes,
+  setLoading as setTypeLoading
+} from '../../../../redux/types/action';
 
 import SnippetsGroups from './SnippetsGroups';
 import InputItems from './InputItems';
@@ -22,11 +29,14 @@ import AddTemplate from '../handelTemplate/addTemplate';
 const Template = ({
   match,
   getSnippets,
-  setLoading,
+  setSnippetLoading,
   history,
   snippets,
   loading,
-  user
+  user,
+  getTypes,
+  setTypeLoading,
+  types
 }) => {
   const [items, setItems] = useState([]);
   const [debugPlaceholders, setDebugPlaceholders] = useState(true);
@@ -34,15 +44,31 @@ const Template = ({
 
   const [placeholders, setPlaceholders] = useState();
 
-  // const [selectedPlaceholder, setSelectedPlaceholder] = useState();
   const [inputItems, setInputItems] = useState([]);
 
   const [modal, setModal] = useState(false);
   const [formVisible, setFormVisible] = useState(false);
   const [loadTemplateData, setLoadTemplateData] = useState({});
 
+  const [Types, setTypes] = useState([]);
+  const [isAllActive, setAllActive] = useState(true);
+  const [filterSelected, setFilterSelected] = useState();
   useEffect(() => {
-    habdelGetData(getSnippets, setLoading, history);
+    const list = JSON.parse(localStorage.getItem('type-order'));
+    let orderList;
+    if (list) {
+      orderList = types.sort((a, b) => {
+        return list.indexOf(a._id) - list.indexOf(b._id);
+      });
+    } else {
+      orderList = types;
+    }
+    setTypes(orderList);
+  }, [types]);
+
+  useEffect(() => {
+    habdelGetData(getSnippets, setSnippetLoading, history);
+    habdelGetData(getTypes, setTypeLoading, history);
   }, []);
 
   useEffect(() => {
@@ -202,14 +228,60 @@ const Template = ({
           <Separator className="mb-5" />
           <Row>
             <Colxx xxs="12" className="mb-4">
-              {/* <Card>
-                <CardBody> */}
+              <Row>
+                <Colxx xxs="12">
+                  <Card className="mb-4">
+                    <Nav className="nav-pills ">
+                      <NavItem>
+                        <NavLink
+                          href="#"
+                          active={isAllActive}
+                          onClick={() => {
+                            setFilterSelected({});
+                            setTypes(
+                              Types.map((type) => {
+                                return { ...type, active: false };
+                              })
+                            );
+                            setAllActive(true);
+                          }}>
+                          All
+                        </NavLink>
+                      </NavItem>
+
+                      {Types.map((ele) => (
+                        <NavItem key={ele._id}>
+                          <NavLink
+                            active={ele.active}
+                            href="#"
+                            onClick={() => {
+                              setTypes(
+                                Types.map((type) => {
+                                  setAllActive(false);
+                                  if (type._id === ele._id) {
+                                    setFilterSelected(ele);
+                                    return { ...ele, active: true };
+                                  } else {
+                                    return { ...type, active: false };
+                                  }
+                                })
+                              );
+                            }}>
+                            {ele.name}
+                          </NavLink>
+                        </NavItem>
+                      ))}
+                    </Nav>
+                  </Card>
+                </Colxx>
+              </Row>
+
               <Row style={{ minHeight: '50vh' }}>
                 {snippets.length !== 0 && (
                   <SnippetsGroups
                     items={items}
                     setItems={setItems}
-                    // data={dataGroup}
+                    filter={filterSelected}
                     data={loadTemplate()}
                   />
                 )}
@@ -240,8 +312,6 @@ const Template = ({
                   <div className="loading" />
                 )}
               </Row>
-              {/* </CardBody>
-              </Card> */}
             </Colxx>
           </Row>
         </Colxx>
@@ -252,14 +322,18 @@ const Template = ({
 
 const mapStateToProps = ({
   snippets: { snippets, loading },
+  types: { types },
   user: { user }
 }) => ({
   snippets,
   user,
-  loading
+  loading,
+  types
 });
 
 export default connect(mapStateToProps, {
   getSnippets,
-  setLoading
+  setSnippetLoading,
+  getTypes,
+  setTypeLoading
 })(Template);

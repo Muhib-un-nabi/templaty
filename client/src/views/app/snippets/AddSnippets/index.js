@@ -27,16 +27,30 @@ import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
 
 import { injectIntl } from 'react-intl';
+import CustomSelectInput from '../../../../components/common/CustomSelectInput';
+
 import IntlMessages from '../../../../helpers/IntlMessages';
 import {
   Colxx,
   Separator
 } from '../../../../components/common/CustomBootstrap';
+import Select from 'react-select';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
 import ControlledInput from '../../../../components/custom/ControlledInput';
-import { addSnippet } from '../../../../redux/snippets/action';
-import { getPlaceholders } from '../../../../redux/placeholder/action';
+import {
+  addSnippet,
+  setLoading as setSnippetLoading
+} from '../../../../redux/snippets/action';
+import {
+  getTypes,
+  setLoading as setTypesLoading
+} from '../../../../redux/types/action';
+import {
+  getPlaceholders,
+  setLoading as setPlaceholderLoading
+} from '../../../../redux/placeholder/action';
+import habdelGetData from '../../../../helpers/habdelGetData';
 import Editor from '../Editor/index';
 
 const fields = [
@@ -67,22 +81,6 @@ const fields = [
       name: 'Key',
       options: [],
       value: v4()
-    },
-    chosen: false
-  },
-
-  {
-    id: 'category',
-    type: {
-      label: 'Text Area',
-      value: '1',
-      id: 1
-    },
-    data: {
-      key: 'category',
-      name: 'Category',
-      options: [],
-      value: ' '
     },
     chosen: false
   },
@@ -159,12 +157,29 @@ const index = ({
   match,
   intl,
   addSnippet,
-  history
+  history,
+  getTypes,
+  setSnippetLoading,
+  setTypesLoading,
+  setPlaceholderLoading,
+  types
 }) => {
   const [discription, setDiscription] = useState('');
   const [Fields, setFields] = useState(fields);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const selectData = () => {
+    return (
+      types.map(({ _id, name }) => ({
+        label: name,
+        value: name,
+        key: _id
+      })) || []
+    );
+  };
   useEffect(() => {
-    getPlaceholders();
+    habdelGetData(getPlaceholders, setPlaceholderLoading, history);
+    habdelGetData(getTypes, setTypesLoading, history);
   }, []);
 
   const submitHandler = async (e) => {
@@ -177,11 +192,10 @@ const index = ({
       placeholderInSnippet = placeholders
         .filter((ele) => placeholderInSnippet.includes(ele.name))
         .map((ele) => ele._id);
+      console.log(selectedOptions);
       const newSnippet = {
         name: Fields.find((ele) => ele.id === 'name-input').data.value,
-        category: Fields.find((ele) => ele.id === 'category').data.value.split(
-          ','
-        ),
+        category: selectedOptions,
         data: Fields,
         discription: discription,
         placeholders: placeholderInSnippet,
@@ -231,6 +245,21 @@ const index = ({
                     />
                   </FormGroup>
                 ))}
+                <FormGroup>
+                  <label>
+                    <IntlMessages id="type.select" />
+                  </label>
+                  <Select
+                    components={{ Input: CustomSelectInput }}
+                    className="react-select"
+                    classNamePrefix="react-select"
+                    isMulti
+                    name="form-field-name"
+                    value={selectedOptions}
+                    onChange={setSelectedOptions}
+                    options={selectData()}
+                  />
+                </FormGroup>
                 <div>
                   {(placeholders.length >= 1 && (
                     <Editor
@@ -253,10 +282,19 @@ const index = ({
   );
 };
 
-const mapStateToProps = ({ placeholders: { placeholders } }) => ({
-  placeholders
+const mapStateToProps = ({
+  placeholders: { placeholders },
+  types: { types }
+}) => ({
+  placeholders,
+  types
 });
 
-export default connect(mapStateToProps, { addSnippet, getPlaceholders })(
-  injectIntl(index)
-);
+export default connect(mapStateToProps, {
+  addSnippet,
+  getTypes,
+  getPlaceholders,
+  setSnippetLoading,
+  setTypesLoading,
+  setPlaceholderLoading
+})(injectIntl(index));

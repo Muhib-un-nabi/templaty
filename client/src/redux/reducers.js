@@ -11,6 +11,7 @@ import contacts from './contacts/reducer';
 import placeholders from './placeholder/reducer';
 import snippets from './snippets/reducer';
 import template from './template/reducer';
+import types from './types/reducer';
 
 const reducers = combineReducers({
   menu,
@@ -20,7 +21,8 @@ const reducers = combineReducers({
   placeholders,
   snippets,
   template,
-  account: () => ({ setting: [] }),
+  types,
+  account: () => ({ setting: [] })
 });
 
 export default reducers;

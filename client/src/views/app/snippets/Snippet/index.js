@@ -25,6 +25,7 @@ import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
 import { getSnippets, deleteSnippet } from '../../../../redux/snippets/action';
 import SnippetsItem from './SnippetsItem';
+import ListItem from '../../../../components/listItem/index';
 
 const Placeholders = ({
   match,
@@ -109,15 +110,15 @@ const Placeholders = ({
                 {user &&
                   Snippets.map((snippet, i) => (
                     <li key={snippet._id}>
-                      <SnippetsItem
-                        user={user}
+                      <ListItem
                         itemData={snippet}
-                        order={i}
-                        deleteClick={(id) => deleteSnippet(id)}
-                        updateClick={(id) =>
-                          history.push(`${adminRoot}/snippets/edit/${id}`)
-                        }
-                      />
+                        user={user}
+                        deleteClick={({ _id }) => deleteSnippet(_id)}
+                        updateClick={({ _id }) =>
+                          history.push(`${adminRoot}/snippets/edit/${_id}`)
+                        }>
+                        <SnippetsItem itemData={snippet} />
+                      </ListItem>
                     </li>
                   ))}
               </ul>

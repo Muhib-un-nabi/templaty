@@ -106,5 +106,9 @@ module.exports = {
   template: 'Template',
   'template.all': 'All Template',
   'template.add': 'Add Template',
-  'template.delete': 'Delete Template'
+  'template.delete': 'Delete Template',
+
+  'type.select': 'Select Type',
+  'type.add': 'Add Type',
+  'type.update': 'Update Type'
 };

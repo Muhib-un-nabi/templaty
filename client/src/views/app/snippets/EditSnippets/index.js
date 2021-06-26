@@ -27,16 +27,29 @@ import {
   Colxx,
   Separator
 } from '../../../../components/common/CustomBootstrap';
+import Select from 'react-select';
+import CustomSelectInput from '../../../../components/common/CustomSelectInput';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
 
 import ControlledInput from '../../../../components/custom/ControlledInput';
-import { getPlaceholders } from '../../../../redux/placeholder/action';
+
+import {
+  getPlaceholders,
+  setLoading as setPlaceholderLoading
+} from '../../../../redux/placeholder/action';
+import {
+  getTypes,
+  setLoading as setTypesLoading
+} from '../../../../redux/types/action';
 import {
   clearCurrent,
   getSnippet,
-  updateSnippet
+  updateSnippet,
+  setLoading as setSnippetLoading
 } from '../../../../redux/snippets/action';
+
+import habdelGetData from '../../../../helpers/habdelGetData';
 import Editor from '../Editor/index';
 
 const index = ({
@@ -48,19 +61,36 @@ const index = ({
   getPlaceholders,
   placeholders,
   getSnippet,
-  updateSnippet
+  updateSnippet,
+  setTypesLoading,
+  setSnippetLoading,
+  setPlaceholderLoading,
+  getTypes,
+  types
 }) => {
   const [Fields, setFields] = useState();
   const [discription, setDiscription] = useState();
+  const [selectedOptions, setSelectedOptions] = useState([]);
 
+  const selectData = () => {
+    return (
+      types.map(({ _id, name }) => ({
+        label: name,
+        value: name,
+        key: _id
+      })) || []
+    );
+  };
   useEffect(() => {
-    getPlaceholders();
+    habdelGetData(getPlaceholders, setPlaceholderLoading, history);
+    habdelGetData(getTypes, setTypesLoading, history);
     getSnippet(match.params.id);
     return () => clearCurrent();
   }, []);
 
   useEffect(() => {
     setFields(current.data);
+    setSelectedOptions(current.category);
     setDiscription(current.discription);
   }, [current]);
 
@@ -76,9 +106,7 @@ const index = ({
         .map((ele) => ele._id);
       const newSnippet = {
         name: Fields.find((ele) => ele.id === 'name-input').data.value,
-        category: Fields.find((ele) => ele.id === 'category').data.value.split(
-          ','
-        ),
+        category: selectedOptions,
         data: Fields,
         discription: discription,
         placeholders: placeholderInSnippet,
@@ -127,6 +155,21 @@ const index = ({
                       />
                     </FormGroup>
                   ))}
+                <FormGroup>
+                  <label>
+                    <IntlMessages id="type.select" />
+                  </label>
+                  <Select
+                    components={{ Input: CustomSelectInput }}
+                    className="react-select"
+                    classNamePrefix="react-select"
+                    isMulti
+                    name="form-field-name"
+                    value={selectedOptions}
+                    onChange={setSelectedOptions}
+                    options={selectData()}
+                  />
+                </FormGroup>
                 <div>
                   {(discription && placeholders.length >= 1 && (
                     <Editor
@@ -151,15 +194,21 @@ const index = ({
 
 const mapStateToProps = ({
   placeholders: { placeholders },
-  snippets: { current }
+  snippets: { current },
+  types: { types }
 }) => ({
   current,
-  placeholders
+  placeholders,
+  types
 });
 
 export default connect(mapStateToProps, {
   clearCurrent,
-  getSnippet,
   updateSnippet,
-  getPlaceholders
+  getTypes,
+  getSnippet,
+  getPlaceholders,
+  setTypesLoading,
+  setSnippetLoading,
+  setPlaceholderLoading
 })(injectIntl(index));
