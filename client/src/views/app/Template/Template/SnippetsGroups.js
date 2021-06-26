@@ -93,6 +93,7 @@ function DroppableList({ id, items, colSize, label, filter }) {
                       {(provided) => (
                         <div
                           data-display={isDisplay}
+                          className="list-item"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}>

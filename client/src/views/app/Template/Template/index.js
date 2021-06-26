@@ -52,7 +52,7 @@ const Template = ({
 
   const [Types, setTypes] = useState([]);
   const [isAllActive, setAllActive] = useState(true);
-  const [filterSelected, setFilterSelected] = useState();
+  const [filterSelected, setFilterSelected] = useState({});
   useEffect(() => {
     const list = JSON.parse(localStorage.getItem('type-order'));
     let orderList;

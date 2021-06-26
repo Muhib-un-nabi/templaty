@@ -38,7 +38,7 @@
   height: 100%;
 }
 
-.un-selected-list.col-2 [data-display='true'] {
+.un-selected-list.col-2 .list-item:not([data-display='false']) {
   width: 0;
   height: 0;
   opacity: 0;
