@@ -71,15 +71,10 @@ exports.deleteUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  // Create Contact Setting
-  const newSetting = new ContactSetting({
-    setting: []
-  });
   //  Create New User
   const newUser = new User({
     name: req.body.name,
     email: req.body.email,
-    contactSetting: newSetting._id,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     team: req.user.team,
@@ -87,7 +82,6 @@ exports.createUser = catchAsync(async (req, res, next) => {
   });
 
   //  Save All
-  await newSetting.save();
   await newUser.save();
   await Team.findByIdAndUpdate(
     req.user.team,

@@ -33,7 +33,10 @@ import { adminRoot } from '../../../../constants/defaultValues';
 import ControlledInput from '../../../../components/custom/ControlledInput';
 import { addPlaceholder } from '../../../../redux/placeholder/action';
 
-const index = ({ match, intl, addPlaceholder, history }) => {
+const index = ({ match, intl, addPlaceholder, history, input: { global } }) => {
+  const [name, setName] = useState('');
+  const [key, setKey] = useState('');
+  const [value, setvalue] = useState('');
   const fields = [
     {
       id: 'name-input',
@@ -168,23 +171,27 @@ const index = ({ match, intl, addPlaceholder, history }) => {
       e.preventDefault();
 
       const newPlaceholders = {
-        name: Fields.find((ele) => ele.id === 'name-input').data.value,
-        category: Fields.find((ele) => ele.id === 'category').data.value.split(
-          ','
-        ),
-        data: Fields,
-        defaultValue: Fields.find((ele) => ele.id === 'default-value').data
-          .value,
-        visibility:
-          Fields.find((ele) => ele.id === 'visibility-input').data.value.id ===
-          'team'
+        name,
+        key,
+        defaultValue: value
+        // visibility:
+        //   Fields.find((ele) => ele.id === 'visibility-input').data.value.id ===
+        //   'team'
       };
-      await addPlaceholder(newPlaceholders);
+      //     category: Fields.find((ele) => ele.id === 'category').data.value.split(
+      //     ','
+      //   ),
+      // await addPlaceholder(newPlaceholders);
       history.push(`${adminRoot}/placeholders/all`);
     } catch (e) {
       console.log(e);
     }
   };
+
+  const makeKey = (string) => {
+    return string.toString().toLocaleLowerCase().replaceAll(' ', '-');
+  };
+
   return (
     <>
       <Row>
@@ -198,27 +205,41 @@ const index = ({ match, intl, addPlaceholder, history }) => {
           <Card>
             <CardBody>
               <Form onSubmit={submitHandler}>
-                {Fields.map((inputData) => (
-                  <FormGroup key={`customInput__${inputData.id}`}>
-                    <Label htmlFor={`customInput__${inputData.id}`}>
-                      {inputData.data.name}
-                    </Label>
-                    <ControlledInput
-                      inputData={inputData}
-                      onChangeHandler={(inputData, updatedValue) =>
-                        setFields((prevState) => {
-                          const newInpuEle = {
-                            ...inputData,
-                            data: { ...inputData.data, value: updatedValue }
-                          };
-                          return prevState.map((ele) =>
-                            ele.id === newInpuEle.id ? newInpuEle : ele
-                          );
-                        })
-                      }
-                    />
-                  </FormGroup>
-                ))}
+                <FormGroup>
+                  <Label>Name</Label>
+                  <Input
+                    type="text"
+                    value={name}
+                    name="name"
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      setKey('');
+                    }}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label>Key</Label>
+                  <Input
+                    type="text"
+                    value={makeKey(key) || makeKey(name)}
+                    name="key"
+                    onChange={(e) => {
+                      setKey(e.target.value);
+                    }}
+                  />
+                </FormGroup>
+                <FormGroup>
+                  <Label>Value (default)</Label>
+                  <Input
+                    type="text"
+                    value={value}
+                    name="value"
+                    onChange={(e) => {
+                      setvalue(e.target.value);
+                    }}
+                  />
+                </FormGroup>
+
                 <Button color="primary" className="mt-4">
                   <IntlMessages id="form.addPlaceholder" />
                 </Button>
@@ -231,4 +252,8 @@ const index = ({ match, intl, addPlaceholder, history }) => {
   );
 };
 
-export default connect(null, { addPlaceholder })(injectIntl(index));
+const mapStateToProps = ({ contacts: { inputs } }) => ({
+  inputs
+});
+
+export default connect(mapStateToProps, { addPlaceholder })(injectIntl(index));

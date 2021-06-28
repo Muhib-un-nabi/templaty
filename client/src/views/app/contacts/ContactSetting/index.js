@@ -45,7 +45,8 @@ const ContactSetting = ({
   getInputField,
   loading,
   history,
-  setLoading
+  setLoading,
+  user
 }) => {
   const [customInput, setCustomInput] = useState(custom);
   const onChangeHandler = (updatedInput) =>
@@ -54,6 +55,13 @@ const ContactSetting = ({
     );
 
   // const [defauultInput, setDefauultInput] = useState(global)
+
+  useEffect(() => {
+    if (!user) return;
+    if (user.role !== 'admin') {
+      history.push('/error');
+    }
+  }, [user]);
 
   useEffect(() => {
     setCustomInput(custom);
@@ -155,8 +163,12 @@ const ContactSetting = ({
   );
 };
 
-const mapStateToProps = ({ contacts: { inputs, loading } }) => ({
+const mapStateToProps = ({
+  contacts: { inputs, loading },
+  user: { user }
+}) => ({
   inputs,
+  user,
   loading
 });
 

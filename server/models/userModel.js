@@ -15,11 +15,6 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: [validator.isEmail, 'Please provide a valid email']
   },
-  contactSetting: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'ContactSetting',
-    required: [true, 'ContactSetting must belong to a User']
-  },
   team: {
     type: mongoose.Schema.ObjectId,
     ref: 'Team',

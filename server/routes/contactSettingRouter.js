@@ -16,7 +16,7 @@ router.use(authController.protect);
 router
   .route('/')
   .get(addQueryParams, getSetting)
-  .patch(addQueryParams, savaSetting)
+  .patch(savaSetting)
   .delete(addQueryParams, deleteSetting);
 
 module.exports = router;

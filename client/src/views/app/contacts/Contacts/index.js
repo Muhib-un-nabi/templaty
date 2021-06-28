@@ -62,14 +62,19 @@ const Contacts = ({
             </h1>
 
             <div className="text-zero top-right-button-container">
-              <Button
-                color="primary"
-                size="sm"
-                className="top-right-button mr-1"
-                onClick={() => history.push(`${adminRoot}/contacts/setting`)}
-                outline>
-                <i className="simple-icon-settings" />
-              </Button>
+              {!user ||
+                (user && user.role === 'admin' && (
+                  <Button
+                    color="primary"
+                    size="sm"
+                    className="top-right-button mr-1"
+                    onClick={() =>
+                      history.push(`${adminRoot}/contacts/setting`)
+                    }
+                    outline>
+                    <i className="simple-icon-settings" />
+                  </Button>
+                ))}
               <Button
                 color="primary"
                 size="lg"

@@ -38,21 +38,21 @@ const createSendToken = (user, statusCode, req, res) => {
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
-  // Create Contact Setting
-  const newSetting = new ContactSetting({
-    setting: []
-  });
   //  Create New User
   const newUser = new User({
     name: req.body.name,
     email: req.body.email,
-    contactSetting: newSetting._id,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm
   });
   // Create New Team
   const newTeam = new Team({
     admin: newUser._id
+  });
+  // Create Contact Setting
+  const newSetting = new ContactSetting({
+    setting: [],
+    team: newTeam._id
   });
   //  Save All
   newUser.team = newTeam._id;
