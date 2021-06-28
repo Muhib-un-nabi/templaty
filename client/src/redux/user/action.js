@@ -136,7 +136,7 @@ export const addNewUser = (userData) => async (dispatch) => {
   }
 };
 
-//  Add New User
+//
 export const isLogin = () => async (dispatch) => {
   try {
     const { data } = await serverApi.post('/users/islogin', authHeader());
@@ -185,15 +185,15 @@ export const deleteUserByAdmin =
 //  Not Working
 export const forgetPassword = () => async (dispatch) => {
   try {
-    const { data } = await serverApi.post('/login');
+    const { data } = await serverApi.post('user/forgotPassword');
     dispatch({
-      type: SIGN_UP,
+      type: FORGET_PASSWORD,
       payload: data.data.data
     });
   } catch (err) {
     NotificationManager.error(
       'Warning message',
-      'Wrong Email and Password',
+      'Wrong Email ',
       3000,
       null,
       null

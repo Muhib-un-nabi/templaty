@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { connect } from 'react-redux';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import IntlMessages from '../../helpers/IntlMessages';
-import { NotificationManager } from '../../components/common/react-notifications';
 import { forgetPassword } from '../../redux/user/action';
 
 const validateEmail = (value) => {
@@ -18,43 +17,12 @@ const validateEmail = (value) => {
   return error;
 };
 
-const ForgotPassword = ({
-  history,
-  forgotUserMail,
-  loading,
-  error,
-  forgotPasswordAction,
-}) => {
+const ForgotPassword = ({ history, loading, forgetPassword }) => {
   const [email] = useState('demo@coloredstrategies.com');
 
   const onForgotPassword = (values) => {
-    if (!loading) {
-      if (values.email !== '') {
-        forgotPasswordAction(values, history);
-      }
-    }
+    forgetPassword(values);
   };
-
-  useEffect(() => {
-    if (error) {
-      NotificationManager.warning(
-        error,
-        'Forgot Password Error',
-        3000,
-        null,
-        null,
-        ''
-      );
-    } else if (!loading && forgotUserMail === 'success')
-      NotificationManager.success(
-        'Please check your email.',
-        'Forgot Password Success',
-        3000,
-        null,
-        null,
-        ''
-      );
-  }, [error, forgotUserMail, loading]);
 
   const initialValues = { email };
 
@@ -109,8 +77,7 @@ const ForgotPassword = ({
                       className={`btn-shadow btn-multiple-state ${
                         loading ? 'show-spinner' : ''
                       }`}
-                      size="lg"
-                    >
+                      size="lg">
                       <span className="spinner d-inline-block">
                         <span className="bounce1" />
                         <span className="bounce2" />
@@ -131,11 +98,6 @@ const ForgotPassword = ({
   );
 };
 
-const mapStateToProps = ({ authUser }) => {
-  const { forgotUserMail, loading, error } = authUser;
-  return { forgotUserMail, loading, error };
-};
+const mapStateToProps = ({ user: { loading } }) => ({ loading });
 
-export default connect(mapStateToProps, {
-  forgotPasswordAction: forgetPassword,
-})(ForgotPassword);
+export default connect(mapStateToProps, { forgetPassword })(ForgotPassword);

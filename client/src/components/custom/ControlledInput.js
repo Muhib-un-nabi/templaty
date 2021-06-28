@@ -9,21 +9,25 @@ import React from 'react';
 import { FormGroup, Input, CustomInput } from 'reactstrap';
 import PropTypes from 'prop-types';
 import { v4 as uuidV4 } from 'uuid';
-import inputType, { CHECKBOX, RADIO_BUTTON } from '../../constants/inputTypes';
+import inputType, {
+  CHECKBOX,
+  RADIO_BUTTON,
+  TEXT_AREA
+} from '../../constants/inputTypes';
 
 const ControlledInput = ({
   inputData,
   onChangeHandler,
-  placholder = 'Enter Value',
+  placholder = 'Enter Value'
 }) => {
   const { id, data, type } = inputData;
-  let { key, name, options, value } = data;
+  let { name, options, value } = data;
   if (!type) return null;
 
   switch (type.label) {
     case CHECKBOX:
       return (
-        <FormGroup data-key={key}>
+        <FormGroup>
           {options.map((option, index) => {
             return (
               <CustomInput
@@ -65,7 +69,7 @@ const ControlledInput = ({
       );
     case RADIO_BUTTON:
       return (
-        <FormGroup data-key={key}>
+        <FormGroup>
           {options.map((option) => {
             return (
               <CustomInput
@@ -98,7 +102,6 @@ const ControlledInput = ({
     default:
       return (
         <Input
-          data-key={key}
           type="text"
           placeholder={placholder}
           value={value}
@@ -116,29 +119,27 @@ const ControlledInput = ({
 ControlledInput.prototype = {
   inputData: PropTypes.object.isRequired,
   onChangeHandler: PropTypes.func.isRequired,
-  placholder: PropTypes.string,
+  placholder: PropTypes.string
 };
 
 export const updateInputState = (prevState, value) => ({
   ...prevState,
-  data: { ...prevState.data, value },
+  data: { ...prevState.data, value }
 });
 
 export const defaultInputObj = ({
   name = 'input Field',
   value = ' ',
   options = [],
-  type = inputType[0],
-  key = uuidV4(),
+  type = inputType[0]
 }) => ({
   id: uuidV4(),
   type,
   data: {
-    key,
     name,
     options,
-    value,
-  },
+    value
+  }
 });
 
 export default ControlledInput;

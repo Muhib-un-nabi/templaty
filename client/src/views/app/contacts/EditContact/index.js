@@ -1,6 +1,5 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-else-return */
 /* eslint-disable no-shadow */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable react-hooks/rules-of-hooks */
@@ -30,58 +29,97 @@ import {
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
+import habdelGetData from '../../../../helpers/habdelGetData';
 
 import ControlledInput from '../../../../components/custom/ControlledInput';
 import {
   updateContact,
   getInputField,
-  getContact,
-  clearCurrent,
-  setLoading
+  setLoading,
+  getContact
 } from '../../../../redux/contacts/action';
-import habdelGetData from '../../../../helpers/habdelGetData';
 
 const index = ({
+  inputs: { custom, global },
   match,
   intl,
   updateContact,
-  current,
-  getContact,
-  clearCurrent,
+  getInputField,
   history,
   loading,
-  setLoading
+  setLoading,
+  getContact,
+  current
 }) => {
-  const [inputs, setInputs] = useState();
+  const [GlobalInput, setGlobalInput] = useState(global);
+  const [customInput, setCustomInput] = useState(custom);
+
+  useEffect(() => {
+    setCustomInput(custom);
+  }, [custom]);
+
+  useEffect(() => {
+    setLoading();
+    const global = GlobalInput.map((ele) => {
+      const newObj = JSON.parse(JSON.stringify(ele));
+      if (newObj.id === 'name-input') {
+        newObj.data.value = current.name;
+      }
+      if (newObj.id === 'visibility-input') {
+        const team = ele.data.options.find((ele) => ele.id === 'team');
+        const privat = ele.data.options.find((ele) => ele.id === 'private');
+        newObj.data.value = current.visibility ? team : privat;
+      }
+      return newObj;
+    });
+    setGlobalInput(global);
+    setLoading(false);
+    return () => setGlobalInput([]);
+  }, [current]);
+
+  useEffect(() => {
+    if (current && current.data && current.data.length && custom.length) {
+      // setLoading();
+      const customUpdateInput = custom.map((ele) => {
+        const findedObj = current.data.find((el) => el.name === ele.data.name);
+        const newObj = JSON.parse(JSON.stringify(ele));
+        if (newObj.data && newObj.data.value && findedObj) {
+          newObj.data.value = findedObj.value;
+          return newObj;
+        }
+        return ele;
+      });
+      setCustomInput(customUpdateInput);
+      // setLoading(false);
+    }
+  }, [current, custom]);
 
   useEffect(() => {
     try {
       setLoading();
       getContact(match.params.id);
+      habdelGetData(getInputField, setLoading, history);
     } catch (e) {
       setLoading(false);
     }
-    return () => clearCurrent();
   }, []);
 
-  useEffect(() => {
-    setInputs(current.data);
-  }, [current]);
-
-  // const onChangeHandler = ;
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-      const newContact = {
-        name: inputs.find((ele) => ele.id === 'name-input').data.value,
-        data: inputs,
-        visibility:
-          inputs.find((ele) => ele.id === 'visibility-input').data.value.id ===
-          'team'
-      };
       await setLoading();
+      const newContact = {
+        name: GlobalInput.find((ele) => ele.id === 'name-input').data.value,
+        data: customInput.map((ele) => ({
+          name: ele.data.name,
+          value: ele.data.value,
+          type: ele.type
+        })),
+        visibility:
+          GlobalInput.find((ele) => ele.id === 'visibility-input').data.value
+            .id === 'team'
+      };
       await updateContact(newContact, match.params.id);
-      await clearCurrent();
       history.push(`${adminRoot}/contacts/all`);
     } catch (e) {
       await setLoading(false);
@@ -91,57 +129,76 @@ const index = ({
     <>
       <Row>
         <Colxx xxs="12">
-          <Breadcrumb heading="menu.contacts-edit" match={match} />
+          <Breadcrumb heading="form.updateContact" match={match} />
           <Separator className="mb-5" />
         </Colxx>
       </Row>
       <Row className="mb-4">
         <Colxx xxs="12">
           <Card>
-            <CardBody className={`${loading && 'loading'}`}>
-              {!loading && (
-                <Form onSubmit={submitHandler}>
-                  {inputs &&
-                    inputs.length !== 0 &&
-                    inputs.map((inputData) => (
-                      <FormGroup key={`customInput__${inputData.id}`}>
-                        <Label htmlFor={`customInput__${inputData.id}`}>
-                          {inputData.data.name}
-                        </Label>
-                        <ControlledInput
-                          inputData={inputData}
-                          onChangeHandler={(inputData, updatedValue) =>
-                            setInputs((prevState) => {
-                              const newInpuEle = {
-                                ...inputData,
-                                data: { ...inputData.data, value: updatedValue }
-                              };
-                              return prevState.map((ele) =>
-                                ele.id === newInpuEle.id ? newInpuEle : ele
-                              );
-                            })
-                          }
-                        />
-                      </FormGroup>
-                    ))}
-
-                  <Button
-                    color="primary"
-                    className={`mt-4 ${
-                      loading && 'show-spinner'
-                    } btn-shadow btn-multiple-state`}
-                    disabled={loading}>
-                    <span className="spinner d-inline-block">
-                      <span className="bounce1" />
-                      <span className="bounce2" />
-                      <span className="bounce3" />
-                    </span>
-                    <span className="label">
-                      <IntlMessages id="form.updateContact" />
-                    </span>
-                  </Button>
-                </Form>
-              )}
+            <CardBody>
+              <Form onSubmit={submitHandler}>
+                {!loading &&
+                  GlobalInput.map((inputData) => (
+                    <FormGroup key={`customInput__${inputData.id}`}>
+                      <Label htmlFor={`customInput__${inputData.id}`}>
+                        {inputData.data.name}
+                      </Label>
+                      <ControlledInput
+                        inputData={inputData}
+                        onChangeHandler={(inputData, updatedValue) =>
+                          setGlobalInput((prevState) => {
+                            const newInpuEle = {
+                              ...inputData,
+                              data: { ...inputData.data, value: updatedValue }
+                            };
+                            return prevState.map((ele) =>
+                              ele.id === newInpuEle.id ? newInpuEle : ele
+                            );
+                          })
+                        }
+                      />
+                    </FormGroup>
+                  ))}
+                {(!loading &&
+                  customInput.map((inputData) => (
+                    <FormGroup key={`customInput__${inputData.id}`}>
+                      <Label htmlFor={`customInput__${inputData.id}`}>
+                        {inputData.data.name}
+                      </Label>
+                      <ControlledInput
+                        inputData={inputData}
+                        onChangeHandler={(inputData, updatedValue) =>
+                          setCustomInput((prevState) => {
+                            const newInpuEle = {
+                              ...inputData,
+                              data: { ...inputData.data, value: updatedValue }
+                            };
+                            return prevState.map((ele) =>
+                              ele.id === newInpuEle.id ? newInpuEle : ele
+                            );
+                          })
+                        }
+                      />
+                    </FormGroup>
+                  ))) || <div className="loading"></div>}
+                <Button
+                  disabled={loading}
+                  color="primary"
+                  className={`btn-shadow mt-4 btn-multiple-state ${
+                    loading ? 'show-spinner' : ''
+                  }`}
+                  size="sm">
+                  <span className="spinner d-inline-block">
+                    <span className="bounce1" />
+                    <span className="bounce2" />
+                    <span className="bounce3" />
+                  </span>
+                  <span className="label">
+                    <IntlMessages id="form.updateContact" />
+                  </span>
+                </Button>
+              </Form>
             </CardBody>
           </Card>
         </Colxx>
@@ -150,16 +207,15 @@ const index = ({
   );
 };
 
-const mapStateToProps = ({ contacts: { inputs, current, loading } }) => ({
+const mapStateToProps = ({ contacts: { inputs, loading, current } }) => ({
   inputs,
-  current,
-  loading
+  loading,
+  current
 });
 
 export default connect(mapStateToProps, {
   updateContact,
-  getContact,
   getInputField,
-  clearCurrent,
-  setLoading
+  setLoading,
+  getContact
 })(injectIntl(index));

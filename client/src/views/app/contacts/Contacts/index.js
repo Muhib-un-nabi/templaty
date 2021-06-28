@@ -31,6 +31,8 @@ import {
 import ContactItem from './ContactItem';
 import habdelGetData from '../../../../helpers/habdelGetData';
 
+import ListItem from '../../../../components/listItem/index';
+
 const Contacts = ({
   match,
   history,
@@ -109,7 +111,6 @@ const Contacts = ({
                       });
                       setContacts(filteredItem);
                     }}
-                    // placeholder={messages['menu.search']}
                   />
                 </div>
               </div>
@@ -119,19 +120,18 @@ const Contacts = ({
           <Row>
             <Colxx xxs="12" className={`mb-4 ${loading && ''}`}>
               {Contacts.length === 0 && <p> No Contacts Found</p>}
-
               <ul className="list-unstyled mb-4">
-                {Contacts.map((contact, i) => (
+                {Contacts.map((contact) => (
                   <li key={contact._id}>
-                    <ContactItem
+                    <ListItem
                       itemData={contact}
-                      order={i}
                       user={user}
-                      deleteClick={(id) => deleteContact(id)}
-                      updateClick={(id) =>
-                        history.push(`${adminRoot}/contacts/edit/${id}`)
-                      }
-                    />
+                      deleteClick={({ _id }) => deleteContact(_id)}
+                      updateClick={({ _id }) =>
+                        history.push(`${adminRoot}/contacts/edit/${_id}`)
+                      }>
+                      <ContactItem list={contact.data} />
+                    </ListItem>
                   </li>
                 ))}
               </ul>

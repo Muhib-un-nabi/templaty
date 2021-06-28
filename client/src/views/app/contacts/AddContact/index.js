@@ -29,6 +29,7 @@ import {
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
+import habdelGetData from '../../../../helpers/habdelGetData';
 
 import ControlledInput from '../../../../components/custom/ControlledInput';
 import {
@@ -54,12 +55,7 @@ const index = ({
     setCustomInput(custom);
   }, [custom]);
   useEffect(() => {
-    try {
-      setLoading();
-      getInputField();
-    } catch (e) {
-      setLoading(false);
-    }
+    habdelGetData(getInputField, setLoading, history);
   }, []);
 
   const submitHandler = async (e) => {
@@ -68,7 +64,11 @@ const index = ({
       await setLoading();
       const newContact = {
         name: GlobalInput.find((ele) => ele.id === 'name-input').data.value,
-        data: [...GlobalInput, ...customInput],
+        data: customInput.map((ele) => ({
+          name: ele.data.name,
+          value: ele.data.value,
+          type: ele.type
+        })),
         visibility:
           GlobalInput.find((ele) => ele.id === 'visibility-input').data.value
             .id === 'team'
@@ -92,27 +92,28 @@ const index = ({
           <Card>
             <CardBody>
               <Form onSubmit={submitHandler}>
-                {GlobalInput.map((inputData) => (
-                  <FormGroup key={`customInput__${inputData.id}`}>
-                    <Label htmlFor={`customInput__${inputData.id}`}>
-                      {inputData.data.name}
-                    </Label>
-                    <ControlledInput
-                      inputData={inputData}
-                      onChangeHandler={(inputData, updatedValue) =>
-                        setGlobalInput((prevState) => {
-                          const newInpuEle = {
-                            ...inputData,
-                            data: { ...inputData.data, value: updatedValue }
-                          };
-                          return prevState.map((ele) =>
-                            ele.id === newInpuEle.id ? newInpuEle : ele
-                          );
-                        })
-                      }
-                    />
-                  </FormGroup>
-                ))}
+                {!loading &&
+                  GlobalInput.map((inputData) => (
+                    <FormGroup key={`customInput__${inputData.id}`}>
+                      <Label htmlFor={`customInput__${inputData.id}`}>
+                        {inputData.data.name}
+                      </Label>
+                      <ControlledInput
+                        inputData={inputData}
+                        onChangeHandler={(inputData, updatedValue) =>
+                          setGlobalInput((prevState) => {
+                            const newInpuEle = {
+                              ...inputData,
+                              data: { ...inputData.data, value: updatedValue }
+                            };
+                            return prevState.map((ele) =>
+                              ele.id === newInpuEle.id ? newInpuEle : ele
+                            );
+                          })
+                        }
+                      />
+                    </FormGroup>
+                  ))}
                 {(!loading &&
                   customInput.map((inputData) => (
                     <FormGroup key={`customInput__${inputData.id}`}>

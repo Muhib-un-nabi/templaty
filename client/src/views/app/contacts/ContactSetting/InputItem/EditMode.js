@@ -20,7 +20,6 @@ import {
 } from 'reactstrap';
 import Select from 'react-select';
 import { ReactSortable } from 'react-sortablejs';
-import { v4 as uuidV4 } from 'uuid';
 import ControlledInput, {
   defaultInputObj
 } from '../../../../../components/custom/ControlledInput';
@@ -29,21 +28,15 @@ import inputTypes from '../../../../../constants/inputTypes';
 
 const EditMode = ({ inputData, onChangeHandler }) => {
   const { id, data, type } = inputData;
-  let { name, key, options, value } = data;
-  const Name = defaultInputObj({ name: 'title', key: 'title', value: name });
-  const Key = defaultInputObj({
-    name: Name.data.name,
-    key: Name.data.name,
-    value: key
-  });
+  let { name, options, value } = data;
+  const Name = defaultInputObj({ name: 'title', value: name });
+
   const Options = defaultInputObj({
     name: Name.data.name,
-    key: Name.data.name,
     value: options
   });
   const Type = defaultInputObj({
     name: Name.data.name,
-    key: Name.data.name,
     value: type
   });
 
@@ -60,15 +53,6 @@ const EditMode = ({ inputData, onChangeHandler }) => {
         />
       </FormGroup>
 
-      <FormGroup>
-        <Label>key</Label>
-        <ControlledInput
-          inputData={Key}
-          onChangeHandler={(__, updatedValue) =>
-            onChangeHandler('key', updatedValue)
-          }
-        />
-      </FormGroup>
       <div className="separator mb-4 mt-4" />
 
       <FormGroup>
@@ -106,7 +90,6 @@ const EditMode = ({ inputData, onChangeHandler }) => {
                     id: item.id,
                     type: inputTypes[0],
                     data: {
-                      key: 'key',
                       name: 'key',
                       options: '',
                       value: item.label

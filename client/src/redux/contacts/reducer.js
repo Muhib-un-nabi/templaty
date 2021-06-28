@@ -74,21 +74,20 @@ const global = [
         }
       ],
       value: {
-        id: 'private',
+        id: 'team',
         type: {
           label: 'Text Area',
           value: '1',
           id: 1
         },
         data: {
-          key: '90599285-a29e-4091-a58a-b3d78ef8c20b',
-          name: 'new Field',
+          key: '1090aab7-858c-4b6e-96d4-6324980e2066',
+          name: 'new cxzcxfield',
           options: [],
           value: ' '
         },
         chosen: false,
-        selected: false,
-        label: 'private'
+        label: 'team'
       }
     },
     chosen: false
