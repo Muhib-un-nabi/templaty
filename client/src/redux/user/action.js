@@ -95,7 +95,6 @@ export const getTeamDetails = () => async (dispatch) => {
 export const getMe = () => async (dispatch) => {
   try {
     const { data } = await serverApi.get('/users/me', authHeader());
-    console.log(data.data.data);
     dispatch({
       type: GET_ME,
       payload: {

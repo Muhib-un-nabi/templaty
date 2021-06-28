@@ -5,7 +5,7 @@ import { Card, CardBody, CardTitle } from 'reactstrap';
 import SnippetItem from './SnippetItem';
 import { Colxx } from '../../../../components/common/CustomBootstrap';
 
-function SnippetsGroups({ data, items, setItems, filter }) {
+function SnippetsGroups({ data, items, setItems, filter, isAllActive }) {
   const [groups, setGroups] = useState({});
 
   useEffect(() => {
@@ -58,13 +58,18 @@ function SnippetsGroups({ data, items, setItems, filter }) {
         setItems(workValue);
       }}>
       {items.map((item) => (
-        <DroppableList key={item.id} {...item} filter={filter} />
+        <DroppableList
+          key={item.id}
+          {...item}
+          filter={filter}
+          isAllActive={isAllActive}
+        />
       ))}
     </DragDropContext>
   );
 }
 
-function DroppableList({ id, items, colSize, label, filter }) {
+function DroppableList({ id, items, colSize, label, filter, isAllActive }) {
   return (
     <Droppable droppableId={id}>
       {(provided) => (
@@ -78,10 +83,12 @@ function DroppableList({ id, items, colSize, label, filter }) {
                 ref={provided.innerRef}>
                 {items.map((item, index) => {
                   let isDisplay;
-                  if (filter) {
+                  if (filter && item.category) {
                     isDisplay = item.category
                       .map((ele) => ele.key)
                       .includes(filter._id);
+                  } else if (!item.category) {
+                    isDisplay = false;
                   } else {
                     isDisplay = true;
                   }
@@ -92,7 +99,7 @@ function DroppableList({ id, items, colSize, label, filter }) {
                       key={item._id}>
                       {(provided) => (
                         <div
-                          data-display={isDisplay}
+                          data-display={isAllActive || isDisplay}
                           className="list-item"
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}

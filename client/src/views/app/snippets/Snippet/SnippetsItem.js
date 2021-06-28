@@ -44,7 +44,7 @@ const PlaceholdersItem = ({ itemData }) => {
           <>{ele.data.name.toUpperCase()}</> : <>{renderValue(ele)}</>
         </li>
       ))}
-      <li>Types : {itemData.category.map((ele) => ele.label).join(', ')}</li>
+      <li>Types : {itemData.category?.map((ele) => ele.label).join(', ')}</li>
       <li ref={descriptionRef} />
     </ul>
   );

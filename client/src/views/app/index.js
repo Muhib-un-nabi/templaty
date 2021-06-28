@@ -32,8 +32,9 @@ const Account = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './account')
 );
 
-const App = ({ match, history, getMe, setLoading }) => {
+const App = ({ match, history, getMe, setLoading, user }) => {
   useEffect(() => {
+    if (user) return;
     habdelGetData(getMe, setLoading, history);
   }, []);
 
@@ -84,4 +85,5 @@ const App = ({ match, history, getMe, setLoading }) => {
   );
 };
 
-export default connect(null, { getMe, setLoading })(withRouter(App));
+const mapStateToProps = ({ user: { user } }) => ({ user });
+export default connect(mapStateToProps, { getMe, setLoading })(withRouter(App));

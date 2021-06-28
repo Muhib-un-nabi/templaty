@@ -12,61 +12,19 @@ const data = [
     id: 'snippets',
     icon: 'simple-icon-pencil',
     label: 'menu.snippets',
-    to: `${adminRoot}/snippets`,
-    subs: [
-      {
-        icon: 'simple-icon-list',
-        label: 'menu.snippets-List',
-        to: `${adminRoot}/snippets/all`
-      },
-      {
-        icon: 'simple-icon-plus',
-        label: 'menu.snippets-add',
-        to: `${adminRoot}/snippets/add`
-      }
-    ]
+    to: `${adminRoot}/snippets`
   },
   {
     id: 'placeholder',
     icon: 'simple-icon-note',
     label: 'menu.placeholder',
-    to: `${adminRoot}/placeholders`,
-    subs: [
-      {
-        icon: 'simple-icon-list',
-        label: 'menu.placeholders-List',
-        to: `${adminRoot}/placeholders/all`
-      },
-      {
-        icon: 'simple-icon-plus',
-        label: 'menu.placeholders-add',
-        to: `${adminRoot}/placeholders/add`
-      }
-    ]
+    to: `${adminRoot}/placeholders`
   },
   {
     id: 'contacts',
     icon: 'simple-icon-people',
     label: 'menu.contacts',
-    to: `${adminRoot}/contacts`,
-    // roles: [UserRole.Admin, UserRole.Editor],
-    subs: [
-      {
-        icon: 'simple-icon-list',
-        label: 'menu.contacts-List',
-        to: `${adminRoot}/contacts/all`
-      },
-      {
-        icon: 'simple-icon-plus',
-        label: 'menu.contacts-add',
-        to: `${adminRoot}/contacts/add`
-      },
-      {
-        icon: 'simple-icon-settings',
-        label: 'menu.contacts-setting',
-        to: `${adminRoot}/contacts/setting`
-      }
-    ]
+    to: `${adminRoot}/contacts`
   },
   {
     id: 'types',

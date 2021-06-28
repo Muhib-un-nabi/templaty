@@ -62,8 +62,16 @@ const Contacts = ({
             <div className="text-zero top-right-button-container">
               <Button
                 color="primary"
-                size="lg"
+                size="sm"
                 className="top-right-button mr-1"
+                onClick={() => history.push(`${adminRoot}/contacts/setting`)}
+                outline>
+                <i className="simple-icon-settings" />
+              </Button>
+              <Button
+                color="primary"
+                size="lg"
+                className="top-right-button ml-1"
                 onClick={() => history.push(`${adminRoot}/contacts/add`)}>
                 <IntlMessages id="menu.contacts-add" />
               </Button>

@@ -282,6 +282,7 @@ const Template = ({
                     items={items}
                     setItems={setItems}
                     filter={filterSelected}
+                    isAllActive={isAllActive}
                     data={loadTemplate()}
                   />
                 )}
