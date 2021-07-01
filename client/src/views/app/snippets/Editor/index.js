@@ -1,25 +1,162 @@
 /* eslint-disable no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
-
 import {
+  Row,
+  Card,
+  CardBody,
+  CardTitle,
   Dropdown,
   DropdownToggle,
   DropdownItem,
-  DropdownMenu
+  DropdownMenu,
+  ButtonDropdown,
+  Button,
+  CardSubtitle,
+  UncontrolledDropdown
 } from 'reactstrap';
 import IntlMessages from '../../../../helpers/IntlMessages';
 
 import { Quill } from 'react-quill';
+const Delta = Quill.import('delta');
+const Embed = Quill.import('blots/embed');
+const Parchment = Quill.import('parchment');
+
+const _get = function get(object, property, receiver) {
+  if (object === null) object = Function.prototype;
+  const desc = Object.getOwnPropertyDescriptor(object, property);
+  if (desc === undefined) {
+    const parent = Object.getPrototypeOf(object);
+    if (parent === null) {
+      return undefined;
+    } else {
+      return get(parent, property, receiver);
+    }
+  } else if ('value' in desc) {
+    return desc.value;
+  } else {
+    const getter = desc.get;
+    if (getter === undefined) {
+      return undefined;
+    }
+    return getter.call(receiver);
+  }
+};
+
+class PlaceholderBlot extends Embed {
+  static create(value) {
+    let node = super.create(value);
+    let {
+      _id,
+      name: Name,
+      key = Name,
+      defaultValue = '',
+      visibility = true,
+      type
+    } = value;
+
+    visibility = visibility ? 'team' : 'private';
+    node.setAttribute('data-_id', _id);
+    node.setAttribute('data-name', Name);
+    node.setAttribute('data-key', key);
+    node.setAttribute('data-type', type);
+    node.setAttribute('data-defaultValue', defaultValue);
+    node.setAttribute('data-visibility', visibility);
+    node.setAttribute('spellcheck', false);
+    node.setAttribute('contenteditable', false);
+    node.classList.add(value.type);
+    node.innerHTML = `<${value.type}
+    spellcheck="false"
+    contenteditable="false"
+    data-_id="${_id}"
+    data-name="${Name}"
+    data-key="${key}"
+    data-defaultValue="${defaultValue}"
+    data-visibility="${visibility}"
+    >{{${Name}}}</${type}>`;
+
+    return node;
+  }
+  static value(domNode) {
+    return domNode.dataset;
+  }
+  length() {
+    return 1;
+    // return this.domNode.innerText.length;
+  }
+  deleteAt(index, length) {
+    if (!this.domNode.dataset.required)
+      _get(
+        PlaceholderBlot.prototype.__proto__ ||
+          Object.getPrototypeOf(PlaceholderBlot.prototype),
+        'deleteAt',
+        this
+      ).call(this, index, length);
+  }
+}
+
+PlaceholderBlot.blotName = 'placeholder';
+PlaceholderBlot.tagName = 'span';
+PlaceholderBlot.className = 'ql-placeholder-content';
+
+Quill.register(PlaceholderBlot);
+
+class Placeholder {
+  constructor(quill, options) {
+    this.quill = quill;
+    this.onTextChange = this.onTextChange.bind(this);
+    this.quill.on(Quill.events.TEXT_CHANGE, this.onTextChange);
+  }
+
+  onTextChange(_, oldDelta, source) {
+    if (source === Quill.sources.USER) {
+      const currrentContents = this.quill.getContents();
+      const delta = currrentContents.diff(oldDelta);
+      const shouldRevert = delta.ops.filter(
+        (op) =>
+          op.insert && op.insert.placeholder && op.insert.placeholder.required
+      ).length;
+      if (shouldRevert) {
+        this.quill.updateContents(delta, Quill.sources.SILENT);
+      }
+    }
+  }
+
+  onClick(ev) {
+    const blot = Parchment.find(ev.target.parentNode);
+    if (blot instanceof PlaceholderBlot) {
+      const index = this.quill.getIndex(blot);
+      this.quill.setSelection(index, blot.length(), Quill.sources.USER);
+    }
+  }
+}
+
+Quill.register('modules/placeholder', Placeholder);
+
+//  React Component
 
 let quill;
+
+const addPlaceholder = (data) => {
+  const range = quill.getSelection();
+  if (!range || range.length !== 0) return;
+  const position = (range && range.index) || 0;
+
+  quill.insertEmbed(position, 'placeholder', data, Quill.sources.USER);
+  quill.setSelection(position + 1);
+};
+
 const Index = ({ value, setValue, placeholderslist, contactslist }) => {
   const [placeholdersDropdown, setPlaceholdersDropdown] = useState(false);
+  const [contactDropdown, setContactDropdown] = useState(false);
   const editorContainerRef = useRef();
   useEffect(() => {
     quill = new Quill(editorContainerRef.current, {
       // debug: 'info',
-      theme: 'snow'
+      theme: 'snow',
+      modules: {
+        placeholder: {}
+      }
     });
     quill.clipboard.dangerouslyPasteHTML(0, value);
     quill.on('text-change', () => {
@@ -43,18 +180,41 @@ const Index = ({ value, setValue, placeholderslist, contactslist }) => {
                 <DropdownItem
                   key={placeholder._id}
                   onClick={(e) => {
-                    console.log(quill);
                     e.preventDefault();
-                    // console.log(quill);
-                    // console.log(quill?.clipboard);
-                    quill.clipboard.dangerouslyPasteHTML(
-                      10,
-                      ` <b style="content:'${placeholder.name}'">{{${placeholder.name}}}</b> `
-                    );
+                    addPlaceholder({
+                      type: 'placeholder',
+                      ...placeholder
+                    });
                   }}>
                   <span>{placeholder.name}</span>
                 </DropdownItem>
-              ))) || <div>No Placeholder is Found</div>}
+              ))) || <DropdownItem>No Placeholder is Found</DropdownItem>}
+          </DropdownMenu>
+        </Dropdown>
+        <Dropdown
+          isOpen={contactDropdown}
+          toggle={() => setContactDropdown(!contactDropdown)}
+          className="mb-5">
+          <DropdownToggle caret color="secondary" outline>
+            <IntlMessages id="inser.contact" />
+          </DropdownToggle>
+          <DropdownMenu>
+            {(contactslist &&
+              contactslist.map((contact) => (
+                <DropdownItem
+                  key={contact.id}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    addPlaceholder({
+                      name: contact.data.name,
+                      defaultValue: contact.data.value,
+                      type: 'contact',
+                      _id: contact.id
+                    });
+                  }}>
+                  <span>{contact.data.name}</span>
+                </DropdownItem>
+              ))) || <DropdownItem>No Contact is Found</DropdownItem>}
           </DropdownMenu>
         </Dropdown>
       </div>

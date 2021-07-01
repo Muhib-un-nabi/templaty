@@ -115,7 +115,7 @@ const index = ({
       const newSnippet = {
         name: GlobalInput.find((ele) => ele.id === 'name-input').data.value,
         category: selectedOptions,
-        discription: discription,
+        discription,
         placeholders,
         visibility:
           GlobalInput.find((ele) => ele.id === 'visibility-input').data.value

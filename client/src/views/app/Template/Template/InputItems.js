@@ -20,20 +20,21 @@ const InputItems = ({ inputs, setInputes }) => {
             {inputs.map((ele) => (
               <FormGroup key={ele._id}>
                 <Label for="exampleEmail">
-                  <b>{ele.name}</b> <small>{` {{${ele.name}}}`}</small>
+                  <b>{ele.name}</b> <small>{` {{${ele.key}}}`}</small>
                 </Label>
                 <Input
                   onChange={(e) => {
-                    let updatedEleName;
+                    let updatedEleid;
                     const updatedState = inputs.map((ele) => {
                       if (ele._id === e.target.id) {
-                        updatedEleName = ele.name;
+                        updatedEleid = ele._id;
                         ele.value = e.target.value;
                       }
                       return ele;
                     });
-                    setInputes(updatedState, updatedEleName);
+                    setInputes(updatedState, updatedEleid);
                   }}
+                  defaultValue={ele.defaultValue}
                   value={ele.value || ele.defaultValue}
                   type="text"
                   name={ele.name}

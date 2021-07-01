@@ -1,5 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Row, Card, CardBody, Button, Nav, NavItem, NavLink } from 'reactstrap';
+import {
+  Row,
+  Card,
+  CardBody,
+  Button,
+  Nav,
+  NavItem,
+  NavLink,
+  Dropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownMenu
+} from 'reactstrap';
 import { connect } from 'react-redux';
 
 import {
@@ -18,6 +30,11 @@ import {
   getTypes,
   setLoading as setTypeLoading
 } from '../../../../redux/types/action';
+import {
+  getContacts,
+  getInputField,
+  setLoading as setContactsLoading
+} from '../../../../redux/contacts/action';
 
 import SnippetsGroups from './SnippetsGroups';
 import InputItems from './InputItems';
@@ -36,7 +53,12 @@ const Template = ({
   user,
   getTypes,
   setTypeLoading,
-  types
+  types,
+  getContacts,
+  getInputField,
+  setContactsLoading,
+  contacts,
+  inputs: { custom }
 }) => {
   const [items, setItems] = useState([]);
   const [debugPlaceholders, setDebugPlaceholders] = useState(true);
@@ -53,6 +75,10 @@ const Template = ({
   const [Types, setTypes] = useState([]);
   const [isAllActive, setAllActive] = useState(true);
   const [filterSelected, setFilterSelected] = useState({});
+
+  const [currContact, setCurrContact] = useState();
+  const [contactDropdown, setContactDropdown] = useState(false);
+
   useEffect(() => {
     const list = JSON.parse(localStorage.getItem('type-order'));
     let orderList;
@@ -69,6 +95,8 @@ const Template = ({
   useEffect(() => {
     habdelGetData(getSnippets, setSnippetLoading, history);
     habdelGetData(getTypes, setTypeLoading, history);
+    habdelGetData(getContacts, setContactsLoading, history);
+    habdelGetData(getInputField, setContactsLoading, history);
   }, []);
 
   useEffect(() => {
@@ -106,17 +134,58 @@ const Template = ({
 
   const updateLivePreview = (updatedState, updatedEle) => {
     const query = updatedEle
-      ? `[data-id="${updatedEle}"]`
-      : '.ql-placeholder-content';
+      ? `.placeholder[data-_id="${updatedEle}"]`
+      : '.placeholder.ql-placeholder-content';
     snippetHrmlRef.current.querySelectorAll(query).forEach((DomEle) => {
       const selected = updatedState.find(
-        (ele) => ele.name === DomEle.dataset.id
+        (ele) => ele._id === DomEle.dataset._id
       );
+      if (!selected) return;
       DomEle.innerHTML = selected.value || selected.defaultValue;
     });
     setInputItems(updatedState);
   };
 
+  const loadContact = (contact) => {
+    const contactEle = snippetHrmlRef.current.querySelectorAll(
+      `.contact.ql-placeholder-content`
+    );
+    replaceWithDefaults(contactEle);
+    replaceWithContact(contact, contactEle);
+    setCurrContact(contact);
+  };
+  const replaceWithDefaults = (contactEle) => {
+    // custom.forEach((contact) => {
+    //   contactEle.forEach((ele) => {
+    //     if (ele.dataset.name === 'name') {
+    //       ele.value = contact.name;
+    //       return;
+    //     }
+    //     const contactData = contact.data.find(
+    //       (data) => data.name === ele.dataset.name
+    //     );
+    //     if (contactData) {
+    //       ele.innerHTML = contactData.value;
+    //       return;
+    //     }
+    //   });
+    // });
+  };
+  const replaceWithContact = (contact, contactEle) => {
+    contactEle.forEach((ele) => {
+      if (ele.dataset.name === 'name') {
+        ele.value = contact.name;
+        return;
+      }
+      const contactData = contact.data.find(
+        (data) => data.name === ele.dataset.name
+      );
+      if (contactData) {
+        ele.innerHTML = contactData.value;
+        return;
+      }
+    });
+  };
   let loadTemplate = () => {
     const data = [
       {
@@ -203,8 +272,29 @@ const Template = ({
                 className="glyph"
                 type="button"
                 onClick={() => setLoadTemplateData({ reset: true })}>
-                <i className="glyph-icon simple-icon-reload h4 text-primary ml-3" />
+                <i className="glyph-icon simple-icon-reload h4 text-primary mx-3" />
               </div>
+              <Dropdown
+                isOpen={contactDropdown}
+                toggle={() => setContactDropdown(!contactDropdown)}
+                className="ml-2">
+                <DropdownToggle caret color="secondary" outline>
+                  <IntlMessages id="inser.contact" />
+                </DropdownToggle>
+                <DropdownMenu>
+                  {(contacts &&
+                    contacts.map((contact) => (
+                      <DropdownItem
+                        key={contact.id}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          loadContact(contact);
+                        }}>
+                        <span>{contact.name}</span>
+                      </DropdownItem>
+                    ))) || <DropdownItem>No Contact is Found</DropdownItem>}
+                </DropdownMenu>
+              </Dropdown>
             </div>
             <Breadcrumb match={match} />
           </div>
@@ -324,17 +414,23 @@ const Template = ({
 const mapStateToProps = ({
   snippets: { snippets, loading },
   types: { types },
-  user: { user }
+  user: { user },
+  contacts: { contacts, inputs }
 }) => ({
   snippets,
   user,
   loading,
-  types
+  types,
+  contacts,
+  inputs
 });
 
 export default connect(mapStateToProps, {
   getSnippets,
   setSnippetLoading,
   getTypes,
-  setTypeLoading
+  setTypeLoading,
+  getContacts,
+  setContactsLoading,
+  getInputField
 })(Template);
