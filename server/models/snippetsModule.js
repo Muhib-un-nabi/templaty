@@ -31,9 +31,6 @@ const snippetsSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Discription Is Required']
   },
-  data: {
-    type: Object
-  },
   visibility: {
     type: Boolean,
     required: [true, 'visibility Option Is Required']

@@ -38,6 +38,7 @@ import Select from 'react-select';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
 import ControlledInput from '../../../../components/custom/ControlledInput';
+
 import {
   addSnippet,
   setLoading as setSnippetLoading
@@ -50,106 +51,12 @@ import {
   getPlaceholders,
   setLoading as setPlaceholderLoading
 } from '../../../../redux/placeholder/action';
+import {
+  getInputField,
+  setLoading as setContactLoading
+} from '../../../../redux/contacts/action';
 import habdelGetData from '../../../../helpers/habdelGetData';
 import Editor from '../Editor/index';
-
-const fields = [
-  {
-    id: 'name-input',
-    type: {
-      label: 'Text Area',
-      value: '1',
-      id: 1
-    },
-    data: {
-      key: 'name',
-      name: 'Name',
-      options: [],
-      value: ' '
-    },
-    chosen: false
-  },
-  {
-    id: '19b9c7de-aa7a-4401-b90a-1fd9f7d83029',
-    type: {
-      label: 'Text Area',
-      value: '1',
-      id: 1
-    },
-    data: {
-      key: 'key',
-      name: 'Key',
-      options: [],
-      value: v4()
-    },
-    chosen: false
-  },
-  {
-    id: 'visibility-input',
-    type: {
-      label: 'Radiobutton',
-      value: '3',
-      id: 3
-    },
-    data: {
-      key: 'visibility',
-      name: 'Visibility',
-      options: [
-        {
-          id: 'team',
-          type: {
-            label: 'Text Area',
-            value: '1',
-            id: 1
-          },
-          data: {
-            key: '606f033b-a2f9-4bdc-a3f3-efb9909e05d2',
-            name: 'new Field',
-            options: [],
-            value: ' '
-          },
-          chosen: false,
-          selected: false,
-          label: 'Team'
-        },
-        {
-          id: 'private',
-          type: {
-            label: 'Text Area',
-            value: '1',
-            id: 1
-          },
-          data: {
-            key: 'dfd98dfe-20b5-40ff-a75d-d0f53f00a094',
-            name: 'new cxzcxfield',
-            options: [],
-            value: ' '
-          },
-          chosen: false,
-          label: 'Private'
-        }
-      ],
-      value: {
-        id: 'team',
-        type: {
-          label: 'Text Area',
-          value: '1',
-          id: 1
-        },
-        data: {
-          key: '606f033b-a2f9-4bdc-a3f3-efb9909e05d2',
-          name: 'new Field',
-          options: [],
-          value: ' '
-        },
-        chosen: false,
-        selected: false,
-        label: 'Team'
-      }
-    },
-    chosen: false
-  }
-];
 
 const index = ({
   getPlaceholders,
@@ -162,12 +69,18 @@ const index = ({
   setSnippetLoading,
   setTypesLoading,
   setPlaceholderLoading,
-  types
+  types,
+  inputs: { custom, global },
+  placeholderLoading,
+  typesLoading,
+  snippetLoading,
+  getInputField,
+  setContactLoading,
+  contactLoading
 }) => {
   const [discription, setDiscription] = useState('');
-  const [Fields, setFields] = useState(fields);
   const [selectedOptions, setSelectedOptions] = useState([]);
-
+  const [GlobalInput, setGlobalInput] = useState(global);
   const selectData = () => {
     return (
       types.map(({ _id, name }) => ({
@@ -180,34 +93,39 @@ const index = ({
   useEffect(() => {
     habdelGetData(getPlaceholders, setPlaceholderLoading, history);
     habdelGetData(getTypes, setTypesLoading, history);
+    habdelGetData(getInputField, setContactLoading, history);
+    setSnippetLoading(false);
   }, []);
 
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-      let placeholderInSnippet = [
-        ...new Set(discription.match(/{{.+?}}/g))
-      ].map((ele) => ele.replaceAll('{', '').replaceAll('}', ''));
-
-      placeholderInSnippet = placeholders
-        .filter((ele) => placeholderInSnippet.includes(ele.name))
-        .map((ele) => ele._id);
-      console.log(selectedOptions);
+      setSnippetLoading();
+      const discriptionHtml = new DOMParser().parseFromString(
+        discription,
+        'text/html'
+      );
+      const placeholders = [
+        ...new Set(
+          [...discriptionHtml.querySelectorAll('placeholder')].map(
+            (ele) => ele.dataset._id
+          )
+        )
+      ];
       const newSnippet = {
-        name: Fields.find((ele) => ele.id === 'name-input').data.value,
+        name: GlobalInput.find((ele) => ele.id === 'name-input').data.value,
         category: selectedOptions,
-        data: Fields,
         discription: discription,
-        placeholders: placeholderInSnippet,
+        placeholders,
         visibility:
-          Fields.find((ele) => ele.id === 'visibility-input').data.value.id ===
-          'team'
+          GlobalInput.find((ele) => ele.id === 'visibility-input').data.value
+            .id === 'team'
       };
 
       await addSnippet(newSnippet);
       history.push(`${adminRoot}/snippets/all`);
     } catch (e) {
-      console.log(e);
+      setSnippetLoading(false);
     }
   };
 
@@ -224,7 +142,7 @@ const index = ({
           <Card>
             <CardBody>
               <Form onSubmit={submitHandler}>
-                {Fields.map((inputData) => (
+                {GlobalInput.map((inputData) => (
                   <FormGroup key={`customInput__${inputData.id}`}>
                     <Label htmlFor={`customInput__${inputData.id}`}>
                       {inputData.data.name}
@@ -232,7 +150,7 @@ const index = ({
                     <ControlledInput
                       inputData={inputData}
                       onChangeHandler={(inputData, updatedValue) =>
-                        setFields((prevState) => {
+                        setGlobalInput((prevState) => {
                           const newInpuEle = {
                             ...inputData,
                             data: { ...inputData.data, value: updatedValue }
@@ -245,33 +163,49 @@ const index = ({
                     />
                   </FormGroup>
                 ))}
-                <FormGroup>
-                  <label>
-                    <IntlMessages id="type.select" />
-                  </label>
-                  <Select
-                    components={{ Input: CustomSelectInput }}
-                    className="react-select"
-                    classNamePrefix="react-select"
-                    isMulti
-                    name="form-field-name"
-                    value={selectedOptions}
-                    onChange={setSelectedOptions}
-                    options={selectData()}
-                  />
-                </FormGroup>
+                {!typesLoading && (
+                  <FormGroup>
+                    <label>
+                      <IntlMessages id="type.select" />
+                    </label>
+                    <Select
+                      components={{ Input: CustomSelectInput }}
+                      className="react-select"
+                      classNamePrefix="react-select"
+                      isMulti
+                      name="form-field-name"
+                      value={selectedOptions}
+                      onChange={setSelectedOptions}
+                      options={selectData()}
+                    />
+                  </FormGroup>
+                )}
                 <div>
-                  {(placeholders.length >= 1 && (
+                  {(!placeholderLoading && !contactLoading && (
                     <Editor
                       value={discription}
                       setValue={setDiscription}
-                      list={placeholders}
+                      placeholderslist={placeholders}
+                      contactslist={custom}
                     />
                   )) || <div>Loading...</div>}
                 </div>
 
-                <Button color="primary" className="mt-4">
-                  <IntlMessages id="form.addSnippets" />
+                <Button
+                  disabled={snippetLoading}
+                  color="primary"
+                  className={`btn-shadow mt-4 btn-multiple-state ${
+                    snippetLoading ? 'show-spinner' : ''
+                  }`}
+                  size="sm">
+                  <span className="spinner d-inline-block">
+                    <span className="bounce1" />
+                    <span className="bounce2" />
+                    <span className="bounce3" />
+                  </span>
+                  <span className="label">
+                    <IntlMessages id="form.addSnippets" />
+                  </span>
                 </Button>
               </Form>
             </CardBody>
@@ -283,11 +217,18 @@ const index = ({
 };
 
 const mapStateToProps = ({
-  placeholders: { placeholders },
-  types: { types }
+  placeholders: { placeholders, loading: placeholderLoading },
+  types: { types, loading: typesLoading },
+  contacts: { inputs, loading: contactLoading },
+  snippets: { loading: snippetLoading }
 }) => ({
+  inputs,
   placeholders,
-  types
+  types,
+  placeholderLoading,
+  typesLoading,
+  snippetLoading,
+  contactLoading
 });
 
 export default connect(mapStateToProps, {
@@ -296,5 +237,7 @@ export default connect(mapStateToProps, {
   getPlaceholders,
   setSnippetLoading,
   setTypesLoading,
-  setPlaceholderLoading
+  setPlaceholderLoading,
+  getInputField,
+  setContactLoading
 })(injectIntl(index));

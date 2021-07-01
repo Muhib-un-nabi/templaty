@@ -49,6 +49,11 @@ import {
   setLoading as setSnippetLoading
 } from '../../../../redux/snippets/action';
 
+import {
+  getInputField,
+  setLoading as setContactLoading
+} from '../../../../redux/contacts/action';
+
 import habdelGetData from '../../../../helpers/habdelGetData';
 import Editor from '../Editor/index';
 
@@ -66,12 +71,17 @@ const index = ({
   setSnippetLoading,
   setPlaceholderLoading,
   getTypes,
-  types
+  types,
+  inputs: { global, custom },
+  placeholderLoading,
+  snippetLoading,
+  getInputField,
+  setContactLoading
 }) => {
-  const [Fields, setFields] = useState();
   const [discription, setDiscription] = useState();
   const [selectedOptions, setSelectedOptions] = useState([]);
-
+  const [GlobalInput, setGlobalInput] = useState(global);
+  const [updateValue, setUpdateValue] = useState(false);
   const selectData = () => {
     return (
       types.map(({ _id, name }) => ({
@@ -81,15 +91,36 @@ const index = ({
       })) || []
     );
   };
+
+  useEffect(() => {
+    if (!current.name) return;
+    const global = GlobalInput.map((ele) => {
+      const newObj = JSON.parse(JSON.stringify(ele));
+      if (newObj.id === 'name-input') {
+        newObj.data.value = current.name;
+      }
+      if (newObj.id === 'visibility-input') {
+        const team = ele.data.options.find((ele) => ele.id === 'team');
+        const privat = ele.data.options.find((ele) => ele.id === 'private');
+        newObj.data.value = current.visibility ? team : privat;
+      }
+      return newObj;
+    });
+    setGlobalInput(global);
+    setSelectedOptions(current.category);
+    setUpdateValue(true);
+    return () => setGlobalInput([]);
+  }, [current]);
+
   useEffect(() => {
     habdelGetData(getPlaceholders, setPlaceholderLoading, history);
     habdelGetData(getTypes, setTypesLoading, history);
+    habdelGetData(getInputField, setContactLoading, history);
     getSnippet(match.params.id);
     return () => clearCurrent();
   }, []);
 
   useEffect(() => {
-    setFields(current.data);
     setSelectedOptions(current.category);
     setDiscription(current.discription);
   }, [current]);
@@ -97,27 +128,31 @@ const index = ({
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-      let placeholderInSnippet = [
-        ...new Set(discription.match(/{{.+?}}/g))
-      ].map((ele) => ele.replaceAll('{', '').replaceAll('}', ''));
-
-      placeholderInSnippet = placeholders
-        .filter((ele) => placeholderInSnippet.includes(ele.name))
-        .map((ele) => ele._id);
+      setSnippetLoading();
+      const discriptionHtml = new DOMParser().parseFromString(
+        discription,
+        'text/html'
+      );
+      const placeholders = [
+        ...new Set(
+          [...discriptionHtml.querySelectorAll('placeholder')].map(
+            (ele) => ele.dataset._id
+          )
+        )
+      ];
       const newSnippet = {
-        name: Fields.find((ele) => ele.id === 'name-input').data.value,
+        name: GlobalInput.find((ele) => ele.id === 'name-input').data.value,
         category: selectedOptions,
-        data: Fields,
         discription: discription,
-        placeholders: placeholderInSnippet,
+        placeholders,
         visibility:
-          Fields.find((ele) => ele.id === 'visibility-input').data.value.id ===
-          'team'
+          GlobalInput.find((ele) => ele.id === 'visibility-input').data.value
+            .id === 'team'
       };
       await updateSnippet(newSnippet, match.params.id);
       history.push(`${adminRoot}/snippets/all`);
     } catch (e) {
-      console.log(e);
+      setSnippetLoading(false);
     }
   };
   return (
@@ -133,55 +168,74 @@ const index = ({
           <Card>
             <CardBody>
               <Form onSubmit={submitHandler}>
-                {Fields &&
-                  Fields.map((inputData) => (
-                    <FormGroup key={`customInput__${inputData.id}`}>
-                      <Label htmlFor={`customInput__${inputData.id}`}>
-                        {inputData.data.name}
-                      </Label>
-                      <ControlledInput
-                        inputData={inputData}
-                        onChangeHandler={(inputData, updatedValue) =>
-                          setFields((prevState) => {
-                            const newInpuEle = {
-                              ...inputData,
-                              data: { ...inputData.data, value: updatedValue }
-                            };
-                            return prevState.map((ele) =>
-                              ele.id === newInpuEle.id ? newInpuEle : ele
-                            );
-                          })
-                        }
+                {updateValue && current && (
+                  <>
+                    {GlobalInput.map((inputData) => (
+                      <FormGroup key={`customInput__${inputData.id}`}>
+                        <Label htmlFor={`customInput__${inputData.id}`}>
+                          {inputData.data.name}
+                        </Label>
+                        <ControlledInput
+                          inputData={inputData}
+                          onChangeHandler={(inputData, updatedValue) =>
+                            setGlobalInput((prevState) => {
+                              const newInpuEle = {
+                                ...inputData,
+                                data: {
+                                  ...inputData.data,
+                                  value: updatedValue
+                                }
+                              };
+                              return prevState.map((ele) =>
+                                ele.id === newInpuEle.id ? newInpuEle : ele
+                              );
+                            })
+                          }
+                        />
+                      </FormGroup>
+                    ))}
+                    <FormGroup>
+                      <label>
+                        <IntlMessages id="type.select" />
+                      </label>
+                      <Select
+                        components={{ Input: CustomSelectInput }}
+                        className="react-select"
+                        classNamePrefix="react-select"
+                        isMulti
+                        name="form-field-name"
+                        value={selectedOptions}
+                        onChange={setSelectedOptions}
+                        options={selectData()}
                       />
                     </FormGroup>
-                  ))}
-                <FormGroup>
-                  <label>
-                    <IntlMessages id="type.select" />
-                  </label>
-                  <Select
-                    components={{ Input: CustomSelectInput }}
-                    className="react-select"
-                    classNamePrefix="react-select"
-                    isMulti
-                    name="form-field-name"
-                    value={selectedOptions}
-                    onChange={setSelectedOptions}
-                    options={selectData()}
-                  />
-                </FormGroup>
-                <div>
-                  {(discription && placeholders.length >= 1 && (
-                    <Editor
-                      value={discription}
-                      setValue={setDiscription}
-                      list={placeholders}
-                    />
-                  )) || <div>Loading...</div>}
-                </div>
-
-                <Button color="primary" className="mt-4">
-                  <IntlMessages id="form.updateSnippets" />
+                    <div>
+                      {(!placeholderLoading && (
+                        <Editor
+                          value={discription}
+                          setValue={setDiscription}
+                          placeholderslist={placeholders}
+                          contactslist={custom}
+                        />
+                      )) || <div>Loading...</div>}
+                    </div>
+                  </>
+                )}
+                <Button
+                  disabled={snippetLoading}
+                  color="primary"
+                  className={`btn-shadow mt-4 btn-multiple-state ${
+                    snippetLoading ? 'show-spinner' : ''
+                  }`}
+                  size="sm">
+                  <span className="spinner d-inline-block">
+                    <span className="bounce1" />
+                    <span className="bounce2" />
+                    <span className="bounce3" />
+                  </span>
+                  <span className="label">
+                    <IntlMessages id="form.updateSnippets" />
+                  </span>
                 </Button>
               </Form>
             </CardBody>
@@ -193,13 +247,18 @@ const index = ({
 };
 
 const mapStateToProps = ({
-  placeholders: { placeholders },
+  placeholders: { placeholders, loading: placeholderLoading },
   snippets: { current },
-  types: { types }
+  types: { types },
+  contacts: { inputs },
+  snippets: { loading: snippetLoading }
 }) => ({
   current,
   placeholders,
-  types
+  types,
+  inputs,
+  placeholderLoading,
+  snippetLoading
 });
 
 export default connect(mapStateToProps, {
@@ -210,5 +269,7 @@ export default connect(mapStateToProps, {
   getPlaceholders,
   setTypesLoading,
   setSnippetLoading,
-  setPlaceholderLoading
+  setPlaceholderLoading,
+  getInputField,
+  setContactLoading
 })(injectIntl(index));

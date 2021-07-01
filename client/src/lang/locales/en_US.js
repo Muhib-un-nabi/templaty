@@ -65,6 +65,8 @@ module.exports = {
   'menu.placeholders-List': 'Placeholders List',
   'menu.placeholders-add': 'Add Placeholders',
   'menu.placeholders': 'Placeholders',
+  'inser.placeholders': 'Inser Placeholders',
+  'inser.contact': 'Inser Contact',
   /* Snippets Route */
   'menu.snippets-List': 'Snippets List',
   'menu.snippets-add': 'Add Snippets',
@@ -80,6 +82,7 @@ module.exports = {
   'form.addContact': 'Add New Contact',
   'form.addPlaceholder': 'Add Placeholder',
   'form.editPlaceholder': 'Edit Placeholder',
+  'form.updatePlaceholder': 'Update Placeholder',
   'form.updateContact': 'Update Contact',
   'form.addSnippets': 'Add Snippets',
   'form.discription': 'Discription',

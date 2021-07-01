@@ -1,7 +1,4 @@
-const crypto = require('crypto');
 const mongoose = require('mongoose');
-const validator = require('validator');
-const bcrypt = require('bcryptjs');
 
 const placeholdersSchema = new mongoose.Schema({
   name: {
@@ -13,6 +10,10 @@ const placeholdersSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Placeholder must belong to a User']
   },
+  key: {
+    type: String,
+    required: [true, 'Key Is Required']
+  },
   defaultValue: {
     type: String
   },
@@ -23,9 +24,6 @@ const placeholdersSchema = new mongoose.Schema({
   },
   category: {
     type: Array
-  },
-  data: {
-    type: Object
   },
   visibility: {
     type: Boolean,

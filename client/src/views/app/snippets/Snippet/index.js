@@ -23,7 +23,13 @@ import {
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
-import { getSnippets, deleteSnippet } from '../../../../redux/snippets/action';
+import {
+  getSnippets,
+  deleteSnippet,
+  setLoading
+} from '../../../../redux/snippets/action';
+import habdelGetData from '../../../../helpers/habdelGetData';
+
 import SnippetsItem from './SnippetsItem';
 import ListItem from '../../../../components/listItem/index';
 
@@ -33,12 +39,13 @@ const Placeholders = ({
   getSnippets,
   deleteSnippet,
   snippets,
-  user
+  user,
+  setLoading
 }) => {
   const [Snippets, setSnippets] = useState(snippets);
 
   useEffect(() => {
-    getSnippets();
+    habdelGetData(getSnippets, setLoading, history);
   }, []);
 
   useEffect(() => {
@@ -135,6 +142,8 @@ const mapStateToProps = ({ snippets: { snippets }, user: { user } }) => ({
   user
 });
 
-export default connect(mapStateToProps, { getSnippets, deleteSnippet })(
-  Placeholders
-);
+export default connect(mapStateToProps, {
+  getSnippets,
+  deleteSnippet,
+  setLoading
+})(Placeholders);

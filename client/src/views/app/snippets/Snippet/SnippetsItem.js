@@ -18,33 +18,11 @@ const PlaceholdersItem = ({ itemData }) => {
       '<b>Discription</b> : ' + itemData.discription;
   }, [itemData]);
   // return null;
-  const renderValue = (element) => {
-    switch (element.type.id) {
-      case 1:
-        return <b>{element.data.value}</b>;
-      case 2:
-        return (
-          <b>
-            {element.data.value.map((ele) => (
-              <span key={ele.id}> {ele.label} ,</span>
-            ))}
-          </b>
-        );
-      case 3:
-        return <b>{element.data.value.label}</b>;
-      default:
-        return null;
-    }
-  };
-
   return (
     <ul>
-      {itemData.data.map((ele) => (
-        <li key={ele.id}>
-          <>{ele.data.name.toUpperCase()}</> : <>{renderValue(ele)}</>
-        </li>
-      ))}
-      <li>Types : {itemData.category?.map((ele) => ele.label).join(', ')}</li>
+      <li>
+        <b>Types :</b> {itemData.category?.map((ele) => ele.label).join(', ')}
+      </li>
       <li ref={descriptionRef} />
     </ul>
   );

@@ -1,95 +1,66 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable one-var */
-/* eslint-disable no-use-before-define */
-/* eslint-disable react/jsx-curly-brace-presence */
-/* eslint-disable jsx-a11y/no-onchange */
-/* eslint-disable react/button-has-type */
+/* eslint-disable no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-shadow */
-/* eslint-disable react/no-array-index-key */
-/* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable no-unused-vars */
-import React, { useEffect } from 'react';
-import { injectIntl } from 'react-intl';
-import { Card } from 'reactstrap';
+import React, { useEffect, useRef, useState } from 'react';
+
+import {
+  Dropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownMenu
+} from 'reactstrap';
+import IntlMessages from '../../../../helpers/IntlMessages';
 
 import { Quill } from 'react-quill';
-import getPlaceholderModule from 'quill-placeholder-module';
-import getAutocompleteModule from 'quill-placeholder-autocomplete-module';
-import './index.css';
-Quill.register(
-  'modules/placeholder',
-  getPlaceholderModule(Quill, {
-    className: 'ql-placeholder-content'
-  })
-);
-Quill.register('modules/autocomplete', getAutocompleteModule(Quill));
-const Editor = ({ value, setValue, list }) => {
-  list = list.map((ele) => ({
-    id: ele.name,
-    label: ele.name
-  }));
+
+let quill;
+const Index = ({ value, setValue, placeholderslist, contactslist }) => {
+  const [placeholdersDropdown, setPlaceholdersDropdown] = useState(false);
+  const editorContainerRef = useRef();
   useEffect(() => {
-    if (!list) return;
-    const quill = new Quill('#editor', {
-      modules: {
-        toolbar: { container: `#toolbar` },
-        placeholder: {
-          delimiters: ['{{', '}}'],
-          placeholders: list
-        },
-        autocomplete: {
-          getPlaceholders: () => list,
-          triggerKey: '{',
-          endKey: '}'
-        }
-      },
+    quill = new Quill(editorContainerRef.current, {
+      // debug: 'info',
       theme: 'snow'
     });
     quill.clipboard.dangerouslyPasteHTML(0, value);
     quill.on('text-change', () => {
       setValue(quill.root.innerHTML);
     });
-  }, []);
+  }, [placeholderslist]);
 
   return (
-    <Card>
-      <div id="toolbar">
-        <span className="ql-formats">
-          <select className="ql-header" defaultValue="">
-            <option value="1"></option>
-            <option value="2"></option>
-            <option value="3"></option>
-            <option value=""></option>
-          </select>
-          <select className="ql-font" defaultValue=""></select>
-          <select className="ql-size" defaultValue="">
-            <option value="small"></option>
-            <option value=""></option>
-            <option value="large"></option>
-            <option value="huge"></option>
-          </select>
-        </span>
-        <span className="ql-formats">
-          <button className="ql-bold"></button>
-          <button className="ql-italic"></button>
-          <button className="ql-underline"></button>
-          <button className="ql-strike"></button>
-          <button className="ql-blockquote"></button>
-        </span>
-        <span className="ql-formats">
-          <select className="ql-placeholder">
-            {list.map((ele, i) => (
-              <option key={i} value={ele.label}>
-                {ele.label}
-              </option>
-            ))}
-          </select>
-        </span>
+    <div>
+      <div className="d-flex justify-content-between">
+        <Dropdown
+          isOpen={placeholdersDropdown}
+          toggle={() => setPlaceholdersDropdown(!placeholdersDropdown)}
+          className="mb-5">
+          <DropdownToggle caret color="secondary" outline>
+            <IntlMessages id="inser.placeholders" />
+          </DropdownToggle>
+          <DropdownMenu>
+            {(placeholderslist &&
+              placeholderslist.map((placeholder) => (
+                <DropdownItem
+                  key={placeholder._id}
+                  onClick={(e) => {
+                    console.log(quill);
+                    e.preventDefault();
+                    // console.log(quill);
+                    // console.log(quill?.clipboard);
+                    quill.clipboard.dangerouslyPasteHTML(
+                      10,
+                      ` <b style="content:'${placeholder.name}'">{{${placeholder.name}}}</b> `
+                    );
+                  }}>
+                  <span>{placeholder.name}</span>
+                </DropdownItem>
+              ))) || <div>No Placeholder is Found</div>}
+          </DropdownMenu>
+        </Dropdown>
       </div>
-      <div id="editor"></div>
-    </Card>
+      <div className="editor" ref={editorContainerRef}></div>
+    </div>
   );
 };
 
-export default injectIntl(Editor);
+export default Index;

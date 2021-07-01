@@ -4,30 +4,20 @@
 /* eslint-disable no-unused-vars */
 
 import React, { useEffect, useState } from 'react';
-import {
-  Row,
-  Button,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
-  Collapse,
-  ButtonDropdown,
-  CustomInput,
-} from 'reactstrap';
+import { Row, Button, Collapse } from 'reactstrap';
 import { connect } from 'react-redux';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import {
   Colxx,
-  Separator,
+  Separator
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
 import {
   getPlaceholders,
-  deletePlaceholder,
+  deletePlaceholder
 } from '../../../../redux/placeholder/action';
-import PlaceholdersItem from './PlaceholdersItem';
+import ListItem from '../../../../components/listItem/index';
 
 const Placeholders = ({
   match,
@@ -35,7 +25,7 @@ const Placeholders = ({
   getPlaceholders,
   deletePlaceholder,
   placeholders,
-  user,
+  user
 }) => {
   const [Placeholders, setPlaceholders] = useState(placeholders);
 
@@ -61,8 +51,7 @@ const Placeholders = ({
                 color="primary"
                 size="lg"
                 className="top-right-button mr-1"
-                onClick={() => history.push(`${adminRoot}/placeholders/add`)}
-              >
+                onClick={() => history.push(`${adminRoot}/placeholders/add`)}>
                 <IntlMessages id="menu.placeholders-add" />
               </Button>
             </div>
@@ -76,8 +65,7 @@ const Placeholders = ({
               className="pt-0 pl-0 d-inline-block d-md-none"
               onClick={() => {
                 // setDisplayOptionsIsOpen(!displayOptionsIsOpen);
-              }}
-            >
+              }}>
               <IntlMessages id="display-options" />
               <i className="simple-icon-arrow-down align-middle" />
             </Button>
@@ -113,13 +101,12 @@ const Placeholders = ({
               <ul className="list-unstyled mb-4">
                 {Placeholders.map((placeholder, i) => (
                   <li key={placeholder._id}>
-                    <PlaceholdersItem
-                      user={user}
+                    <ListItem
                       itemData={placeholder}
-                      order={i}
-                      deleteClick={(id) => deletePlaceholder(id)}
-                      updateClick={(id) =>
-                        history.push(`${adminRoot}/placeholders/edit/${id}`)
+                      user={user}
+                      deleteClick={({ _id }) => deletePlaceholder(_id)}
+                      updateClick={({ _id }) =>
+                        history.push(`${adminRoot}/placeholders/edit/${_id}`)
                       }
                     />
                   </li>
@@ -135,10 +122,10 @@ const Placeholders = ({
 
 const mapStateToProps = ({
   placeholders: { placeholders },
-  user: { user },
+  user: { user }
 }) => ({
   placeholders,
-  user,
+  user
 });
 
 export default connect(mapStateToProps, { deletePlaceholder, getPlaceholders })(

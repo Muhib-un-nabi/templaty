@@ -20,6 +20,7 @@ import {
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import { v4 as uuidV4, v4 } from 'uuid';
+import Select from 'react-select';
 
 import { injectIntl } from 'react-intl';
 import IntlMessages from '../../../../helpers/IntlMessages';
@@ -29,167 +30,79 @@ import {
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
 import { adminRoot } from '../../../../constants/defaultValues';
-
+import habdelGetData from '../../../../helpers/habdelGetData';
 import ControlledInput from '../../../../components/custom/ControlledInput';
-import { addPlaceholder } from '../../../../redux/placeholder/action';
+import CustomSelectInput from '../../../../components/common/CustomSelectInput';
+import {
+  getTypes,
+  setLoading as setTypesLoading
+} from '../../../../redux/types/action';
+import {
+  addPlaceholder,
+  setLoading as setPlaceholderLoading
+} from '../../../../redux/placeholder/action';
 
-const index = ({ match, intl, addPlaceholder, history, input: { global } }) => {
-  const [name, setName] = useState('');
+const index = ({
+  intl,
+  match,
+  history,
+  types,
+  loading,
+  inputs: { global },
+  addPlaceholder,
+  setPlaceholderLoading,
+  getTypes,
+  setTypesLoading
+}) => {
+  const [GlobalInput, setGlobalInput] = useState(global);
   const [key, setKey] = useState('');
   const [value, setvalue] = useState('');
-  const fields = [
-    {
-      id: 'name-input',
-      type: {
-        label: 'Text Area',
-        value: '1',
-        id: 1
-      },
-      data: {
-        key: 'name',
-        name: 'Name',
-        options: [],
-        value: ' '
-      },
-      chosen: false
-    },
-    {
-      id: '19b9c7de-aa7a-4401-b90a-1fd9f7d83029',
-      type: {
-        label: 'Text Area',
-        value: '1',
-        id: 1
-      },
-      data: {
-        key: 'key',
-        name: 'Key',
-        options: [],
-        value: v4()
-      },
-      chosen: false
-    },
-    {
-      id: 'default-value',
-      type: {
-        label: 'Text Area',
-        value: '1',
-        id: 1
-      },
-      data: {
-        key: 'value',
-        name: 'Value ( default )',
-        options: [],
-        value: ' '
-      },
-      chosen: false
-    },
-    {
-      id: 'category',
-      type: {
-        label: 'Text Area',
-        value: '1',
-        id: 1
-      },
-      data: {
-        key: 'category',
-        name: 'Category',
-        options: [],
-        value: ' '
-      },
-      chosen: false
-    },
-    {
-      id: 'visibility-input',
-      type: {
-        label: 'Radiobutton',
-        value: '3',
-        id: 3
-      },
-      data: {
-        key: 'visibility',
-        name: 'Visibility',
-        options: [
-          {
-            id: 'team',
-            type: {
-              label: 'Text Area',
-              value: '1',
-              id: 1
-            },
-            data: {
-              key: '606f033b-a2f9-4bdc-a3f3-efb9909e05d2',
-              name: 'new Field',
-              options: [],
-              value: ' '
-            },
-            chosen: false,
-            selected: false,
-            label: 'Team'
-          },
-          {
-            id: 'private',
-            type: {
-              label: 'Text Area',
-              value: '1',
-              id: 1
-            },
-            data: {
-              key: 'dfd98dfe-20b5-40ff-a75d-d0f53f00a094',
-              name: 'new cxzcxfield',
-              options: [],
-              value: ' '
-            },
-            chosen: false,
-            label: 'Private'
-          }
-        ],
-        value: {
-          id: 'team',
-          type: {
-            label: 'Text Area',
-            value: '1',
-            id: 1
-          },
-          data: {
-            key: '606f033b-a2f9-4bdc-a3f3-efb9909e05d2',
-            name: 'new Field',
-            options: [],
-            value: ' '
-          },
-          chosen: false,
-          selected: false,
-          label: 'Team'
-        }
-      },
-      chosen: false
-    }
-  ];
-  const [Fields, setFields] = useState(fields);
+  const [selectedOptions, setSelectedOptions] = useState([]);
+
+  const selectData = () => {
+    return (
+      types.map(({ _id, name }) => ({
+        label: name,
+        value: name,
+        key: _id
+      })) || []
+    );
+  };
+
+  useEffect(() => {
+    habdelGetData(getTypes, setTypesLoading, history);
+  }, []);
 
   const submitHandler = async (e) => {
     try {
       e.preventDefault();
-
+      setPlaceholderLoading();
       const newPlaceholders = {
-        name,
-        key,
-        defaultValue: value
-        // visibility:
-        //   Fields.find((ele) => ele.id === 'visibility-input').data.value.id ===
-        //   'team'
+        name: GlobalInput.find((ele) => ele.id === 'name-input').data.value,
+        key: genrateKey(),
+        defaultValue: value,
+        visibility:
+          GlobalInput.find((ele) => ele.id === 'visibility-input').data.value
+            .id === 'team',
+        category: selectedOptions
       };
-      //     category: Fields.find((ele) => ele.id === 'category').data.value.split(
-      //     ','
-      //   ),
-      // await addPlaceholder(newPlaceholders);
+      await addPlaceholder(newPlaceholders);
+      setPlaceholderLoading(false);
+
       history.push(`${adminRoot}/placeholders/all`);
     } catch (e) {
-      console.log(e);
+      setPlaceholderLoading(false);
     }
   };
 
   const makeKey = (string) => {
     return string.toString().toLocaleLowerCase().replaceAll(' ', '-');
+  };
+  const genrateKey = () => {
+    return (
+      makeKey(key) ||
+      makeKey(GlobalInput.find((ele) => ele.id === 'name-input').data.value)
+    );
   };
 
   return (
@@ -205,23 +118,33 @@ const index = ({ match, intl, addPlaceholder, history, input: { global } }) => {
           <Card>
             <CardBody>
               <Form onSubmit={submitHandler}>
-                <FormGroup>
-                  <Label>Name</Label>
-                  <Input
-                    type="text"
-                    value={name}
-                    name="name"
-                    onChange={(e) => {
-                      setName(e.target.value);
-                      setKey('');
-                    }}
-                  />
-                </FormGroup>
+                {!loading &&
+                  GlobalInput.map((inputData) => (
+                    <FormGroup key={`customInput__${inputData.id}`}>
+                      <Label htmlFor={`customInput__${inputData.id}`}>
+                        {inputData.data.name}
+                      </Label>
+                      <ControlledInput
+                        inputData={inputData}
+                        onChangeHandler={(inputData, updatedValue) =>
+                          setGlobalInput((prevState) => {
+                            const newInpuEle = {
+                              ...inputData,
+                              data: { ...inputData.data, value: updatedValue }
+                            };
+                            return prevState.map((ele) =>
+                              ele.id === newInpuEle.id ? newInpuEle : ele
+                            );
+                          })
+                        }
+                      />
+                    </FormGroup>
+                  ))}
                 <FormGroup>
                   <Label>Key</Label>
                   <Input
                     type="text"
-                    value={makeKey(key) || makeKey(name)}
+                    value={genrateKey()}
                     name="key"
                     onChange={(e) => {
                       setKey(e.target.value);
@@ -239,9 +162,36 @@ const index = ({ match, intl, addPlaceholder, history, input: { global } }) => {
                     }}
                   />
                 </FormGroup>
-
-                <Button color="primary" className="mt-4">
-                  <IntlMessages id="form.addPlaceholder" />
+                <FormGroup>
+                  <label>
+                    <IntlMessages id="type.select" />
+                  </label>
+                  <Select
+                    components={{ Input: CustomSelectInput }}
+                    className="react-select"
+                    classNamePrefix="react-select"
+                    isMulti
+                    name="form-field-name"
+                    value={selectedOptions}
+                    onChange={setSelectedOptions}
+                    options={selectData()}
+                  />
+                </FormGroup>
+                <Button
+                  disabled={loading}
+                  color="primary"
+                  className={`btn-shadow mt-4 btn-multiple-state ${
+                    loading ? 'show-spinner' : ''
+                  }`}
+                  size="sm">
+                  <span className="spinner d-inline-block">
+                    <span className="bounce1" />
+                    <span className="bounce2" />
+                    <span className="bounce3" />
+                  </span>
+                  <span className="label">
+                    <IntlMessages id="form.addPlaceholder" />
+                  </span>
                 </Button>
               </Form>
             </CardBody>
@@ -252,8 +202,18 @@ const index = ({ match, intl, addPlaceholder, history, input: { global } }) => {
   );
 };
 
-const mapStateToProps = ({ contacts: { inputs } }) => ({
-  inputs
+const mapStateToProps = ({
+  contacts: { inputs },
+  types: { types, loading }
+}) => ({
+  inputs,
+  types,
+  loading
 });
 
-export default connect(mapStateToProps, { addPlaceholder })(injectIntl(index));
+export default connect(mapStateToProps, {
+  addPlaceholder,
+  getTypes,
+  setTypesLoading,
+  setPlaceholderLoading
+})(injectIntl(index));

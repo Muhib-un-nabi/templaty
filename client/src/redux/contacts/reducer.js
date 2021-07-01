@@ -24,7 +24,7 @@ const global = [
       key: 'ec099bfc-bf99-4c83-a94d-3a93e45c6043',
       name: 'Name',
       options: [],
-      value: ' '
+      value: ''
     },
     chosen: false
   },
