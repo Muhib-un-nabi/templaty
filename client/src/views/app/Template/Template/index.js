@@ -71,6 +71,7 @@ const Template = ({
   const snippetHrmlRef = useRef();
 
   const [placeholders, setPlaceholders] = useState();
+  const [isupdatePlaceholder, setIsupdatePlaceholder] = useState(true);
 
   const [inputItems, setInputItems] = useState([]);
 
@@ -215,7 +216,7 @@ const Template = ({
         id: 'un-selected-list',
         colSize: 2,
         items: snippets,
-        label: 'Un-Selected Snippets'
+        label: 'Available Snippets'
       },
       {
         id: 'selected-list',
@@ -229,6 +230,7 @@ const Template = ({
     const { snippets: templateSnippets, placeholders: templatePlaceholders } =
       loadTemplateData;
     if (templateSnippets && templateSnippets.length !== 0) {
+      setIsupdatePlaceholder(false);
       const unselectedList = snippets.filter(
         (ele) => !templateSnippets.includes(ele._id)
       );
@@ -243,6 +245,7 @@ const Template = ({
           (ele) => ele?.name === placeholder?.name
         );
         placeholder.value = placeholderValue.value || placeholder.value;
+        console.log(placeholder);
         return placeholder;
       });
       //  Set All The State
@@ -250,18 +253,7 @@ const Template = ({
       setItems(data);
       setLoadTemplateData({});
       setModal(false);
-      // const newInputItems = inputItems.map((placeholder) => {
-      //   const placeholderValue = templatePlaceholders.find(
-      //     (ele) => ele._id === placeholder._id
-      //   );
-      //   const value = placeholderValue.value || placeholder.defaultValue;
-      //   return { ...placeholder, value };
-      // });
-      // //  Set All The State
-      // setItems(newInputItems);
-      // setItems(data);
-      // setModal(false);
-      // setLoadTemplateData({});
+      setIsupdatePlaceholder(true);
     }
     if (loadTemplateData.reset) {
       const newInputItems = inputItems.map((placeholder) => {
@@ -426,15 +418,20 @@ const Template = ({
                     </Colxx>
                   </>
                 )}
-                <InputItems
-                  inputs={inputItems}
-                  setInputes={updateLivePreview}
-                />
+                {isupdatePlaceholder && (
+                  <>
+                    <InputItems
+                      inputs={inputItems}
+                      setInputes={updateLivePreview}
+                    />
 
-                <LivePreview
-                  debugMode={debugPlaceholders}
-                  refrance={snippetHrmlRef}
-                />
+                    <LivePreview
+                      debugMode={debugPlaceholders}
+                      refrance={snippetHrmlRef}
+                    />
+                  </>
+                )}
+
                 {loading && snippets.length === 0 && (
                   <div className="loading" />
                 )}

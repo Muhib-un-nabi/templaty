@@ -49,9 +49,10 @@ const index = ({
         <IntlMessages id="template" />
       </ModalHeader>
       <ModalBody style={{ minHeight: '40vh' }}>
-        {loading && <div>Loading...</div>}
+        {loading && <div className="loading" />}
         {template.length === 0 && <div>No Template Is Found</div>}
-        {template.length !== 0 &&
+        {!loading &&
+          template.length !== 0 &&
           template.map((itemData) => (
             <div key={itemData._id}>
               <TemplateItem
