@@ -68,6 +68,7 @@ module.exports = {
   'inser.placeholders': 'Inser Placeholders',
   'inser.contact': 'Inser Contact',
   /* Snippets Route */
+  'menu.placeholders-update': 'Update Placeholders',
   'menu.snippets-List': 'Snippets List',
   'menu.snippets-add': 'Add Snippets',
   'menu.snippets': 'Snippets',
@@ -89,6 +90,7 @@ module.exports = {
   'form.updateSnippets': 'Update Snippets',
 
   /* FOR Contact Setting Form */
+  'button.edit': 'Edit',
   'button.add': 'Add',
   'button.save': 'Save',
   'button.save-changes': 'Save Changes',

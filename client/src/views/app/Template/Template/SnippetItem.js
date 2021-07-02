@@ -9,7 +9,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Card, Button, Collapse, FormGroup, Label } from 'reactstrap';
 
-const PlaceholdersItem = ({ itemData }) => {
+import { adminRoot } from '../../../../constants/defaultValues';
+import IntlMessages from '../../../../helpers/IntlMessages';
+
+const PlaceholdersItem = ({ itemData, history }) => {
   const [collapse, setCollapse] = useState(false);
   const descriptionRef = useRef();
 
@@ -19,36 +22,57 @@ const PlaceholdersItem = ({ itemData }) => {
   }, [itemData]);
 
   return (
-  <>
-    {collapse&& <div onClick={()=> setCollapse(!collapse)} className='overlay-snippet-item' ></div> }
-    <Card className={`d-flex mb-2 snippet-item ${(collapse ) && 'show p-2'}`}>
-      <div className="d-flex flex-grow-1 min-width-zero">
-        <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center p-1 ">
-          <div className="list-item-heading mb-0 truncate w-80 mb-1 mt-1">
-            {itemData.name}
+    <>
+      {collapse && (
+        <div
+          onClick={() => setCollapse(!collapse)}
+          className="overlay-snippet-item"></div>
+      )}
+      <Card className={`d-flex mb-2 snippet-item ${collapse && 'show p-2'}`}>
+        <div className="d-flex flex-grow-1 min-width-zero">
+          <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center p-1 ">
+            <div className="list-item-heading mb-0 truncate w-80 mb-1 mt-1">
+              {itemData.name}
+            </div>
           </div>
-        </div>
 
-        <div className="custom-control custom-checkbox pl-0 align-self-center pr-1">
-          <Button
-            outline
-            color="theme-2"
-            className={`icon-button ml-1 rotate-icon-click ${
-              collapse ? 'rotate' : ''
-            }`}
-            onClick={() => setCollapse(!collapse)}>
-              <i className={`${collapse? 'simple-icon-size-actual':'simple-icon-size-fullscreen'}`} />
-          </Button>
-        </div>
-      </div>
-      <Collapse isOpen={collapse}>
-        <div className="card-body py-1 border">
-          <div ref={descriptionRef} />
+          <div className="custom-control custom-checkbox pl-0 align-self-center pr-1">
+            <Button
+              outline
+              color="theme-2"
+              className={`icon-button ml-1 rotate-icon-click ${
+                collapse ? 'rotate' : ''
+              }`}
+              onClick={() => setCollapse(!collapse)}>
+              <i
+                className={`${
+                  collapse
+                    ? 'simple-icon-size-actual'
+                    : 'simple-icon-size-fullscreen'
+                }`}
+              />
+            </Button>
           </div>
-  
-      </Collapse>
+        </div>
+        <Collapse isOpen={collapse}>
+          <div className="card-body py-1 border">
+            <div ref={descriptionRef} />
+          </div>
+          <div className="d-flex justify-content-end">
+            <Button
+              outline
+              color="primary"
+              className="mb-2"
+              onClick={() => {
+                console.log(itemData);
+                history.push(`${adminRoot}/snippets/edit/${itemData._id}`);
+              }}>
+              <IntlMessages id="button.edit" />
+            </Button>
+          </div>
+        </Collapse>
       </Card>
-      </>
+    </>
   );
 };
 

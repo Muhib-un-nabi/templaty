@@ -45,7 +45,6 @@ const AddTemplate = ({
   const [dataList, setDataList] = useState([]);
   useEffect(() => {
     if (formVisible) {
-      console.log(getTemplates);
       habdelGetData(getTemplates, setLoading, history);
     }
     setDataList(() => template.map((ele) => ({ name: ele.name })));
@@ -62,10 +61,13 @@ const AddTemplate = ({
         name,
         snippets: snippets.items.map((ele) => ele._id),
         visibility: isvisible,
-        placeholders: placeholders.map(({ name, value, defaultValue }) => ({
-          name,
-          value: value || defaultValue
-        }))
+        placeholders: placeholders.map(
+          ({ name, value, defaultValue, _id }) => ({
+            name,
+            value: value || defaultValue,
+            _id
+          })
+        )
       };
       const findExistingTemplate = template.find((ele) => ele.name === name);
       if (findExistingTemplate) {

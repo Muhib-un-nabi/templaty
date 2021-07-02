@@ -135,6 +135,7 @@ const Template = ({
       return placeholders.find((placeholder) => placeholder.name === ele);
     });
     setInputItems(currPlaceholders);
+    loadContact();
     updateLivePreview(currPlaceholders);
   }, [items]);
 
@@ -156,7 +157,8 @@ const Template = ({
     const contactEle = snippetHrmlRef.current.querySelectorAll(
       `.contact.ql-placeholder-content`
     );
-    // replaceWithDefaults(contactEle);
+    contactEle.forEach((ele) => replaceWithDefaults(ele));
+    if (!contact) return;
     replaceWithContact(contact, contactEle);
     setCurrContact(contact);
   };
@@ -206,6 +208,7 @@ const Template = ({
       replaceWithDefaults(ele);
     });
   };
+
   let loadTemplate = () => {
     const data = [
       {
@@ -237,16 +240,16 @@ const Template = ({
       //  Replace Placeholder Values
       const newInputItems = inputItems.map((placeholder) => {
         const placeholderValue = templatePlaceholders.find(
-          (ele) => ele?.name === placeholder?.name
+          (ele) => ele._id === placeholder._id
         );
-        placeholder.value = placeholderValue.value || placeholder.value;
-        return placeholder;
+        const value = placeholderValue.value || placeholder.defaultValue;
+        return { ...placeholder, value };
       });
       //  Set All The State
-      setItems(newInputItems);
+      setInputItems(newInputItems);
       setItems(data);
-      setLoadTemplateData({});
       setModal(false);
+      setLoadTemplateData({});
     }
     if (loadTemplateData.reset) {
       const newInputItems = inputItems.map((placeholder) => {
@@ -305,7 +308,7 @@ const Template = ({
                   {(contacts &&
                     contacts.map((contact) => (
                       <DropdownItem
-                        key={contact.id}
+                        key={contact._id}
                         onClick={(e) => {
                           e.preventDefault();
                           loadContact(contact);
@@ -394,6 +397,7 @@ const Template = ({
                     filter={filterSelected}
                     isAllActive={isAllActive}
                     data={loadTemplate()}
+                    history={history}
                   />
                 )}
                 {snippets.length === 0 && (

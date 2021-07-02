@@ -34,7 +34,7 @@ const InputItems = ({ inputs, setInputes }) => {
                     });
                     setInputes(updatedState, updatedEleid);
                   }}
-                  defaultValue={ele.defaultValue}
+                  // defaultValue={ele.defaultValue}
                   value={ele.value || ele.defaultValue}
                   type="text"
                   name={ele.name}

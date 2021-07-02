@@ -82,7 +82,8 @@ const mapStateToProps = ({
   user: { user }
 }) => ({
   template,
-  user
+  user,
+  loading
 });
 
 export default connect(mapStateToProps, {

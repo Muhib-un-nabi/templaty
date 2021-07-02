@@ -2,7 +2,10 @@
   background-color: #922c88;
   color: white;
 }
-
+.ql-placeholder-content.contact {
+  background-color: #723b6c;
+  color: white;
+}
 .normal-style .ql-placeholder-content {
   background-color: inherit;
   color: inherit;

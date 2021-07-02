@@ -5,7 +5,14 @@ import { Card, CardBody, CardTitle } from 'reactstrap';
 import SnippetItem from './SnippetItem';
 import { Colxx } from '../../../../components/common/CustomBootstrap';
 
-function SnippetsGroups({ data, items, setItems, filter, isAllActive }) {
+function SnippetsGroups({
+  data,
+  items,
+  setItems,
+  filter,
+  isAllActive,
+  history
+}) {
   const [groups, setGroups] = useState({});
 
   useEffect(() => {
@@ -63,13 +70,22 @@ function SnippetsGroups({ data, items, setItems, filter, isAllActive }) {
           {...item}
           filter={filter}
           isAllActive={isAllActive}
+          history={history}
         />
       ))}
     </DragDropContext>
   );
 }
 
-function DroppableList({ id, items, colSize, label, filter, isAllActive }) {
+function DroppableList({
+  id,
+  items,
+  colSize,
+  label,
+  filter,
+  isAllActive,
+  history
+}) {
   return (
     <Droppable droppableId={id}>
       {(provided) => (
@@ -104,7 +120,7 @@ function DroppableList({ id, items, colSize, label, filter, isAllActive }) {
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
                           ref={provided.innerRef}>
-                          <SnippetItem itemData={item} />
+                          <SnippetItem itemData={item} history={history} />
                         </div>
                       )}
                     </Draggable>

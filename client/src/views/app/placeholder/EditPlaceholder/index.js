@@ -146,7 +146,7 @@ const index = ({
     <>
       <Row>
         <Colxx xxs="12">
-          <Breadcrumb heading="menu.placeholders-add" match={match} />
+          <Breadcrumb heading="menu.placeholders-update" match={match} />
           <Separator className="mb-5" />
         </Colxx>
       </Row>
