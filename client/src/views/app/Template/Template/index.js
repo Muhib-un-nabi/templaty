@@ -240,16 +240,28 @@ const Template = ({
       //  Replace Placeholder Values
       const newInputItems = inputItems.map((placeholder) => {
         const placeholderValue = templatePlaceholders.find(
-          (ele) => ele._id === placeholder._id
+          (ele) => ele?.name === placeholder?.name
         );
-        const value = placeholderValue.value || placeholder.defaultValue;
-        return { ...placeholder, value };
+        placeholder.value = placeholderValue.value || placeholder.value;
+        return placeholder;
       });
       //  Set All The State
-      setInputItems(newInputItems);
+      setItems(newInputItems);
       setItems(data);
-      setModal(false);
       setLoadTemplateData({});
+      setModal(false);
+      // const newInputItems = inputItems.map((placeholder) => {
+      //   const placeholderValue = templatePlaceholders.find(
+      //     (ele) => ele._id === placeholder._id
+      //   );
+      //   const value = placeholderValue.value || placeholder.defaultValue;
+      //   return { ...placeholder, value };
+      // });
+      // //  Set All The State
+      // setItems(newInputItems);
+      // setItems(data);
+      // setModal(false);
+      // setLoadTemplateData({});
     }
     if (loadTemplateData.reset) {
       const newInputItems = inputItems.map((placeholder) => {
