@@ -36,6 +36,12 @@ import {
   setLoading as setContactsLoading
 } from '../../../../redux/contacts/action';
 
+import {
+  CHECKBOX,
+  RADIO_BUTTON,
+  TEXT_AREA
+} from '../../../../constants/inputTypes';
+
 import SnippetsGroups from './SnippetsGroups';
 import InputItems from './InputItems';
 import LivePreview from './livePreview';
@@ -150,26 +156,27 @@ const Template = ({
     const contactEle = snippetHrmlRef.current.querySelectorAll(
       `.contact.ql-placeholder-content`
     );
-    replaceWithDefaults(contactEle);
+    // replaceWithDefaults(contactEle);
     replaceWithContact(contact, contactEle);
     setCurrContact(contact);
   };
   const replaceWithDefaults = (contactEle) => {
-    // custom.forEach((contact) => {
-    //   contactEle.forEach((ele) => {
-    //     if (ele.dataset.name === 'name') {
-    //       ele.value = contact.name;
-    //       return;
-    //     }
-    //     const contactData = contact.data.find(
-    //       (data) => data.name === ele.dataset.name
-    //     );
-    //     if (contactData) {
-    //       ele.innerHTML = contactData.value;
-    //       return;
-    //     }
-    //   });
-    // });
+    const currContact = custom.find((ele) => ele.id === contactEle.dataset._id);
+    if (currContact) {
+      switch (currContact.type.label) {
+        case CHECKBOX:
+          contactEle.innerHTML = currContact.data.value
+            .map((ele) => ele.label)
+            .join(', ');
+          break;
+        case RADIO_BUTTON:
+          contactEle.innerHTML = currContact.data.value.label;
+          break;
+        default:
+          contactEle.innerHTML = currContact.data.value;
+      }
+      return;
+    }
   };
   const replaceWithContact = (contact, contactEle) => {
     contactEle.forEach((ele) => {
@@ -180,10 +187,23 @@ const Template = ({
       const contactData = contact.data.find(
         (data) => data.name === ele.dataset.name
       );
+
       if (contactData) {
-        ele.innerHTML = contactData.value;
+        switch (contactData.type.label) {
+          case CHECKBOX:
+            ele.innerHTML = contactData.value
+              .map((ele) => ele.label)
+              .join(', ');
+            break;
+          case RADIO_BUTTON:
+            ele.innerHTML = contactData.value.label;
+            break;
+          default:
+            ele.innerHTML = contactData.value;
+        }
         return;
       }
+      replaceWithDefaults(ele);
     });
   };
   let loadTemplate = () => {
