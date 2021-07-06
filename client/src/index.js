@@ -9,7 +9,7 @@ import 'video.js/dist/video-js.css';
 import {
   isMultiColorActive,
   defaultColor,
-  isDarkSwitchActive,
+  isDarkSwitchActive
 } from './constants/defaultValues';
 import { getCurrentColor, setCurrentColor } from './helpers/Utils';
 

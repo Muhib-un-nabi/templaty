@@ -79,11 +79,11 @@ const Account = ({ match, user, history, getMe, setLoading }) => {
         </Row>
       )}
 
-      {user && user.role === 'admin' && (
+      {/* {user && user.role === 'admin' && (
         <Row>
           <Team history={history} />
         </Row>
-      )}
+      )} */}
     </>
   );
 };

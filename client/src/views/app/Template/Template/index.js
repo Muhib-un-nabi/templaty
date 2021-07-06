@@ -273,7 +273,7 @@ const Template = ({
         <Colxx xxs="12">
           <div className="mb-2">
             <h1>
-              <IntlMessages id="menu.snippets" />
+              <IntlMessages id="template" />
             </h1>
 
             <div className="text-zero top-right-button-container mr-2 d-flex">

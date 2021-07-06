@@ -38,7 +38,10 @@
 }
 
 .height__100 {
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  min-height: 100%;
 }
 
 .un-selected-list.col-2 .list-item[data-display='false'] {
@@ -47,4 +50,14 @@
   opacity: 0;
   visibility: 0;
   display: none !important;
+}
+
+/*  quill editor auto height */
+.ql-container {
+  height: auto !important;
+}
+
+.ql-editor {
+  height: auto !important;
+  min-height: 200px !important;
 }

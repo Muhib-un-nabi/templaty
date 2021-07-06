@@ -66,7 +66,7 @@ app.use('/api', limiter);
 //   bookingController.webhookCheckout
 // );
 // Body parser, reading data from body into req.body
-app.use(express.json({ limit: '100kb' }));
+app.use(express.json({ limit: '1000kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 app.use(cookieParser());
 // Data sanitization against NoSQL query injection

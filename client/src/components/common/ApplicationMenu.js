@@ -33,8 +33,7 @@ const ApplicationMenu = ({ children }) => {
       {children}
       <NavLink
         className="app-menu-button d-inline-block d-xl-none"
-        onClick={() => setIsOpen(!isOpen)}
-      >
+        onClick={() => setIsOpen(!isOpen)}>
         <i className="simple-icon-options" />
       </NavLink>
     </div>

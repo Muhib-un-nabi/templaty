@@ -63,10 +63,9 @@ const PlaceholdersItem = ({ itemData, history }) => {
               outline
               color="primary"
               className="mb-2"
-              onClick={() => {
-                console.log(itemData);
-                history.push(`${adminRoot}/snippets/edit/${itemData._id}`);
-              }}>
+              onClick={() =>
+                history.push(`${adminRoot}/snippets/edit/${itemData._id}`)
+              }>
               <IntlMessages id="button.edit" />
             </Button>
           </div>

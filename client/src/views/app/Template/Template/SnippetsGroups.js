@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { Card, CardBody, CardTitle } from 'reactstrap';
+import { Button, Card, CardBody, CardTitle } from 'reactstrap';
 
 import SnippetItem from './SnippetItem';
 import { Colxx } from '../../../../components/common/CustomBootstrap';
+import IntlMessages from '../../../../helpers/IntlMessages';
+import { adminRoot } from '../../../../constants/defaultValues';
 
 function SnippetsGroups({
   data,
@@ -86,6 +88,7 @@ function DroppableList({
   isAllActive,
   history
 }) {
+  console.log(id === 'un-selected-list');
   return (
     <Droppable droppableId={id}>
       {(provided) => (
@@ -128,6 +131,15 @@ function DroppableList({
                 })}
                 {provided.placeholder}
               </div>
+              {id === 'un-selected-list' && (
+                <Button
+                  color="primary"
+                  className="mb-2 mx-2"
+                  outline
+                  onClick={() => history.push(`${adminRoot}/snippets/add`)}>
+                  <IntlMessages id="menu.snippets-add" />
+                </Button>
+              )}
             </CardBody>
           </Card>
         </Colxx>
