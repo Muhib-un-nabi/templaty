@@ -24,7 +24,8 @@ import {
   NavLink,
   CardBody,
   CardSubtitle,
-  CardText
+  CardText,
+  Button
 } from 'reactstrap';
 import { connect } from 'react-redux';
 import {
@@ -36,14 +37,32 @@ import ThumbnailImage from '../../../../components/cards/ThumbnailImage';
 import { adminRoot } from '../../../../constants/defaultValues';
 import { getMe, setLoading } from '../../../../redux/user/action';
 import Team from './team';
+import IntlMessages from '../../../../helpers/IntlMessages';
 
 const Account = ({ match, user, history, getMe, setLoading }) => {
   return (
     <>
       <Row>
         <Colxx xxs="12">
-          <Breadcrumb heading="menu.account" match={match} />
-          <Separator className="mb-5" />
+          <div className="mb-2">
+            <h1>
+              <IntlMessages id="menu.account" />
+            </h1>
+
+            <div className="text-zero top-right-button-container">
+              <Button
+                color="primary"
+                size="lg"
+                className="top-right-button mr-1"
+                onClick={() =>
+                  history.push(`${adminRoot}/account/email-setting`)
+                }>
+                <IntlMessages id="setting.email-setting" />
+              </Button>
+            </div>
+            <Breadcrumb match={match} />
+            <Separator className="mb-5" />
+          </div>
         </Colxx>
       </Row>
 
@@ -79,11 +98,11 @@ const Account = ({ match, user, history, getMe, setLoading }) => {
         </Row>
       )}
 
-      {/* {user && user.role === 'admin' && (
+      {user && user.role === 'admin' && (
         <Row>
           <Team history={history} />
         </Row>
-      )} */}
+      )}
     </>
   );
 };

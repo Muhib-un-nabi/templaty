@@ -43,13 +43,15 @@
   flex: 1 0 auto;
   min-height: 100%;
 }
-
+.un-selected-list.col-2 .list-item {
+  transition: all 0.3s ease;
+}
 .un-selected-list.col-2 .list-item[data-display='false'] {
-  width: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
   height: 0;
   opacity: 0;
-  visibility: 0;
-  display: none !important;
 }
 
 /*  quill editor auto height */

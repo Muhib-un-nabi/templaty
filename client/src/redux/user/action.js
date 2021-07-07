@@ -62,7 +62,7 @@ export const login = (userData) => async (dispatch) => {
   } catch (err) {
     NotificationManager.error(
       'Warning message',
-      'Wrong Email and Password',
+      'Wrong Email and Password.',
       3000,
       null,
       null
@@ -158,6 +158,7 @@ export const isLogin = () => async (dispatch) => {
     );
   }
 };
+
 //  Delete User
 export const deleteUserByAdmin =
   (id, deleteUserData, asignTo) => async (dispatch) => {
@@ -239,6 +240,8 @@ export const resetPassword = () => async (dispatch) => {
     throw new Error('Somthing went Wrong, Please Try again');
   }
 };
+
+/// SMTP Configration
 
 const setToken = (token) => {
   sessionStorage.setItem('token', token);

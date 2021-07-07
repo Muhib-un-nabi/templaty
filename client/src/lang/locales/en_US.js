@@ -73,6 +73,7 @@ module.exports = {
   'menu.snippets-add': 'Add Snippets',
   'menu.snippets': 'Snippets',
   'menu.types': 'Types',
+  'menu.email-setting': 'Email Setting',
 
   /* FOR Contact Setting Form */
   'display-options': 'Display Options',
@@ -112,6 +113,12 @@ module.exports = {
   'template.all': 'All Template',
   'template.add': 'Add Template',
   'template.delete': 'Delete Template',
+  'setting.email-setting': 'Email Settings',
+  'setting.email-add': 'Add SMTP Account',
+  'smtp.configre': 'Configure SMTP Account',
+  'smtp.add': 'Add SMTP Account',
+  'smtp.update': 'Update SMTP Account',
+  // 'menu.email-setting': 'Email Settings',
 
   'type.select': 'Select Type',
   'type.add': 'Add Type',
