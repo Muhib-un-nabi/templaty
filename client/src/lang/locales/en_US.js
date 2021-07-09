@@ -110,6 +110,7 @@ module.exports = {
   'modal.user-delete': 'Delete User',
 
   template: 'Template',
+  readonly: 'Read Only',
   'template.all': 'All Template',
   'template.add': 'Add Template',
   'template.delete': 'Delete Template',
@@ -118,7 +119,10 @@ module.exports = {
   'smtp.configre': 'Configure SMTP Account',
   'smtp.add': 'Add SMTP Account',
   'smtp.update': 'Update SMTP Account',
+  'smtp.update.setting': 'Update SMTP Setting',
   // 'menu.email-setting': 'Email Settings',
+  'smtp.team': 'Team SMTP Account',
+  'smtp.user': 'User SMTP Account',
 
   'type.select': 'Select Type',
   'type.add': 'Add Type',

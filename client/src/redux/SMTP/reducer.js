@@ -2,13 +2,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 import {
-  ADD_SMTP,
   CLEAR_CURRENT,
   DELETE_SMTP,
   GET_SMTP,
   GET_SMTPS,
   SET_LOADING,
-  UPDATE_SMTP
+  ADD_OR__UPDATE_SMTP
 } from './types';
 
 const INITIAL_STATE = {
@@ -31,18 +30,20 @@ export default (state = INITIAL_STATE, action) => {
         current: action.payload,
         loading: false
       };
-    case ADD_SMTP:
+    case ADD_OR__UPDATE_SMTP:
+      const has = state.smtp.find((ele) => ele._id === action.payload._id);
+      if (has) {
+        return {
+          ...state,
+          smtp: state.smtp.map((ele) =>
+            ele._id === has._id ? action.payload : ele
+          ),
+          loading: false
+        };
+      }
       return {
         ...state,
         smtp: [...state.smtp, action.payload],
-        loading: false
-      };
-    case UPDATE_SMTP:
-      return {
-        ...state,
-        smtp: state.smtp.map((ele) =>
-          ele._id === action.payload._id ? action.payload : ele
-        ),
         loading: false
       };
     case DELETE_SMTP:

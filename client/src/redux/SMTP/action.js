@@ -1,13 +1,12 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 import {
-  ADD_SMTP,
+  ADD_OR__UPDATE_SMTP,
   CLEAR_CURRENT,
   DELETE_SMTP,
   GET_SMTP,
   GET_SMTPS,
-  SET_LOADING,
-  UPDATE_SMTP
+  SET_LOADING
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -51,16 +50,16 @@ export const getSMTP = (id) => async (dispatch) => {
   }
 };
 //  Add New SMTP
-export const addSMTP = (SMTP) => async (dispatch) => {
+export const addORupdateSMTP = (SMTP) => async (dispatch) => {
   try {
     const { data } = await serverApi.post('/smtp', SMTP, authHeader());
     dispatch({
-      type: ADD_SMTP,
+      type: ADD_OR__UPDATE_SMTP,
       payload: data.data.data
     });
     NotificationManager.success(
       'Success message',
-      'SMTP Account was Added successfully',
+      'SMTP Setting Updated successfully',
       3000,
       null,
       null
@@ -68,42 +67,43 @@ export const addSMTP = (SMTP) => async (dispatch) => {
   } catch (err) {
     NotificationManager.error(
       'Warning message',
-      'Somthing Wrong, SMTP Account  was not added',
+      'Somthing Wrong, SMTP Setting was not Updated',
       3000,
       null,
       null
     );
-    // throw new Error(err);
+    throw new Error(err);
   }
 };
 //  Update SMTP
-export const updateSMTP = (SMTP, id) => async (dispatch) => {
-  try {
-    const { data } = await serverApi.patch(`/smtp/${id}`, SMTP, authHeader());
-    dispatch({
-      type: UPDATE_SMTP,
-      payload: data.data.data
-    });
-    NotificationManager.success(
-      'Success message',
-      'SMTP Updated successfully',
-      3000,
-      null,
-      null
-    );
-  } catch (err) {
-    NotificationManager.error(
-      'Success message',
-      'Somthing Wrong, SMTP  was not Updated',
-      3000,
-      null,
-      null
-    );
-    // throw new Error(err);
-  }
-};
+// export const addORupdateSMTP = (SMTP, id) => async (dispatch) => {
+//   try {
+//     const { data } = await serverApi.patch(`/smtp/${id}`, SMTP, authHeader());
+//     dispatch({
+//       type: UPDATE_SMTP,
+//       payload: data.data.data
+//     });
+//     NotificationManager.success(
+//       'Success message',
+//       'SMTP Updated successfully',
+//       3000,
+//       null,
+//       null
+//     );
+//   } catch (err) {
+//     NotificationManager.error(
+//       'Success message',
+//       'Somthing Wrong, SMTP  was not Updated',
+//       3000,
+//       null,
+//       null
+//     );
+//     // throw new Error(err);
+//   }
+// };
 
 //  DELETE New SMTP
+
 export const deleteSMTP = (id) => async (dispatch) => {
   try {
     await serverApi.delete(`/smtp/${id}`, authHeader());

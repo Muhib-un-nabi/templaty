@@ -63,3 +63,7 @@
   height: auto !important;
   min-height: 200px !important;
 }
+
+.min-h-70vh {
+  min-height: 70vh;
+}

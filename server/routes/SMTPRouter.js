@@ -1,10 +1,9 @@
 const express = require('express');
 const {
-  createSMTP,
+  createorUpdateSMTP,
   deleteSMTP,
   getAllSMTP,
-  getSMTP,
-  updateSMTP
+  getSMTP
 } = require('../controllers/SMTPCantroller');
 const authController = require('../controllers/authController');
 
@@ -15,12 +14,11 @@ router.use(authController.protect);
 router
   .route('/')
   .get(getAllSMTP)
-  .post(createSMTP);
+  .post(createorUpdateSMTP);
 
 router
   .route('/:id')
   .get(getSMTP)
-  .patch(updateSMTP)
   .delete(deleteSMTP);
 
 module.exports = router;

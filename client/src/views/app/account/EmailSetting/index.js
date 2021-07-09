@@ -1,39 +1,31 @@
-import {
-  AvForm,
-  AvField,
-  AvGroup,
-  AvInput,
-  AvFeedback,
-  AvRadioGroup,
-  AvRadio,
-  AvCheckboxGroup,
-  AvCheckbox
-} from 'availity-reactstrap-validation';
-
 import React, { useEffect, useState } from 'react';
 import {
   Row,
   Card,
   NavLink,
   CardBody,
-  CardSubtitle,
-  CardText,
-  Button,
-  Label,
-  Modal,
-  ModalHeader,
-  ModalBody
+  CardTitle,
+  CardHeader,
+  TabContent,
+  TabPane,
+  Nav,
+  NavItem
 } from 'reactstrap';
+
+import classnames from 'classnames';
 import { connect } from 'react-redux';
 import {
   Colxx,
   Separator
 } from '../../../../components/common/CustomBootstrap';
-import { getSMTPS, setLoading, addSMTP } from '../../../../redux/SMTP/action';
+import {
+  getSMTPS,
+  setLoading,
+  addORupdateSMTP
+} from '../../../../redux/SMTP/action';
 import habdelGetData from '../../../../helpers/habdelGetData';
 
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
-import { adminRoot } from '../../../../constants/defaultValues';
 import IntlMessages from '../../../../helpers/IntlMessages';
 
 import EmailSettingFrom from './form';
@@ -44,130 +36,158 @@ const EmailSetting = ({
   history,
   getSMTPS,
   setLoading,
-  addSMTP,
+  addORupdateSMTP,
 
   smtp,
   loading
 }) => {
-  const [formModel, setFormModel] = useState(false);
+  const [activeTab, setActiveState] = useState('1');
+  const defaault = { secure: 'yes', port: 465 };
+  const [teamSMTPdefaultValues, setTeamSMTPdefaultValues] = useState();
+  const [userSMTPdefaultValues, setUserSMTPdefaultValues] = useState();
+  const [isUpdateValue, setIsUpdateValue] = useState(false);
+
+  useEffect(() => {
+    if (smtp && smtp.length !== 0) {
+      const user = smtp.find((ele) => ele.type === 'user');
+      user &&
+        setUserSMTPdefaultValues({
+          ...user,
+          secure: user.secure ? 'yes' : 'no'
+        });
+      const team = smtp.find((ele) => ele.type === 'team');
+      team &&
+        setTeamSMTPdefaultValues({
+          ...team,
+          secure: team.secure ? 'yes' : 'no'
+        });
+      setIsUpdateValue(true);
+    }
+    if (!loading && smtp.length === 0) {
+      setTeamSMTPdefaultValues(defaault);
+      setUserSMTPdefaultValues(defaault);
+      setIsUpdateValue(true);
+    }
+  }, [smtp]);
+
   useEffect(() => {
     habdelGetData(getSMTPS, setLoading, history);
   }, []);
 
   const addNewSmtpAccount = async (data) => {
     try {
+      setIsUpdateValue(false);
       await setLoading();
-      await addSMTP(data);
-      setFormModel(false);
+      await addORupdateSMTP(data);
     } catch {
       setLoading(false);
-      setFormModel(false);
+      setIsUpdateValue(true);
     }
-  };
-  const canAddSMTP = () => {
-    return !smtp.filter((ele) => {
-      return ele.user === user._id && ele.type !== 'team';
-    }).length;
   };
 
   return (
     <>
-      <EmailSettingFrom
-        formModel={formModel}
-        setFormModel={setFormModel}
-        history={history}
-        onSubmitHandler={addNewSmtpAccount}
-      />
       <Row>
         <Colxx xxs="12">
           <div className="mb-2">
             <h1>
               <IntlMessages id="menu.email-setting" />
             </h1>
-
-            {user && !loading && canAddSMTP() && (
-              <div className="text-zero top-right-button-container">
-                <Button
-                  color="primary"
-                  size="lg"
-                  className="top-right-button mr-1"
-                  onClick={() => setFormModel(true)}>
-                  <IntlMessages id="setting.email-add" />
-                </Button>
-              </div>
-            )}
             <Breadcrumb match={match} />
             <Separator className="mb-5" />
           </div>
         </Colxx>
       </Row>
+      {(user && !loading && (
+        <Row>
+          <Colxx xxs="12">
+            <Card className="mb-4 min-h-70vh">
+              <CardHeader className="pl-0 pr-0">
+                <Nav tabs className=" card-header-tabs  ml-0 mr-0">
+                  <NavItem className="w-50 text-center">
+                    <NavLink
+                      to="#"
+                      location={{}}
+                      className={classnames({
+                        active: activeTab === '1',
+                        'nav-link': true
+                      })}
+                      onClick={() => {
+                        setActiveState('1');
+                      }}>
+                      <IntlMessages id="smtp.user" />
+                    </NavLink>
+                  </NavItem>
+                  <NavItem className="w-50 text-center">
+                    <NavLink
+                      to="#"
+                      location={{}}
+                      className={classnames({
+                        active: activeTab === '2',
+                        'nav-link': true
+                      })}
+                      onClick={() => {
+                        setActiveState('2');
+                      }}>
+                      <IntlMessages id="smtp.team" />
+                    </NavLink>
+                  </NavItem>
+                </Nav>
+              </CardHeader>
 
-      <Row>
-        <Colxx className="mb-4" xxs="12">
-          <ul className="list-unstyled mb-4">
-            {user &&
-              smtp.map((smtp, i) => {
-                const isUpdate = () => {
-                  const isTeam = smtp.type === 'team';
-                  const isAdmin = user.role === 'admin';
-                  const isUser = user._id === smtp.user;
-                  if (isTeam && isAdmin) return true;
-                  if (!isTeam && isUser) return true;
-                  if (isAdmin) return true;
-                  else return false;
-                };
-                return (
-                  <li key={smtp._id}>
-                    <Card className="d-flex mb-4">
-                      <div className="d-flex flex-grow-1 min-width-zero">
-                        <div className="card-body align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
-                          <div className="list-item-heading mb-0 truncate w-80 mb-1 mt-1">
-                            <b>{smtp.mail}</b>
-                          </div>
-                        </div>
-
-                        {user.role === 'admin' &&
-                          user._id === smtp.user &&
-                          smtp.type !== 'team' && (
-                            <div className="custom-control custom-checkbox pl-1 align-self-center pr-4">
-                              <div className="w-15 w-xs-100">
-                                <span className="badge badge-light  badge-pill">
-                                  Personal
-                                </span>
-                              </div>
-                            </div>
-                          )}
-                        <div className="custom-control custom-checkbox pl-1 align-self-center pr-4">
-                          <div className="w-15 w-xs-100">
-                            <span
-                              className={`badge badge-${
-                                smtp.type === 'team' ? 'primary' : 'secondary'
-                              } badge-pill`}>
-                              {smtp.type === 'team' ? 'Team' : 'Private'}
-                            </span>
-                          </div>
-                        </div>
-
-                        {isUpdate() && (
-                          <div className="custom-control custom-checkbox pl-1 align-self-center pr-4">
-                            <Button
-                              outline
-                              color="theme-3"
-                              className="icon-button ml-1"
-                              // onClick={() => updateClick(itemData)}
-                            >
-                              <i className="simple-icon-pencil" />
-                            </Button>
-                          </div>
+              <TabContent activeTab={activeTab}>
+                <TabPane tabId="1">
+                  <Row>
+                    <Colxx sm="12">
+                      <CardBody>
+                        <CardTitle className="mb-4">
+                          <IntlMessages id="smtp.configre" />
+                        </CardTitle>
+                        {isUpdateValue && (
+                          <EmailSettingFrom
+                            history={history}
+                            onSubmitHandler={addNewSmtpAccount}
+                            defaultValues={userSMTPdefaultValues}
+                          />
                         )}
-                      </div>
-                    </Card>
-                  </li>
-                );
-              })}
-          </ul>
-        </Colxx>
-      </Row>
+                      </CardBody>
+                    </Colxx>
+                  </Row>
+                </TabPane>
+                <TabPane tabId="2">
+                  <Row>
+                    <Colxx sm="12">
+                      <CardBody>
+                        <CardTitle className="mb-4">
+                          {(user.role === 'admin' && (
+                            <IntlMessages id="smtp.configre" />
+                          )) || (
+                            <>
+                              <IntlMessages id="smtp.team" />{' '}
+                              <b>
+                                {' '}
+                                (<IntlMessages id="readonly" />)
+                              </b>
+                            </>
+                          )}
+                        </CardTitle>
+                        {isUpdateValue && (
+                          <EmailSettingFrom
+                            history={history}
+                            onSubmitHandler={addNewSmtpAccount}
+                            defaultValues={teamSMTPdefaultValues}
+                            SMTPfor="team"
+                          />
+                        )}
+                      </CardBody>
+                    </Colxx>
+                  </Row>
+                </TabPane>
+              </TabContent>
+            </Card>
+          </Colxx>
+        </Row>
+      )) || <div className="loading" />}
     </>
   );
 };
@@ -178,6 +198,8 @@ const mapStateToProps = ({ user: { user }, smtp: { smtp, loading } }) => ({
   loading
 });
 
-export default connect(mapStateToProps, { getSMTPS, setLoading, addSMTP })(
-  EmailSetting
-);
+export default connect(mapStateToProps, {
+  getSMTPS,
+  setLoading,
+  addORupdateSMTP
+})(EmailSetting);
