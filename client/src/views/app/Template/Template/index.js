@@ -31,6 +31,10 @@ import {
   setLoading as setTypeLoading
 } from '../../../../redux/types/action';
 import {
+  getSMTPS,
+  setLoading as setSMTPLoading
+} from '../../../../redux/SMTP/action';
+import {
   getContacts,
   getInputField,
   setLoading as setContactsLoading
@@ -64,7 +68,12 @@ const Template = ({
   getInputField,
   setContactsLoading,
   contacts,
-  inputs: { custom }
+  inputs: { custom },
+
+  smtp,
+  smtpLoading,
+  getSMTPS,
+  setSMTPLoading
 }) => {
   const [items, setItems] = useState([]);
   const [debugPlaceholders, setDebugPlaceholders] = useState(true);
@@ -104,6 +113,7 @@ const Template = ({
     habdelGetData(getTypes, setTypeLoading, history);
     habdelGetData(getContacts, setContactsLoading, history);
     habdelGetData(getInputField, setContactsLoading, history);
+    habdelGetData(getSMTPS, setSMTPLoading, history);
   }, []);
 
   useEffect(() => {
@@ -404,7 +414,7 @@ const Template = ({
                     history={history}
                   />
                 )}
-                {snippets.length === 0 && (
+                {snippets.length === 0 && loading && (
                   <>
                     <Colxx xxs="2">
                       <Card className="height__100">
@@ -426,8 +436,13 @@ const Template = ({
                     />
 
                     <LivePreview
+                      contacts={contacts}
+                      hasSnippet={items[1] && items[1].items.length}
                       debugMode={debugPlaceholders}
                       refrance={snippetHrmlRef}
+                      smtpLoading={smtpLoading}
+                      smtp={smtp}
+                      setLoadTemplateData={setLoadTemplateData}
                     />
                   </>
                 )}
@@ -448,14 +463,17 @@ const mapStateToProps = ({
   snippets: { snippets, loading },
   types: { types },
   user: { user },
-  contacts: { contacts, inputs }
+  contacts: { contacts, inputs },
+  smtp: { smtp, loading: smtpLoading }
 }) => ({
   snippets,
   user,
   loading,
   types,
   contacts,
-  inputs
+  inputs,
+  smtp,
+  smtpLoading
 });
 
 export default connect(mapStateToProps, {
@@ -465,5 +483,7 @@ export default connect(mapStateToProps, {
   setTypeLoading,
   getContacts,
   setContactsLoading,
-  getInputField
+  getInputField,
+  getSMTPS,
+  setSMTPLoading
 })(Template);

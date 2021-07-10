@@ -3,7 +3,8 @@ const {
   createorUpdateSMTP,
   deleteSMTP,
   getAllSMTP,
-  getSMTP
+  getSMTP,
+  sendMail
 } = require('../controllers/SMTPCantroller');
 const authController = require('../controllers/authController');
 
@@ -15,6 +16,8 @@ router
   .route('/')
   .get(getAllSMTP)
   .post(createorUpdateSMTP);
+
+router.route('/send').post(sendMail);
 
 router
   .route('/:id')

@@ -21,8 +21,6 @@ import {
 } from 'reactstrap';
 import { connect } from 'react-redux';
 
-import { v4 } from 'uuid';
-
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
 

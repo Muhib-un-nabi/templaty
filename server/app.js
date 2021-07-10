@@ -96,6 +96,7 @@ app.use((req, res, next) => {
 });
 //  Snippets Routes
 app.use('/api/snippets', snippetsRouter);
+app.use('/api/smtp', SMTPRouter);
 // // Data sanitization against XSS
 app.use(xss());
 // 3) ROUTES
@@ -109,7 +110,6 @@ app.use('/api/placeholders', placeholdersRouter);
 //  Template Routes
 app.use('/api/templates', templateRouter);
 app.use('/api/types', typesRouter);
-app.use('/api/smtp', SMTPRouter);
 
 app.all('/api', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

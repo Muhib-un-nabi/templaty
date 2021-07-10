@@ -50,6 +50,7 @@ const index = ({
 }) => {
   const [GlobalInput, setGlobalInput] = useState(global);
   const [customInput, setCustomInput] = useState(custom);
+  const [email, setEmail] = useState('');
 
   useEffect(() => {
     setCustomInput(custom);
@@ -64,6 +65,7 @@ const index = ({
       await setLoading();
       const newContact = {
         name: GlobalInput.find((ele) => ele.id === 'name-input').data.value,
+        email: email,
         data: customInput.map((ele) => ({
           name: ele.data.name,
           value: ele.data.value,
@@ -114,6 +116,14 @@ const index = ({
                       />
                     </FormGroup>
                   ))}
+                <FormGroup>
+                  <Label>Email</Label>
+                  <Input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    type="email"
+                    required></Input>
+                </FormGroup>
                 {(!loading &&
                   customInput.map((inputData) => (
                     <FormGroup key={`customInput__${inputData.id}`}>

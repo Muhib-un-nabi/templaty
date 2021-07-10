@@ -6,7 +6,8 @@ import {
   DELETE_SMTP,
   GET_SMTP,
   GET_SMTPS,
-  SET_LOADING
+  SET_LOADING,
+  SEND_MAIL
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -122,6 +123,27 @@ export const deleteSMTP = (id) => async (dispatch) => {
     NotificationManager.error(
       'Warning message',
       'Somthing Wrong. SMTP  was not Deleted',
+      3000,
+      null,
+      null
+    );
+  }
+};
+
+export const senMail = (mail) => async (dispatch) => {
+  try {
+    await serverApi.post(`/smtp/send`, mail, authHeader());
+    NotificationManager.success(
+      'Success message',
+      'Sending Mail request was proceeded',
+      3000,
+      null,
+      null
+    );
+  } catch (err) {
+    NotificationManager.error(
+      'Warning message',
+      'Somthing Wrong.Sending Mail request was not proceeded',
       3000,
       null,
       null

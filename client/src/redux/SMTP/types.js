@@ -10,4 +10,6 @@ export const CLEAR_CURRENT = 'CLEAR_CURRENT';
 export const ADD_OR__UPDATE_SMTP = 'ADD_OR__UPDATE_SMTP';
 export const DELETE_SMTP = 'DELETE_SMTPE';
 
+export const SEND_MAIL = 'SEND_MAIL';
+
 export const SET_LOADING = 'SET_LOADING';

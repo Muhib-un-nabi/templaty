@@ -135,7 +135,7 @@ const Contacts = ({
                       updateClick={({ _id }) =>
                         history.push(`${adminRoot}/contacts/edit/${_id}`)
                       }>
-                      <ContactItem list={contact.data} />
+                      <ContactItem list={contact.data} email={contact.email} />
                     </ListItem>
                   </li>
                 ))}

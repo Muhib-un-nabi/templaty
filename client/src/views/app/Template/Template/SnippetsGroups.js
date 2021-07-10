@@ -88,7 +88,6 @@ function DroppableList({
   isAllActive,
   history
 }) {
-  console.log(id === 'un-selected-list');
   return (
     <Droppable droppableId={id}>
       {(provided) => (
