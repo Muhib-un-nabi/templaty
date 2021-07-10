@@ -42,8 +42,8 @@ const Email = ({
 }) => {
   const selectDataSMTP = () => {
     return (
-      smtp.map(({ _id, mail }) => ({
-        label: mail,
+      smtp.map(({ _id, mail, type }) => ({
+        label: `${type.toUpperCase()} <${mail}>`,
         value: _id,
         key: _id
       })) || []
@@ -52,7 +52,7 @@ const Email = ({
   const selectData = () => {
     return (
       contacts.map(({ _id, name, email }) => ({
-        label: name,
+        label: `${name} <${email}>`,
         value: email,
         key: _id
       })) || []

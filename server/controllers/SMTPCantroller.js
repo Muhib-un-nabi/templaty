@@ -72,27 +72,26 @@ exports.updateSMTP = catchAsync(async (req, res, next) => {
 exports.deleteSMTP = factory.deleteOne(SMTP);
 
 exports.createorUpdateSMTP = catchAsync(async (req, res, next) => {
-  const findSMTPTeam = await SMTP.findOne({
-    team: req.user.team,
-    type: req.body.type
-  });
-
-  const findSMTPUser = await SMTP.findOne({
-    user: req.user._id,
-    type: req.body.type,
-    team: req.user.team
-  });
-
-  if (findSMTPTeam) {
-    const doc = await updateSMTP(req, findSMTPTeam._id);
-    return sendResponce(res, doc);
-  } else if (!findSMTPTeam && req.body.type === 'team') {
+  if (req.body.type === 'team' && req.user.role === 'admin') {
+    const findSMTPTeam = await SMTP.findOne({
+      team: req.user.team,
+      type: 'team'
+    });
+    if (findSMTPTeam) {
+      const doc = await updateSMTP(req, findSMTPTeam._id);
+      return sendResponce(res, doc);
+    }
     const doc = await createSMTP(req);
     return sendResponce(res, doc);
-  } else if (findSMTPUser) {
-    const doc = await updateSMTP(req, findSMTPUser._id);
-    return sendResponce(res, doc);
-  } else if (!findSMTPUser && req.body.type === 'user') {
+  } else if (req.body.type === 'user') {
+    const findSMTPUser = await SMTP.findOne({
+      user: req.user._id,
+      type: 'user'
+    });
+    if (findSMTPUser) {
+      const doc = await updateSMTP(req, findSMTPUser._id);
+      return sendResponce(res, doc);
+    }
     const doc = await createSMTP(req);
     return sendResponce(res, doc);
   }
@@ -111,6 +110,7 @@ const sendResponce = (res, doc) => {
 
 const createSMTP = async req => {
   req.body.password = await encrypetPass(req.body.password);
+  req.body.secure = req.body.password.port == 465 ? true : false;
   return await SMTP.create({
     ...req.body,
     user: req.user._id,
@@ -120,6 +120,7 @@ const createSMTP = async req => {
 
 const updateSMTP = async (req, id) => {
   req.body.password = await encrypetPass(req.body.password);
+  req.body.secure = req.body.password.port == 465 ? true : false;
   return await SMTP.findByIdAndUpdate(id, req.body, {
     new: true,
     runValidators: true
@@ -204,16 +205,20 @@ async function mail({
   );
 
   // send mail with defined transport object
-  let info = await transporter.sendMail({
-    from,
-    to: to.join(', '),
-    cc: cc.join(', '),
-    bcc: bcc.join(', '),
-    subject,
-    html: body,
-    text: htmlToText.fromString(body)
-  });
+  try {
+    let info = await transporter.sendMail({
+      from,
+      to: to.join(', '),
+      cc: cc.join(', '),
+      bcc: bcc.join(', '),
+      subject,
+      html: body,
+      text: htmlToText.fromString(body)
+    });
 
-  console.log('Email Sended');
-  console.log('Message sent: %s', info.messageId);
+    console.log('Email Sended');
+    console.log('Message sent: %s', info.messageId);
+  } catch (e) {
+    console.log(e);
+  }
 }

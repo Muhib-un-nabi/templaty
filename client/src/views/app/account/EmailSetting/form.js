@@ -16,7 +16,7 @@ const Account = ({
   match,
   user,
   history,
-  defaultValues = { secure: 'yes', port: 465 },
+  defaultValues = { port: 465 },
   onSubmitHandler,
   loading,
   SMTPfor = 'user'
@@ -61,16 +61,6 @@ const Account = ({
         <AvInput name="port" type="numbers" required disabled={!isEditable} />
         <AvFeedback>Port is required!</AvFeedback>
       </AvGroup>
-
-      <AvRadioGroup
-        className="error-l-150"
-        name="secure"
-        disabled={!isEditable}
-        required>
-        <Label className="d-block">Secure</Label>
-        <AvRadio customInput label="yes" value="yes" />
-        <AvRadio customInput label="no" value="no" />
-      </AvRadioGroup>
 
       <Button
         disabled={!isEditable || loading}

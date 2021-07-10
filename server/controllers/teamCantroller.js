@@ -10,6 +10,7 @@ const Team = require('./../models/teamModule');
 const Placeholders = require('./../models/placeholdersModule');
 const Snippets = require('./../models/snippetsModule');
 const Contact = require('./../models/contactModule');
+const SMTP = require('./../models/SMTPModule');
 
 exports.addQueryParams = (req, res, next) => {
   req.params.id = req.user.team;
@@ -43,7 +44,6 @@ exports.deleteUsers = catchAsync(async (req, res, next) => {
   await ContactSetting.findByIdAndDelete(currUser.contactSetting);
 
   // Handle User Data
-  console.log(req.user._id);
 
   if (req.query.deleteUserData === 'true') {
     const query = { user: req.params.id };
@@ -63,6 +63,7 @@ exports.deleteUsers = catchAsync(async (req, res, next) => {
     await Snippets.updateMany(...update);
     await Contact.updateMany(...update);
   }
+  await SMTP.deleteMany({ user: req.params.id, type: 'user' });
   // Send final Responce
   res.status(204).json({
     status: 'success',

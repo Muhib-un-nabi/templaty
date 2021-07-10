@@ -42,7 +42,7 @@ const EmailSetting = ({
   loading
 }) => {
   const [activeTab, setActiveState] = useState('1');
-  const defaault = { secure: 'yes', port: 465 };
+  const defaault = { port: 465 };
   const [teamSMTPdefaultValues, setTeamSMTPdefaultValues] = useState();
   const [userSMTPdefaultValues, setUserSMTPdefaultValues] = useState();
   const [isUpdateValue, setIsUpdateValue] = useState(false);
@@ -52,14 +52,12 @@ const EmailSetting = ({
       const user = smtp.find((ele) => ele.type === 'user');
       user &&
         setUserSMTPdefaultValues({
-          ...user,
-          secure: user.secure ? 'yes' : 'no'
+          ...user
         });
       const team = smtp.find((ele) => ele.type === 'team');
       team &&
         setTeamSMTPdefaultValues({
-          ...team,
-          secure: team.secure ? 'yes' : 'no'
+          ...team
         });
       setIsUpdateValue(true);
     }
