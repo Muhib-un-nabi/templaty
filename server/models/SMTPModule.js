@@ -27,10 +27,6 @@ const SMTPSchema = new mongoose.Schema({
     type: Number,
     default: 587
   },
-  secure: {
-    type: Boolean,
-    default: false
-  },
   mail: {
     type: String,
     required: [true, 'mail Is Required']

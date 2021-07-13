@@ -1,15 +1,11 @@
 const crypto = require('crypto');
-const bcrypt = require('bcryptjs');
-
-const nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
-const htmlToText = require('html-to-text');
 
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
 const SMTP = require('../models/SMTPModule');
 const factory = require('./handlerFactory');
-const ReverseMd5 = require('reverse-md5');
+
+const mailSMTP = require('../utils/mailSMTP');
 
 exports.getAllSMTP = catchAsync(async (req, res, next) => {
   let query;
@@ -154,19 +150,18 @@ exports.sendMail = catchAsync(async (req, res, next) => {
   if (!smtpAccount)
     return next(new AppError('This Request not proceeded.', 400));
   smtpAccount.password = await deEncrypetPass(smtpAccount.password);
-  mail({
+  mailSMTP({
     user: smtpAccount.mail,
     pass: smtpAccount.password,
     host: smtpAccount.host,
     port: smtpAccount.port,
-    secure: smtpAccount.secure,
     from: smtpAccount.mail,
 
     to: req.body.to,
     cc: req.body.cc,
     bcc: req.body.bcc,
 
-    subject: req.body.subjec,
+    subject: req.body.subject,
     body: req.body.body
   });
 
@@ -177,48 +172,3 @@ exports.sendMail = catchAsync(async (req, res, next) => {
     }
   });
 });
-
-async function mail({
-  user,
-  pass,
-  host,
-  port,
-  secure,
-  from,
-
-  to = [],
-  cc = [],
-  bcc = [],
-  subject,
-  body
-}) {
-  let transporter = nodemailer.createTransport(
-    smtpTransport({
-      host,
-      port,
-      secure,
-      auth: {
-        user,
-        pass
-      }
-    })
-  );
-
-  // send mail with defined transport object
-  try {
-    let info = await transporter.sendMail({
-      from,
-      to: to.join(', '),
-      cc: cc.join(', '),
-      bcc: bcc.join(', '),
-      subject,
-      html: body,
-      text: htmlToText.fromString(body)
-    });
-
-    console.log('Email Sended');
-    console.log('Message sent: %s', info.messageId);
-  } catch (e) {
-    console.log(e);
-  }
-}

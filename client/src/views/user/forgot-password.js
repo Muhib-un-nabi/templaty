@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
-import { Row, Card, CardTitle, Label, FormGroup, Button } from 'reactstrap';
+import React, { useEffect, useState } from 'react';
+import {
+  Row,
+  Card,
+  CardTitle,
+  Label,
+  FormGroup,
+  Button,
+  Alert
+} from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
 import { connect } from 'react-redux';
 import { Colxx } from '../../components/common/CustomBootstrap';
 import IntlMessages from '../../helpers/IntlMessages';
-import { forgetPassword } from '../../redux/user/action';
+import { forgetPassword, setLoading } from '../../redux/user/action';
 
 const validateEmail = (value) => {
   let error;
@@ -18,10 +26,29 @@ const validateEmail = (value) => {
 };
 
 const ForgotPassword = ({ history, loading, forgetPassword }) => {
-  const [email] = useState('demo@coloredstrategies.com');
+  const [waitting, setWaitting] = useState(false);
+  const [sucessMSG, setSucessMSG] = useState(false);
+  const [errMsg, setErrMsg] = useState(false);
 
-  const onForgotPassword = (values) => {
-    forgetPassword(values);
+  const [email] = useState('muhib.ataki@gmail.com');
+
+  const onForgotPassword = async (values) => {
+    try {
+      setSucessMSG(false);
+      setErrMsg(false);
+      await await setWaitting(true);
+      await forgetPassword(values);
+      setSucessMSG(true);
+    } catch {
+      await setWaitting(false);
+      setErrMsg(true);
+    } finally {
+      await setWaitting(false);
+      setTimeout(() => {
+        setSucessMSG(false);
+        setErrMsg(false);
+      }, 5000);
+    }
   };
 
   const initialValues = { email };
@@ -34,7 +61,7 @@ const ForgotPassword = ({ history, loading, forgetPassword }) => {
             <p className="text-white h2">MAGIC IS IN THE DETAILS</p>
             <p className="white mb-0">
               Please use your e-mail to reset your password. <br />
-              If you are not a member, please{' '}
+              If you are not a member, please
               <NavLink to="/user/register" className="white">
                 register
               </NavLink>
@@ -67,15 +94,25 @@ const ForgotPassword = ({ history, loading, forgetPassword }) => {
                       </div>
                     )}
                   </FormGroup>
-
+                  {sucessMSG && (
+                    <Alert color="success">
+                      <IntlMessages id="alert.success-forget-pass-msg" />
+                    </Alert>
+                  )}
+                  {errMsg && (
+                    <Alert color="danger">
+                      <IntlMessages id="alert.fail-forget-pass-msg" />
+                    </Alert>
+                  )}
                   <div className="d-flex justify-content-between align-items-center">
-                    <NavLink to="/user/forgot-password">
-                      <IntlMessages id="user.forgot-password-question" />
+                    <NavLink to="/user/register">
+                      <IntlMessages id="user.register-password-question" />
                     </NavLink>
                     <Button
+                      disabled={waitting}
                       color="primary"
                       className={`btn-shadow btn-multiple-state ${
-                        loading ? 'show-spinner' : ''
+                        waitting ? 'show-spinner' : ''
                       }`}
                       size="lg">
                       <span className="spinner d-inline-block">
@@ -97,7 +134,6 @@ const ForgotPassword = ({ history, loading, forgetPassword }) => {
     </Row>
   );
 };
-
 const mapStateToProps = ({ user: { loading } }) => ({ loading });
 
 export default connect(mapStateToProps, { forgetPassword })(ForgotPassword);

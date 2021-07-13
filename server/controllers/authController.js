@@ -3,7 +3,7 @@ const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
-// const Email = require('../utils/email');
+const Email = require('../utils/email');
 const User = require('./../models/userModel');
 const ContactSetting = require('./../models/contactSettingModule');
 const Team = require('./../models/teamModule');
@@ -196,13 +196,19 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // 3) Send it to user's email
   try {
-    const resetURL = `${req.protocol}://${req.get(
-      'host'
-    )}/api/v1/users/resetPassword/${resetToken}`;
-    // await new Email(user, resetURL).sendPasswordReset();
+    let resetURL;
+    // Change Url Fro Development  and production ENV
+    if (process.env.NODE_ENV !== 'development') {
+      resetURL = `${req.protocol}://${req.get(
+        'host'
+      )}/users/reset-password/${resetToken}`;
+    } else {
+      resetURL = `${req.protocol}://localhost:3000/users/reset-password/${resetToken}`;
+    }
+    await new Email(user, resetURL).sendPasswordReset();
+
     res.status(200).json({
       status: 'success',
-      url: resetURL,
       message: 'Token sent to email!'
     });
   } catch (err) {

@@ -19,6 +19,7 @@ module.exports = {
   'user.email': 'E-mail',
   'user.password': 'Password',
   'user.forgot-password-question': 'Forget password?',
+  'user.register-password-question': 'Create New Account?',
   'user.fullname': 'Full Name',
   'user.login-button': 'LOGIN',
   'user.register-button': 'REGISTER',
@@ -126,5 +127,9 @@ module.exports = {
 
   'type.select': 'Select Type',
   'type.add': 'Add Type',
-  'type.update': 'Update Type'
+  'type.update': 'Update Type',
+
+  'alert.success-forget-pass-msg': 'Reset Password Token Send To your email',
+  'alert.fail-forget-pass-msg':
+    'Wrong Email. Please Contat to support for more info'
 };

@@ -33,7 +33,7 @@ const LivePreview = ({
       cc: extractValue(cc),
       bcc: extractValue(bcc),
       from: from.value,
-      subjec: subject,
+      subject: subject,
       body: refrance.current.innerHTML
     };
     senMail(newMail);

@@ -140,7 +140,6 @@ export const addNewUser = (userData) => async (dispatch) => {
 export const isLogin = () => async (dispatch) => {
   try {
     const { data } = await serverApi.post('/users/islogin', authHeader());
-    console.log(data);
     dispatch({
       type: IS_LOGGED_IN,
       payload: {
@@ -184,13 +183,21 @@ export const deleteUserByAdmin =
   };
 
 //  Not Working
-export const forgetPassword = () => async (dispatch) => {
+export const forgetPassword = (email) => async (dispatch) => {
   try {
-    const { data } = await serverApi.post('user/forgotPassword');
+    const { data } = await serverApi.post('users/forgotPassword', email);
     dispatch({
-      type: FORGET_PASSWORD,
-      payload: data.data.data
+      type: SET_LOADING,
+      payload: false
     });
+    NotificationManager.success(
+      'Success message',
+      data.message,
+      3000,
+      null,
+      null
+    );
+    return true;
   } catch (err) {
     NotificationManager.error(
       'Warning message',
@@ -199,7 +206,7 @@ export const forgetPassword = () => async (dispatch) => {
       null,
       null
     );
-    throw new Error('Somthing went Wrong, Please Try again');
+    throw new Error(err);
   }
 };
 

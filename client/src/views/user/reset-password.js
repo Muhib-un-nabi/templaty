@@ -22,7 +22,7 @@ const ResetPassword = ({
   history,
   loading,
   error,
-  resetPasswordAction,
+  resetPasswordAction
 }) => {
   const [newPassword] = useState('');
   const [newPasswordAgain] = useState('');
@@ -57,7 +57,7 @@ const ResetPassword = ({
           resetPasswordAction({
             newPassword: values.newPassword,
             resetPasswordCode: oobCode,
-            history,
+            history
           });
         }
       } else {
@@ -101,8 +101,7 @@ const ResetPassword = ({
             <Formik
               validate={validateNewPassword}
               initialValues={initialValues}
-              onSubmit={onResetPassword}
-            >
+              onSubmit={onResetPassword}>
               {({ errors, touched }) => (
                 <Form className="av-tooltip tooltip-label-bottom">
                   <FormGroup className="form-group has-float-label">
@@ -140,8 +139,7 @@ const ResetPassword = ({
                       className={`btn-shadow btn-multiple-state ${
                         loading ? 'show-spinner' : ''
                       }`}
-                      size="lg"
-                    >
+                      size="lg">
                       <span className="spinner d-inline-block">
                         <span className="bounce1" />
                         <span className="bounce2" />
@@ -168,5 +166,5 @@ const mapStateToProps = ({ authUser }) => {
 };
 
 export default connect(mapStateToProps, {
-  resetPasswordAction: resetPassword,
+  resetPasswordAction: resetPassword
 })(ResetPassword);
