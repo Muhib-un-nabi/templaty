@@ -53,6 +53,10 @@ import LivePreview from './livePreview';
 import HandelTemplate from '../handelTemplate/index';
 import AddTemplate from '../handelTemplate/addTemplate';
 
+import Email from './Email';
+import Download from './download';
+import Copy from './copy';
+
 const Template = ({
   match,
   getSnippets,
@@ -64,11 +68,13 @@ const Template = ({
   getTypes,
   setTypeLoading,
   types,
-  getContacts,
   getInputField,
+
+  getContacts,
   setContactsLoading,
   contacts,
   inputs: { custom },
+  contactLoading,
 
   smtp,
   smtpLoading,
@@ -94,6 +100,10 @@ const Template = ({
 
   const [currContact, setCurrContact] = useState();
   const [contactDropdown, setContactDropdown] = useState(false);
+
+  const [emailModel, setEmailModel] = useState(false);
+  const [downloadModel, setDownloadModel] = useState(false);
+  const [copyModel, setCopyModel] = useState(false);
 
   useEffect(() => {
     const list = JSON.parse(localStorage.getItem('type-order'));
@@ -352,6 +362,26 @@ const Template = ({
             history={history}
             placeholders={inputItems}
           />
+          {/* cantrolesl */}
+          <Email
+            value={snippetHrmlRef.current}
+            smtpLoading={smtpLoading}
+            smtp={smtp}
+            contacts={contacts}
+            contactLoading={contactLoading}
+            emailModel={emailModel}
+            setEmailModel={setEmailModel}
+          />
+          <Download
+            dataRef={snippetHrmlRef}
+            downloadModel={downloadModel}
+            setDownloadModel={setDownloadModel}
+          />
+          <Copy
+            copyModel={copyModel}
+            dataRef={snippetHrmlRef}
+            setCopyModel={setCopyModel}
+          />
           <Separator className="mb-5" />
           <Row>
             <Colxx xxs="12" className="mb-4">
@@ -418,12 +448,16 @@ const Template = ({
                   <>
                     <Colxx xxs="2">
                       <Card className="height__100">
-                        <CardBody className="height__100">Loading...</CardBody>
+                        <CardBody className="height__100">
+                          No Snippet Found
+                        </CardBody>
                       </Card>
                     </Colxx>
                     <Colxx xxs="2">
                       <Card className="height__100">
-                        <CardBody className="height__100">Loading...</CardBody>
+                        <CardBody className="height__100">
+                          No Snippet Found
+                        </CardBody>
                       </Card>
                     </Colxx>
                   </>
@@ -443,6 +477,10 @@ const Template = ({
                       smtpLoading={smtpLoading}
                       smtp={smtp}
                       setLoadTemplateData={setLoadTemplateData}
+                      // Cntrolls
+                      setEmailModel={setEmailModel}
+                      setDownloadModel={setDownloadModel}
+                      setCopyModel={setCopyModel}
                     />
                   </>
                 )}
@@ -463,7 +501,7 @@ const mapStateToProps = ({
   snippets: { snippets, loading },
   types: { types },
   user: { user },
-  contacts: { contacts, inputs },
+  contacts: { contacts, inputs, contactLoading },
   smtp: { smtp, loading: smtpLoading }
 }) => ({
   snippets,
@@ -471,6 +509,7 @@ const mapStateToProps = ({
   loading,
   types,
   contacts,
+  contactLoading,
   inputs,
   smtp,
   smtpLoading

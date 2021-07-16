@@ -150,7 +150,7 @@ exports.sendMail = catchAsync(async (req, res, next) => {
   if (!smtpAccount)
     return next(new AppError('This Request not proceeded.', 400));
   smtpAccount.password = await deEncrypetPass(smtpAccount.password);
-  mailSMTP({
+  await mailSMTP({
     user: smtpAccount.mail,
     pass: smtpAccount.password,
     host: smtpAccount.host,

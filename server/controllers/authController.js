@@ -201,9 +201,9 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     if (process.env.NODE_ENV !== 'development') {
       resetURL = `${req.protocol}://${req.get(
         'host'
-      )}/users/reset-password/${resetToken}`;
+      )}/user/reset-password/${resetToken}`;
     } else {
-      resetURL = `${req.protocol}://localhost:3000/users/reset-password/${resetToken}`;
+      resetURL = `${req.protocol}://localhost:3000/user/reset-password/${resetToken}`;
     }
     await new Email(user, resetURL).sendPasswordReset();
 

@@ -1,5 +1,8 @@
 /* eslint-disable no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
+import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.bubble.css';
+
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Row,
@@ -167,56 +170,60 @@ const Index = ({ value, setValue, placeholderslist, contactslist }) => {
   return (
     <div>
       <div className="d-flex justify-content-between">
-        <Dropdown
-          isOpen={placeholdersDropdown}
-          toggle={() => setPlaceholdersDropdown(!placeholdersDropdown)}
-          className="mb-5">
-          <DropdownToggle caret color="secondary" outline>
-            <IntlMessages id="inser.placeholders" />
-          </DropdownToggle>
-          <DropdownMenu>
-            {(placeholderslist &&
-              placeholderslist.map((placeholder) => (
-                <DropdownItem
-                  key={placeholder._id}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    addPlaceholder({
-                      type: 'placeholder',
-                      ...placeholder
-                    });
-                  }}>
-                  <span>{placeholder.name}</span>
-                </DropdownItem>
-              ))) || <DropdownItem>No Placeholder is Found</DropdownItem>}
-          </DropdownMenu>
-        </Dropdown>
-        <Dropdown
-          isOpen={contactDropdown}
-          toggle={() => setContactDropdown(!contactDropdown)}
-          className="mb-5">
-          <DropdownToggle caret color="secondary" outline>
-            <IntlMessages id="inser.contact" />
-          </DropdownToggle>
-          <DropdownMenu>
-            {(contactslist &&
-              contactslist.map((contact) => (
-                <DropdownItem
-                  key={contact.id}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    addPlaceholder({
-                      name: contact.data.name,
-                      defaultValue: contact.data.value,
-                      type: 'contact',
-                      _id: contact.id
-                    });
-                  }}>
-                  <span>{contact.data.name}</span>
-                </DropdownItem>
-              ))) || <DropdownItem>No Contact is Found</DropdownItem>}
-          </DropdownMenu>
-        </Dropdown>
+        {placeholderslist && (
+          <Dropdown
+            isOpen={placeholdersDropdown}
+            toggle={() => setPlaceholdersDropdown(!placeholdersDropdown)}
+            className="mb-5">
+            <DropdownToggle caret color="secondary" outline>
+              <IntlMessages id="inser.placeholders" />
+            </DropdownToggle>
+            <DropdownMenu>
+              {(placeholderslist &&
+                placeholderslist.map((placeholder) => (
+                  <DropdownItem
+                    key={placeholder._id}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      addPlaceholder({
+                        type: 'placeholder',
+                        ...placeholder
+                      });
+                    }}>
+                    <span>{placeholder.name}</span>
+                  </DropdownItem>
+                ))) || <DropdownItem>No Placeholder is Found</DropdownItem>}
+            </DropdownMenu>
+          </Dropdown>
+        )}
+        {contactslist && (
+          <Dropdown
+            isOpen={contactDropdown}
+            toggle={() => setContactDropdown(!contactDropdown)}
+            className="mb-5">
+            <DropdownToggle caret color="secondary" outline>
+              <IntlMessages id="inser.contact" />
+            </DropdownToggle>
+            <DropdownMenu>
+              {(contactslist &&
+                contactslist.map((contact) => (
+                  <DropdownItem
+                    key={contact.id}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      addPlaceholder({
+                        name: contact.data.name,
+                        defaultValue: contact.data.value,
+                        type: 'contact',
+                        _id: contact.id
+                      });
+                    }}>
+                    <span>{contact.data.name}</span>
+                  </DropdownItem>
+                ))) || <DropdownItem>No Contact is Found</DropdownItem>}
+            </DropdownMenu>
+          </Dropdown>
+        )}
       </div>
       <div className="editor" ref={editorContainerRef}></div>
     </div>

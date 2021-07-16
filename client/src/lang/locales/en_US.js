@@ -30,6 +30,9 @@ module.exports = {
   'menu.add-user': 'Add New User',
   'menu.user': 'User',
   'user.create-account': 'Create New Account',
+  'user.reset-password': 'Reset Password',
+  'user.new-password': 'New Password',
+  'user.new-password-again': 'New Againg Password',
   /* 03.Menu */
   'menu.home': 'Home',
   'menu.app': 'Home',
@@ -124,6 +127,12 @@ module.exports = {
   // 'menu.email-setting': 'Email Settings',
   'smtp.team': 'Team SMTP Account',
   'smtp.user': 'User SMTP Account',
+  'email.send': 'Send Email',
+  'email.validation-error': 'Validation Error Pleasr Fill Requied fields',
+
+  download: 'Download',
+  copy: 'Copy',
+  'copy.as': 'Copy As',
 
   'type.select': 'Select Type',
   'type.add': 'Add Type',

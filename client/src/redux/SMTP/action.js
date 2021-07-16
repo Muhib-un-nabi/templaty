@@ -23,7 +23,7 @@ export const getSMTPS = () => async (dispatch) => {
     });
   } catch (err) {
     NotificationManager.error(
-      'Success message',
+      'Warning message',
       'Somthing went Wrong, SMTP Accounts was not Load.',
       3000,
       null,
@@ -42,7 +42,7 @@ export const getSMTP = (id) => async (dispatch) => {
     });
   } catch (err) {
     NotificationManager.error(
-      'Success message',
+      'Warning message',
       'Somthing went Wrong, SMTP Account was not Load.',
       3000,
       null,
@@ -59,7 +59,7 @@ export const addORupdateSMTP = (SMTP) => async (dispatch) => {
       payload: data.data.data
     });
     NotificationManager.success(
-      'Success message',
+      'Warning message',
       'SMTP Setting Updated successfully',
       3000,
       null,
@@ -123,27 +123,6 @@ export const deleteSMTP = (id) => async (dispatch) => {
     NotificationManager.error(
       'Warning message',
       'Somthing Wrong. SMTP  was not Deleted',
-      3000,
-      null,
-      null
-    );
-  }
-};
-
-export const senMail = (mail) => async (dispatch) => {
-  try {
-    await serverApi.post(`/smtp/send`, mail, authHeader());
-    NotificationManager.success(
-      'Success message',
-      'Sending Mail request was proceeded',
-      3000,
-      null,
-      null
-    );
-  } catch (err) {
-    NotificationManager.error(
-      'Warning message',
-      'Somthing Wrong.Sending Mail request was not proceeded',
       3000,
       null,
       null

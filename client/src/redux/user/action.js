@@ -229,9 +229,13 @@ export const logout = () => async (dispatch) => {
   }
 };
 
-export const resetPassword = () => async (dispatch) => {
+export const resetPassword = (token, dataBody) => async (dispatch) => {
   try {
-    const { data } = await serverApi.post('/login');
+    const { data } = await serverApi.patch(
+      `users/resetPassword/${token}`,
+      dataBody,
+      authHeader()
+    );
     dispatch({
       type: SIGN_UP,
       payload: data.data.data

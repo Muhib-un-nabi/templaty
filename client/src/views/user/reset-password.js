@@ -22,7 +22,8 @@ const ResetPassword = ({
   history,
   loading,
   error,
-  resetPasswordAction
+  resetPassword,
+  match
 }) => {
   const [newPassword] = useState('');
   const [newPasswordAgain] = useState('');
@@ -48,18 +49,14 @@ const ResetPassword = ({
       );
   }, [error, loading, newPassword]);
 
-  const onResetPassword = (values) => {
+  const onResetPassword = async (values) => {
     if (!loading) {
-      const params = new URLSearchParams(location.search);
-      const oobCode = params.get('oobCode');
-      if (oobCode) {
-        if (values.newPassword !== '') {
-          resetPasswordAction({
-            newPassword: values.newPassword,
-            resetPasswordCode: oobCode,
-            history
-          });
-        }
+      const { token } = match.params;
+      if (token && values.newPassword !== '') {
+        await resetPassword(token, {
+          password: values.newPassword,
+          passwordConfirm: values.newPassword
+        });
       } else {
         NotificationManager.warning(
           'Please check your email url.',
@@ -160,11 +157,4 @@ const ResetPassword = ({
   );
 };
 
-const mapStateToProps = ({ authUser }) => {
-  const { newPassword, resetPasswordCode, loading, error } = authUser;
-  return { newPassword, resetPasswordCode, loading, error };
-};
-
-export default connect(mapStateToProps, {
-  resetPasswordAction: resetPassword
-})(ResetPassword);
+export default connect(null, { resetPassword })(ResetPassword);

@@ -67,3 +67,12 @@
 .min-h-70vh {
   min-height: 70vh;
 }
+.w-95 {
+  width: 95%;
+}
+
+/* Email Model Header */
+
+.email-header > * {
+  width: 100%;
+}
