@@ -50,7 +50,6 @@ const TopNav = ({
 }) => {
   const [isInFullScreen, setIsInFullScreen] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
-
   const search = () => {
     history.push(`${searchPath}?key=${searchKeyword}`);
     setSearchKeyword('');
@@ -286,7 +285,10 @@ const TopNav = ({
               <DropdownToggle className="p-0" color="empty">
                 <span className="name mr-1">{user.name}</span>
                 <span>
-                  <img alt="Profile" src="/assets/img/profiles/l-1.jpg" />
+                  <img
+                    alt="Profile"
+                    src={`https://www.gravatar.com/avatar/${user.photo}`}
+                  />
                 </span>
               </DropdownToggle>
             )}

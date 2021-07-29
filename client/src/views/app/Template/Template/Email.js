@@ -62,7 +62,7 @@ const Email = ({
         subject,
         body
       };
-      await serverApi.post(`/smtp/send`, mail, authHeader());
+      const info = await serverApi.post(`/smtp/send`, mail, authHeader());
       NotificationManager.success(
         'Success message',
         'Email Sended Sucessfully',
@@ -70,9 +70,12 @@ const Email = ({
         null,
         null
       );
+      console.log(info);
       setEmailModel(false);
     } catch (e) {
-      setEmailError(e.message);
+      console.dir(e.toJSON());
+      // console.log(e.Error);
+      setEmailError(e.Error);
       setTimeout(() => {
         setEmailError('');
       }, 5000);

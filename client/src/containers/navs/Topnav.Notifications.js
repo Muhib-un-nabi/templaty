@@ -4,7 +4,7 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  NavLink,
+  NavLink
 } from 'reactstrap';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import notifications from '../../data/notifications';
@@ -36,19 +36,16 @@ const TopnavNotifications = () => {
       <UncontrolledDropdown className="dropdown-menu-right">
         <DropdownToggle
           className="header-icon notificationButton"
-          color="empty"
-        >
+          color="empty">
           <i className="simple-icon-bell" />
           <span className="count">3</span>
         </DropdownToggle>
         <DropdownMenu
           className="position-absolute mt-3 scroll"
           right
-          id="notificationDropdown"
-        >
+          id="notificationDropdown">
           <PerfectScrollbar
-            options={{ suppressScrollX: true, wheelPropagation: false }}
-          >
+            options={{ suppressScrollX: true, wheelPropagation: false }}>
             {notifications.map((notification, index) => {
               return <NotificationItem key={index} {...notification} />;
             })}

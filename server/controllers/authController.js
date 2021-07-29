@@ -39,29 +39,27 @@ const createSendToken = (user, statusCode, req, res) => {
 
 exports.signup = catchAsync(async (req, res, next) => {
   //  Create New User
-  const newUser = new User({
+  const newUser = await new User({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm
   });
   // Create New Team
-  const newTeam = new Team({
+  const newTeam = await new Team({
     admin: newUser._id
   });
   // Create Contact Setting
-  const newSetting = new ContactSetting({
+  const newSetting = await new ContactSetting({
     setting: [],
     team: newTeam._id
   });
   //  Save All
   newUser.team = newTeam._id;
-  await newSetting.save();
-  await newUser.save();
   await newTeam.save();
+  await newUser.save();
+  await newSetting.save();
 
-  const url = `${req.protocol}://${req.get('host')}/me`;
-  // console.log(url);
   req.user = newUser;
   createSendToken(newUser, 201, req, res);
 });

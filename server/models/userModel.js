@@ -2,6 +2,7 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const md5 = require('md5');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -69,6 +70,8 @@ userSchema.pre('save', async function(next) {
 });
 
 userSchema.pre('save', function(next) {
+  this.photo = md5(this.email);
+
   if (!this.isModified('password') || this.isNew) return next();
 
   this.passwordChangedAt = Date.now() - 1000;

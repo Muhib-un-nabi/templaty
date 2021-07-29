@@ -1,0 +1,8 @@
+body {
+  padding: 0 !important;
+}
+.add-pakage-form {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

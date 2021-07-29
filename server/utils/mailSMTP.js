@@ -41,10 +41,8 @@ module.exports = async function({
 
     console.log('Email Sended');
     console.log(info);
-    console.log('Message sent: %s', info.messageId);
     return info;
   } catch (e) {
-    console.log('Email Was Not Send');
-    console.log(e);
+    throw new Error(e);
   }
 };

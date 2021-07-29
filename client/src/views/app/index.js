@@ -4,8 +4,16 @@ import { Route, withRouter, Switch, Redirect } from 'react-router-dom';
 
 import AppLayout from '../../layout/AppLayout';
 import habdelGetData from '../../helpers/habdelGetData';
-import { getMe, setLoading } from '../../redux/user/action';
+import {
+  getMe,
+  setLoading,
+  getTeamDetails,
+  updateTeamDetails
+} from '../../redux/user/action';
 import { connect } from 'react-redux';
+
+import socketIo from 'socket.io-client';
+const io = socketIo();
 
 const Template = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './Template')
@@ -32,10 +40,31 @@ const Account = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './account')
 );
 
-const App = ({ match, history, getMe, setLoading, user }) => {
+const App = ({
+  match,
+  history,
+  //Redux Data
+  user,
+  getMe,
+  //Actions
+  setLoading,
+  getTeamDetails,
+  updateTeamDetails
+}) => {
+  useEffect(() => {
+    if (!user) return;
+    io.emit('join team', user.team);
+    window.io = io;
+    io.emit('pakckage updated Request');
+
+    io.on('pakckage updated', async (data) => {
+      await updateTeamDetails(data);
+    });
+  }, [user]);
   useEffect(() => {
     if (user) return;
     habdelGetData(getMe, setLoading, history);
+    habdelGetData(getTeamDetails, setLoading, history);
   }, []);
 
   return (
@@ -86,4 +115,9 @@ const App = ({ match, history, getMe, setLoading, user }) => {
 };
 
 const mapStateToProps = ({ user: { user } }) => ({ user });
-export default connect(mapStateToProps, { getMe, setLoading })(withRouter(App));
+export default connect(mapStateToProps, {
+  getMe,
+  setLoading,
+  getTeamDetails,
+  updateTeamDetails
+})(withRouter(App));

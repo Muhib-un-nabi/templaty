@@ -9,7 +9,9 @@ import { adminRoot } from '../../constants/defaultValues';
 
 import { Colxx } from '../../components/common/CustomBootstrap';
 import IntlMessages from '../../helpers/IntlMessages';
-import { login, setLoading } from '../../redux/user/action';
+import { login, setLoading, getTeamDetails } from '../../redux/user/action';
+
+import habdelGetData from '../../helpers/habdelGetData';
 
 const validatePassword = (value) => {
   let error;
@@ -31,7 +33,14 @@ const validateEmail = (value) => {
   return error;
 };
 
-const Login = ({ history, loading = false, error = [], login, setLoading }) => {
+const Login = ({
+  history,
+  loading = false,
+  error = [],
+  login,
+  setLoading,
+  getTeamDetails
+}) => {
   const [email] = useState('admin@gmail.com');
   const [password] = useState('pass1234');
 
@@ -40,6 +49,7 @@ const Login = ({ history, loading = false, error = [], login, setLoading }) => {
     try {
       await setLoading();
       await login(values);
+      habdelGetData(getTeamDetails, setLoading, history);
       history.push(adminRoot);
     } catch (e) {
       await setLoading(false);
@@ -144,5 +154,6 @@ const mapStateToProps = ({ user: { loading } }) => ({ loading });
 
 export default connect(mapStateToProps, {
   login,
-  setLoading
+  setLoading,
+  getTeamDetails
 })(Login);

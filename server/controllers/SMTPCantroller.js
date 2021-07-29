@@ -150,7 +150,8 @@ exports.sendMail = catchAsync(async (req, res, next) => {
   if (!smtpAccount)
     return next(new AppError('This Request not proceeded.', 400));
   smtpAccount.password = await deEncrypetPass(smtpAccount.password);
-  await mailSMTP({
+
+  const info = await mailSMTP({
     user: smtpAccount.mail,
     pass: smtpAccount.password,
     host: smtpAccount.host,
@@ -163,12 +164,12 @@ exports.sendMail = catchAsync(async (req, res, next) => {
 
     subject: req.body.subject,
     body: req.body.body
+  }).catch(e => {
+    return next(new AppError('This Request not proceeded.', 404));
   });
 
   res.status(200).json({
     status: 'success',
-    data: {
-      data: 'doc'
-    }
+    data: info
   });
 });

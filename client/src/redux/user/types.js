@@ -16,6 +16,7 @@ export const DELETE_ACCOUNT = 'DELETE_ACCOUNT';
 
 //  Admin Action (Team Caantrole)
 export const GET_TEAM_DETAILS = 'GET_TEAM_DETAILS';
+export const UPDATE_TEAM_DETAILS = 'UPDATE_TEAM_DETAILS';
 export const ADD_NEW_USER_IN_TEAM = 'ADD_NEW_USER_IN_TEAM';
 export const DELETE_USER_BY_ADMIN = 'DELETE_USER_BY_ADMIN';
 

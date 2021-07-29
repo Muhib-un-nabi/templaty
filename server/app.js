@@ -1,11 +1,12 @@
-const path = require('path');
 const express = require('express');
+const app = express();
+
+const path = require('path');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
-const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const compression = require('compression');
@@ -23,22 +24,10 @@ const teamRouter = require('./routes/teamRouter');
 const templateRouter = require('./routes/templateRouter');
 const typesRouter = require('./routes/typesRouter');
 const SMTPRouter = require('./routes/SMTPRouter');
-// Start express app
-const app = express();
 
-app.enable('trust proxy');
-
-// 1) GLOBAL MIDDLEWARES
-// Implement CORS
-app.use(cors());
-// Access-Control-Allow-Origin *
-// api.natours.com, front-end natours.com
-app.use(
-  cors({
-    'Access-Control-Allow-Origin': '*'
-    // origin: 'http://localhost:3001'
-  })
-);
+const packageRouter = require('./routes/packageRouter');
+const couponRouter = require('./routes/couponRouter');
+const notificationRouter = require('./routes/notificationRouter');
 
 app.options('*', cors());
 // app.options('/api/v1/tours/:id', cors());
@@ -110,6 +99,10 @@ app.use('/api/placeholders', placeholdersRouter);
 //  Template Routes
 app.use('/api/templates', templateRouter);
 app.use('/api/types', typesRouter);
+
+app.use('/api/package', packageRouter);
+app.use('/api/coupon', couponRouter);
+app.use('/api/notification', notificationRouter);
 
 app.all('/api', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

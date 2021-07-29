@@ -10,7 +10,11 @@ import { IntlProvider } from 'react-intl';
 import AppLocale from './lang';
 import ColorSwitcher from './components/common/ColorSwitcher';
 import { NotificationContainer } from './components/common/react-notifications';
-import { isMultiColorActive, adminRoot } from './constants/defaultValues';
+import {
+  isMultiColorActive,
+  adminRoot,
+  superAdminRoot
+} from './constants/defaultValues';
 import { getDirection } from './helpers/Utils';
 import ProtectedRoute from './views/user/ProtectedRoute';
 
@@ -23,6 +27,9 @@ const ViewApp = React.lazy(() =>
   import(/* webpackChunkName: "views-app" */ './views/app')
 );
 
+const ViewAdminApp = React.lazy(() =>
+  import(/* webpackChunkName: "views-error" */ './views/admin')
+);
 const ViewUser = React.lazy(() =>
   import(/* webpackChunkName: "views-user" */ './views/user')
 );
@@ -61,6 +68,10 @@ class App extends React.Component {
               <Router>
                 <Switch>
                   <ProtectedRoute path={adminRoot} component={ViewApp} />
+                  <Route
+                    path={superAdminRoot}
+                    render={(props) => <ViewAdminApp {...props} />}
+                  />
                   <Route
                     path="/user"
                     render={(props) => <ViewUser {...props} />}

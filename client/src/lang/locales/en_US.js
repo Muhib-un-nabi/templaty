@@ -130,6 +130,7 @@ module.exports = {
   'email.send': 'Send Email',
   'email.validation-error': 'Validation Error Pleasr Fill Requied fields',
 
+  actions: 'Actions',
   download: 'Download',
   copy: 'Copy',
   'copy.as': 'Copy As',
@@ -137,6 +138,8 @@ module.exports = {
   'type.select': 'Select Type',
   'type.add': 'Add Type',
   'type.update': 'Update Type',
+
+  remaning: 'Remaining',
 
   'alert.success-forget-pass-msg': 'Reset Password Token Send To your email',
   'alert.fail-forget-pass-msg':

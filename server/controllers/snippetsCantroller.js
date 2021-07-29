@@ -3,6 +3,8 @@ const AppError = require('../utils/appError');
 const Snippets = require('../models/snippetsModule');
 const factory = require('./handlerFactory');
 
+const updataPakage = require('../webSocket/updataPakage');
+
 exports.getSnippets = factory.getAllFromTeam(Snippets, 'placeholders');
 
 exports.getSnippet = factory.getOne(Snippets, 'placeholders');
@@ -24,4 +26,6 @@ exports.createSnippet = catchAsync(async (req, res, next) => {
       data: newSnippet
     }
   });
+
+  await updataPakage(Snippets, req);
 });

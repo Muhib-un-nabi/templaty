@@ -59,12 +59,15 @@ const Team = ({
   history,
   deleteUserByAdmin,
   setLoading,
-  loading
+  loading,
+
+  user
 }) => {
   const [modal, setModal] = useState(false);
   const [current, setCurrent] = useState();
   const [deleteUserData, setDeleteUserData] = useState(false);
   const [asignTo, setAsignTo] = useState();
+  console.log(team);
   useEffect(() => {
     try {
       setLoading();
@@ -187,66 +190,72 @@ const Team = ({
           </h1>
 
           <div className="text-zero top-right-button-container">
-            <Button
-              color="primary"
-              size="lg"
-              className="top-right-button mr-1"
-              onClick={() => history.push(`${adminRoot}/account/user/add`)}>
-              <IntlMessages id="button.user-add" />
-            </Button>
+            {user.role !== 'user' && (
+              <Button
+                color="primary"
+                size="lg"
+                className="top-right-button mr-1"
+                onClick={() => history.push(`${adminRoot}/account/user/add`)}>
+                <IntlMessages id="button.user-add" />
+              </Button>
+            )}
           </div>
         </div>
       </Colxx>
       {team &&
         team.users &&
-        [team.admin, ...team.users].map((user) => (
-          <Colxx key={user._id} className="mb-4" md="6" sm="6" lg="4" xxs="12">
-            <Card className="d-flex flex-row mb-4">
-              <NavLink to={`${adminRoot}/cards`} className="d-flex">
-                <ThumbnailImage
-                  rounded
-                  src="/assets/img/profiles/l-1.jpg"
-                  alt="Card image cap"
-                  className="m-4"
-                />
-              </NavLink>
-              <div className=" d-flex flex-grow-1 min-width-zero">
-                <CardBody className=" pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero">
-                  <div className="min-width-zero">
-                    <CardSubtitle className="truncate mb-1">
-                      {user.name}
-                    </CardSubtitle>
-                    <CardText className="text-muted text-small mb-2">
-                      Role: {user.role}
-                    </CardText>
-                    <CardText className="text-muted text-small mb-2">
-                      Email: {user.email}
-                    </CardText>
-                    {user.role === 'user' && (
-                      <Button
-                        outline
-                        size="xs"
-                        onClick={() => {
-                          setModal(true);
-                          setCurrent(user);
-                        }}
-                        color="primary">
-                        <IntlMessages id="user.user-delete" />
-                      </Button>
-                    )}
-                  </div>
-                </CardBody>
-              </div>
-            </Card>
-          </Colxx>
-        ))}
+        [team.admin, ...team.users].map((currUser) => {
+          const { _id, photo, name, role, email } = currUser;
+          return (
+            <Colxx key={_id} className="mb-4" md="6" sm="6" lg="4" xxs="12">
+              <Card className="d-flex flex-row mb-4 ">
+                <NavLink to={`${adminRoot}/cards`} className="d-flex">
+                  <ThumbnailImage
+                    rounded
+                    src={`https://www.gravatar.com/avatar/${photo}`}
+                    alt="Card image cap"
+                    className="m-4"
+                  />
+                </NavLink>
+                <div className=" d-flex flex-grow-1 min-width-zero">
+                  <CardBody className=" pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero">
+                    <div className="min-width-zero">
+                      <CardSubtitle className="truncate mb-1">
+                        {name}
+                      </CardSubtitle>
+                      <CardText className="text-muted text-small mb-2">
+                        Role: {role}
+                      </CardText>
+                      <CardText className="text-muted text-small mb-2">
+                        Email: {email}
+                      </CardText>
+                      {role === 'user' && user.role !== 'user' && (
+                        <Button
+                          outline
+                          size="xs"
+                          onClick={() => {
+                            setModal(true);
+                            setCurrent(currUser);
+                          }}
+                          color="primary">
+                          <IntlMessages id="user.user-delete" />
+                        </Button>
+                      )}
+                    </div>
+                  </CardBody>
+                </div>
+              </Card>
+            </Colxx>
+          );
+        })}
     </>
   );
 };
 
-const mapStateToProps = ({ user: { team, loading } }) => ({
+const mapStateToProps = ({ user: { team, loading, user } }) => ({
   team,
-  loading
+  loading,
+  user
 });
 export default connect(mapStateToProps, {
   getTeamDetails,

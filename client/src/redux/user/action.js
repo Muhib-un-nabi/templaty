@@ -16,7 +16,8 @@ import {
   DELETE_USER_BY_ADMIN,
   SET_LOADING,
   IS_LOGGED_IN,
-  GET_ME
+  GET_ME,
+  UPDATE_TEAM_DETAILS
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -91,6 +92,11 @@ export const getTeamDetails = () => async (dispatch) => {
     // throw new Error('Somthing went Wrong, Please Try again');
   }
 };
+//  get Team Detail
+export const updateTeamDetails = (data) => ({
+  type: UPDATE_TEAM_DETAILS,
+  payload: data
+});
 
 export const getMe = () => async (dispatch) => {
   try {

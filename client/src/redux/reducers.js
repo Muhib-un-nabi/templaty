@@ -13,6 +13,7 @@ import snippets from './snippets/reducer';
 import template from './template/reducer';
 import types from './types/reducer';
 import smtp from './SMTP/reducer';
+import packages from './packages/reducer';
 
 const reducers = combineReducers({
   menu,
@@ -24,6 +25,7 @@ const reducers = combineReducers({
   template,
   types,
   smtp,
+  packages,
   account: () => ({ setting: [] })
 });
 

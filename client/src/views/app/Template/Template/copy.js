@@ -14,9 +14,11 @@ import IntlMessages from '../../../../helpers/IntlMessages';
 
 import { NotificationManager } from '../../../../components/common/react-notifications';
 
+import updataPakageAction from '../../../../webSocket/updataPakageAction';
+
 import Editor from '../../snippets/Editor/index';
 
-const Email = ({ dataRef, copyModel, setCopyModel }) => {
+const Copy = ({ dataRef, copyModel, setCopyModel }) => {
   const [loading, setLoading] = useState(false);
   const [copyAsText, setCopyAsText] = useState(true);
 
@@ -52,6 +54,7 @@ const Email = ({ dataRef, copyModel, setCopyModel }) => {
         null,
         null
       );
+      updataPakageAction();
     } catch {
       NotificationManager.error(
         'Error message',
@@ -131,4 +134,4 @@ const Email = ({ dataRef, copyModel, setCopyModel }) => {
   );
 };
 
-export default Email;
+export default Copy;

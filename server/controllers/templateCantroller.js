@@ -3,6 +3,8 @@ const AppError = require('../utils/appError');
 const Templates = require('../models/templateModule');
 const factory = require('./handlerFactory');
 
+const updataPakage = require('../webSocket/updataPakage');
+
 exports.getTemplates = factory.getAllFromTeam(Templates);
 
 exports.getTemplate = factory.getOne(Templates);
@@ -24,4 +26,6 @@ exports.createTemplate = catchAsync(async (req, res, next) => {
       data: newTemplate
     }
   });
+
+  await updataPakage(Templates, req);
 });

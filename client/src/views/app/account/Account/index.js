@@ -18,6 +18,8 @@
 /* eslint-disable consistent-return */
 
 import React, { useEffect } from 'react';
+import { injectIntl } from 'react-intl';
+
 import {
   Row,
   Card,
@@ -33,13 +35,27 @@ import {
   Separator
 } from '../../../../components/common/CustomBootstrap';
 import Breadcrumb from '../../../../containers/navs/Breadcrumb';
-import ThumbnailImage from '../../../../components/cards/ThumbnailImage';
+// import ThumbnailImage from '../../../../components/cards/ThumbnailImage';
 import { adminRoot } from '../../../../constants/defaultValues';
 import { getMe, setLoading } from '../../../../redux/user/action';
 import Team from './team';
 import IntlMessages from '../../../../helpers/IntlMessages';
 
-const Account = ({ match, user, history, getMe, setLoading }) => {
+import GradientWithRadialProgressCard from '../../../../components/cards/GradientWithRadialProgressCard';
+
+const Account = ({
+  intl,
+  match,
+  history,
+  // Redux Data
+  user,
+  team,
+  //Actions
+  getMe,
+  setLoading
+}) => {
+  const { messages } = intl;
+
   return (
     <>
       <Row>
@@ -65,40 +81,57 @@ const Account = ({ match, user, history, getMe, setLoading }) => {
           </div>
         </Colxx>
       </Row>
-
-      {user && (
-        <Row>
-          <Colxx key={user._id} className="mb-4" md="6" sm="6" lg="4" xxs="12">
-            <Card className="d-flex flex-row mb-4">
-              <NavLink to={`${adminRoot}/cards`} className="d-flex">
-                <ThumbnailImage
-                  rounded
-                  src="/assets/img/profiles/l-1.jpg"
-                  alt="Card image cap"
-                  className="m-4"
-                />
-              </NavLink>
-              <div className=" d-flex flex-grow-1 min-width-zero">
-                <CardBody className=" pl-0 align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero">
-                  <div className="min-width-zero">
-                    <CardSubtitle className="truncate mb-1">
-                      {user.name}
-                    </CardSubtitle>
-                    <CardText className="text-muted text-small mb-2">
-                      Role: {user.role}
-                    </CardText>
-                    <CardText className="text-muted text-small mb-2">
-                      Email: {user.email}
-                    </CardText>
-                  </div>
-                </CardBody>
-              </div>
-            </Card>
+      {/* You Have Remaining 50  */}
+      {user && team && team.current && team.package && (
+        <Row className="mb-4">
+          <Colxx className="mb-4">
+            <GradientWithRadialProgressCard
+              icon="simple-icon-pencil"
+              title={`${team.current.snippets} ${messages['menu.snippets']}`}
+              detail={`${team.package.snippets - team.current.snippets} ${
+                messages['menu.snippets']
+              } ${messages['remaning']}`}
+              percent={(team.current.snippets * 100) / team.package.snippets}
+              progressText={`${team.current.snippets}/${team.package.snippets}`}
+            />
+          </Colxx>
+          <Colxx className="mb-4">
+            <GradientWithRadialProgressCard
+              icon="simple-icon-people"
+              title={`${team.current.contacts} ${messages['menu.contacts']}`}
+              detail={`${team.package.contacts - team.current.contacts} ${
+                messages['menu.contacts']
+              } ${messages['remaning']}`}
+              percent={(team.current.contacts * 100) / team.package.contacts}
+              progressText={`${team.current.contacts}/${team.package.contacts}`}
+            />
+          </Colxx>
+          <Colxx className="mb-4">
+            <GradientWithRadialProgressCard
+              icon="simple-icon-notebook"
+              title={`${team.current.templates} ${messages['menu.templates']}`}
+              detail={`${team.package.templates - team.current.templates} ${
+                messages['menu.templates']
+              } ${messages['remaning']}`}
+              percent={(team.current.templates * 100) / team.package.templates}
+              progressText={`${team.current.templates}/${team.package.templates}`}
+            />
+          </Colxx>
+          <Colxx className="mb-4">
+            <GradientWithRadialProgressCard
+              icon="iconsminds-clock"
+              title={`${team.current.actions} ${messages['actions']}`}
+              detail={`${team.package.actions - team.current.actions} ${
+                messages['actions']
+              } ${messages['remaning']}`}
+              percent={(team.current.actions * 100) / team.package.actions}
+              progressText={`${team.current.actions}/${team.package.actions}`}
+            />
           </Colxx>
         </Row>
       )}
 
-      {user && user.role === 'admin' && (
+      {user && (
         <Row>
           <Team history={history} />
         </Row>
@@ -107,8 +140,11 @@ const Account = ({ match, user, history, getMe, setLoading }) => {
   );
 };
 
-const mapStateToProps = ({ user: { user } }) => ({
-  user
+const mapStateToProps = ({ user: { user, team } }) => ({
+  user,
+  team
 });
 
-export default connect(mapStateToProps, { getMe, setLoading })(Account);
+export default connect(mapStateToProps, { getMe, setLoading })(
+  injectIntl(Account)
+);

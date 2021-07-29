@@ -16,7 +16,8 @@ import {
   DELETE_USER_BY_ADMIN,
   SET_LOADING,
   IS_LOGGED_IN,
-  GET_ME
+  GET_ME,
+  UPDATE_TEAM_DETAILS
 } from './types';
 
 const INITIAL_STATE = {
@@ -62,6 +63,14 @@ export default (state = INITIAL_STATE, action) => {
           users: state.team.users.filter((user) => user._id !== action.payload)
         },
         loading: false
+      };
+    case UPDATE_TEAM_DETAILS:
+      return {
+        ...state,
+        team: {
+          ...state.team,
+          current: { ...state.team.current, ...action.payload }
+        }
       };
     case SET_LOADING:
       return {

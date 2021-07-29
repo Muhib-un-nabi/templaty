@@ -3,6 +3,8 @@ const AppError = require('../utils/appError');
 const Placeholders = require('../models/placeholdersModule');
 const factory = require('./handlerFactory');
 
+const updataPakage = require('../webSocket/updataPakage');
+
 exports.getPlaceholders = factory.getAllFromTeam(Placeholders);
 
 exports.getPlaceholder = factory.getOne(Placeholders);
@@ -24,4 +26,6 @@ exports.createPlaceholder = catchAsync(async (req, res, next) => {
       data: newPlaceholder
     }
   });
+
+  await updataPakage(Placeholders, req);
 });

@@ -1,6 +1,6 @@
 export const UserRole = {
   Admin: 0,
-  Editor: 1,
+  Editor: 1
 };
 /*
 Menu Types:
@@ -14,17 +14,18 @@ export const defaultLocale = 'en';
 export const localeOptions = [
   { id: 'en', name: 'English - LTR', direction: 'ltr' },
   { id: 'es', name: 'Español', direction: 'ltr' },
-  { id: 'enrtl', name: 'English - RTL', direction: 'rtl' },
+  { id: 'enrtl', name: 'English - RTL', direction: 'rtl' }
 ];
 export const currentUser = {
   id: 1,
   title: 'Sarah Kortney',
   img: '/assets/img/profiles/l-1.jpg',
   date: 'Last seen today 15:24',
-  role: UserRole.Admin,
+  role: UserRole.Admin
 };
 
 export const adminRoot = '/app';
+export const superAdminRoot = '/admin';
 export const buyUrl = 'https://1.envato.market/k4z0';
 export const searchPath = `${adminRoot}/#`;
 export const servicePath = 'https://api.coloredstrategies.com';
@@ -46,5 +47,5 @@ export const colors = [
   'orangecarrot',
   'redruby',
   'yellowgranola',
-  'greysteel',
+  'greysteel'
 ];

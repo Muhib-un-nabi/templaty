@@ -23,7 +23,7 @@ function GlideComponent(props) {
   const initGlide = () => {
     glideCarousel = new Glide(carousel, {
       ...props.settings,
-      direction: getDirection().direction,
+      direction: getDirection().direction
     });
     glideCarousel.mount();
     glideCarousel.on('resize', onResize);
@@ -81,23 +81,20 @@ function GlideComponent(props) {
             <button
               type="button"
               className="glide__arrow glide__arrow--left left-arrow btn btn-link"
-              data-glide-dir="<"
-            >
+              data-glide-dir="<">
               <i className="simple-icon-arrow-left" />
             </button>
 
             <div
               className="glide__bullets slider-dot-container"
-              data-glide-el="controls[nav]"
-            >
+              data-glide-el="controls[nav]">
               {renderDots()}
             </div>
 
             <button
               type="button"
               className="glide__arrow glide__arrow--right right-arrow btn btn-link"
-              data-glide-dir=">"
-            >
+              data-glide-dir=">">
               <i className="simple-icon-arrow-right" />
             </button>
           </div>
@@ -108,7 +105,7 @@ function GlideComponent(props) {
 }
 
 GlideComponent.defaultProps = {
-  settings: {},
+  settings: {}
 };
 
 GlideComponent.propTypes = {
@@ -138,8 +135,8 @@ GlideComponent.propTypes = {
     breakpoints: PropTypes.object,
     // eslint-disable-next-line react/forbid-prop-types
     classes: PropTypes.object,
-    throttle: PropTypes.number,
-  }),
+    throttle: PropTypes.number
+  })
   // id: PropTypes.string,
   // className: PropTypes.string,
 };

@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import htmlToPdf from 'html2pdf.js';
+// import htmlToPdf from 'html2pdf.js';
+import { jsPDF } from 'jspdf';
+
 import 'react-tagsinput/react-tagsinput.css';
 import {
   FormGroup,
@@ -44,7 +46,11 @@ const Download = ({ dataRef, downloadModel, setDownloadModel }) => {
   const [loading, setLoading] = useState(false);
   const [fileType, setFileType] = useState([]);
   const [body, setBody] = useState('');
-  const DEFAULT_TITLE = new Date().getFullYear() + '-templaty';
+  const nD = new Date();
+  const DEFAULT_TITLE = `${nD.getFullYear()}${nD
+    .getMonth()
+    .toString()
+    .padStart(2, 0)}${nD.getDay().toString().padStart(2, 0)}-templaty`;
   const DEFAULT_FILE_TYPE = filesTypes[0];
 
   const download = async () => {
@@ -60,7 +66,16 @@ const Download = ({ dataRef, downloadModel, setDownloadModel }) => {
         await downloadString(data);
       } else if (fileType.ext === 'pdf') {
         const parser = document.querySelector('.preview-html .ql-editor');
-        await htmlToPdf().from(parser).save();
+        var doc = new jsPDF('p', 'pt', 'a4');
+        await doc.html(parser, {
+          callback: function (pdf) {
+            pdf.save(title || DEFAULT_TITLE);
+          },
+          x: 10,
+          y: 10
+        });
+        // console.log(doc);
+        // doc.save('sample-document.pdf');
       } else {
         data.text = body.replace(/<[^>]+>/g, '');
         await downloadString(data);
@@ -121,6 +136,7 @@ const Download = ({ dataRef, downloadModel, setDownloadModel }) => {
       </ModalHeader>
       <ModalBody style={{ minHeight: '40vh' }} className=".normal-style">
         <>
+          {loading && <div className="loading" />}
           <h5 className="py-2">
             <b>File Name : </b>
             <span>{title || DEFAULT_TITLE}.</span>
@@ -156,6 +172,7 @@ const Download = ({ dataRef, downloadModel, setDownloadModel }) => {
         </>
 
         <Button
+          id="fdsdahflkdshiefwlu"
           onClick={download}
           color="primary"
           className={`btn-shadow  w-100 btn-multiple-state ${
