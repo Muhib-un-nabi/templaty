@@ -3,7 +3,7 @@ const AppError = require('../utils/appError');
 const Snippets = require('../models/snippetsModule');
 const factory = require('./handlerFactory');
 
-const updataPakage = require('../webSocket/updataPakage');
+const { updataPakage } = require('../webSocket/updataPakage');
 
 exports.getSnippets = factory.getAllFromTeam(Snippets, 'placeholders');
 

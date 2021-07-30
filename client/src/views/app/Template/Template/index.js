@@ -203,8 +203,12 @@ const Template = ({
   };
   const replaceWithContact = (contact, contactEle) => {
     contactEle.forEach((ele) => {
-      if (ele.dataset.name === 'name') {
-        ele.value = contact.name;
+      if (ele.dataset.name.toLowerCase() === 'name') {
+        ele.innerHTML = contact.name;
+        return;
+      }
+      if (ele.dataset.name.toLowerCase() === 'email') {
+        ele.innerHTML = contact.email;
         return;
       }
       const contactData = contact.data.find(
@@ -371,16 +375,19 @@ const Template = ({
             contactLoading={contactLoading}
             emailModel={emailModel}
             setEmailModel={setEmailModel}
+            user={user}
           />
           <Download
             dataRef={snippetHrmlRef}
             downloadModel={downloadModel}
             setDownloadModel={setDownloadModel}
+            user={user}
           />
           <Copy
             copyModel={copyModel}
             dataRef={snippetHrmlRef}
             setCopyModel={setCopyModel}
+            user={user}
           />
           <Separator className="mb-5" />
           <Row>

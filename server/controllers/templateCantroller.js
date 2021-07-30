@@ -3,7 +3,7 @@ const AppError = require('../utils/appError');
 const Templates = require('../models/templateModule');
 const factory = require('./handlerFactory');
 
-const updataPakage = require('../webSocket/updataPakage');
+const { updataPakage } = require('../webSocket/updataPakage');
 
 exports.getTemplates = factory.getAllFromTeam(Templates);
 

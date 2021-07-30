@@ -2,7 +2,7 @@ const includesData = ['contacts', 'snippets', 'templates', 'actions'];
 
 const Team = require('../models/teamModule');
 
-module.exports = async (Model, req) => {
+exports.updataPakage = async (Model, req) => {
   try {
     const name = await Model.modelName.toLowerCase();
     console.log(name);
@@ -25,4 +25,17 @@ module.exports = async (Model, req) => {
   } catch (e) {
     console.log(`Can't Updata Pakage details`);
   }
+};
+
+exports.updataPakageAction = async teamID => {
+  const teamIdString = teamID.toString();
+
+  const updatedTemDetails = await Team.findByIdAndUpdate(teamIdString, {
+    $inc: {
+      ['current.actions']: 1
+    }
+  });
+  await global.io
+    .to(teamIdString)
+    .emit('pakckage updated', { actions: updatedTemDetails.current.actions });
 };

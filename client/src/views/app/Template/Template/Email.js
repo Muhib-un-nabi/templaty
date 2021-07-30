@@ -13,6 +13,7 @@ import {
 import IntlMessages from '../../../../helpers/IntlMessages';
 
 import serverApi, { authHeader } from '../../../../api';
+import { updataPakageActionEmmiter } from '../../../../webSocket/index';
 
 import Select from 'react-select';
 import CustomSelectInput from '../../../../components/common/CustomSelectInput';
@@ -22,6 +23,7 @@ import Editor from '../../snippets/Editor/index';
 const Email = ({
   contacts,
   value,
+  user,
 
   smtp,
   smtpLoading,
@@ -70,8 +72,8 @@ const Email = ({
         null,
         null
       );
-      console.log(info);
       setEmailModel(false);
+      updataPakageActionEmmiter(user.team);
     } catch (e) {
       console.dir(e.toJSON());
       // console.log(e.Error);

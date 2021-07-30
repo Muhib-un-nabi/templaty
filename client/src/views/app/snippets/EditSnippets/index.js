@@ -215,7 +215,7 @@ const index = ({
                           value={discription}
                           setValue={setDiscription}
                           placeholderslist={placeholders}
-                          contactslist={custom}
+                          contactslist={[...custom, ...global]}
                         />
                       )) || <div>Loading...</div>}
                     </div>

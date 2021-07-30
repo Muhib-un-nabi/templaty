@@ -173,7 +173,29 @@ const Index = ({ value, setValue, placeholderslist, contactslist }) => {
   const [placeholdersDropdown, setPlaceholdersDropdown] = useState(false);
   const [contactDropdown, setContactDropdown] = useState(false);
   const editorContainerRef = useRef();
+
+  const removeVisibility = (ele) => ele.id !== 'visibility-input';
+  // Adding Email Placeholder in insert-contact
+  contactslist = [
+    ...contactslist.filter(removeVisibility),
+    {
+      id: 'email',
+      type: {
+        label: 'Text Area',
+        value: '1',
+        id: 1
+      },
+      data: {
+        key: 'ec09cxzcxzxcz-bf99-4c83-a94d-3a93e45c6043',
+        name: 'Email',
+        options: [],
+        value: ''
+      },
+      chosen: false
+    }
+  ];
   useEffect(() => {
+    editorContainerRef.current.innerHTML = '';
     quill = new Quill(editorContainerRef.current, {
       // debug: 'info',
       theme: 'snow',
@@ -183,7 +205,7 @@ const Index = ({ value, setValue, placeholderslist, contactslist }) => {
     quill.on('text-change', () => {
       setValue(quill.root.innerHTML);
     });
-  }, [placeholderslist]);
+  }, []);
 
   return (
     <div>

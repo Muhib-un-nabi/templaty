@@ -12,8 +12,7 @@ import {
 } from '../../redux/user/action';
 import { connect } from 'react-redux';
 
-import socketIo from 'socket.io-client';
-const io = socketIo();
+import io, { joinTeam } from '../../webSocket';
 
 const Template = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './Template')
@@ -53,13 +52,8 @@ const App = ({
 }) => {
   useEffect(() => {
     if (!user) return;
-    io.emit('join team', user.team);
-    window.io = io;
-    io.emit('pakckage updated Request');
-
-    io.on('pakckage updated', async (data) => {
-      await updateTeamDetails(data);
-    });
+    joinTeam(user);
+    io.on('pakckage updated', updateTeamDetails);
   }, [user]);
   useEffect(() => {
     if (user) return;

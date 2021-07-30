@@ -3,7 +3,7 @@ const AppError = require('../utils/appError');
 const Contact = require('../models/contactModule');
 const factory = require('./handlerFactory');
 
-const updataPakage = require('../webSocket/updataPakage');
+const { updataPakage } = require('../webSocket/updataPakage');
 
 // const User = require('./../models/userModel');
 // const ContactSetting = require('./../models/contactSettingModule');

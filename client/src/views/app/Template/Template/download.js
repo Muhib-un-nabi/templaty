@@ -1,6 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 // import htmlToPdf from 'html2pdf.js';
 import { jsPDF } from 'jspdf';
+
+import { updataPakageActionEmmiter } from '../../../../webSocket/index';
 
 import 'react-tagsinput/react-tagsinput.css';
 import {
@@ -41,7 +43,7 @@ function downloadString({
   }, 1500);
 }
 
-const Download = ({ dataRef, downloadModel, setDownloadModel }) => {
+const Download = ({ dataRef, downloadModel, setDownloadModel, user }) => {
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [fileType, setFileType] = useState([]);
@@ -80,6 +82,7 @@ const Download = ({ dataRef, downloadModel, setDownloadModel }) => {
         data.text = body.replace(/<[^>]+>/g, '');
         await downloadString(data);
       }
+
       NotificationManager.success(
         'Success message',
         'File Downloaded Sucessfully',
@@ -87,6 +90,7 @@ const Download = ({ dataRef, downloadModel, setDownloadModel }) => {
         null,
         null
       );
+      updataPakageActionEmmiter(user.team);
     } catch (e) {
       NotificationManager.error(
         'Success message',

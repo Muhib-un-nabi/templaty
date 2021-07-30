@@ -3,7 +3,7 @@ const AppError = require('../utils/appError');
 const Placeholders = require('../models/placeholdersModule');
 const factory = require('./handlerFactory');
 
-const updataPakage = require('../webSocket/updataPakage');
+const { updataPakage } = require('../webSocket/updataPakage');
 
 exports.getPlaceholders = factory.getAllFromTeam(Placeholders);
 

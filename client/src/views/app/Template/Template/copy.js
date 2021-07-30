@@ -14,11 +14,11 @@ import IntlMessages from '../../../../helpers/IntlMessages';
 
 import { NotificationManager } from '../../../../components/common/react-notifications';
 
-import updataPakageAction from '../../../../webSocket/updataPakageAction';
+import { updataPakageActionEmmiter } from '../../../../webSocket/index';
 
 import Editor from '../../snippets/Editor/index';
 
-const Copy = ({ dataRef, copyModel, setCopyModel }) => {
+const Copy = ({ dataRef, copyModel, setCopyModel, user }) => {
   const [loading, setLoading] = useState(false);
   const [copyAsText, setCopyAsText] = useState(true);
 
@@ -54,8 +54,8 @@ const Copy = ({ dataRef, copyModel, setCopyModel }) => {
         null,
         null
       );
-      updataPakageAction();
-    } catch {
+      updataPakageActionEmmiter(user.team);
+    } catch (e) {
       NotificationManager.error(
         'Error message',
         'Text Was not copied',

@@ -73,6 +73,7 @@ const index = ({
   setContactLoading,
   contactLoading
 }) => {
+  console.log(custom, global);
   const [discription, setDiscription] = useState('');
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [GlobalInput, setGlobalInput] = useState(global);
@@ -181,7 +182,7 @@ const index = ({
                       value={discription}
                       setValue={setDiscription}
                       placeholderslist={placeholders}
-                      contactslist={custom}
+                      contactslist={[...custom, ...global]}
                     />
                   )) || <div>Loading...</div>}
                 </div>
