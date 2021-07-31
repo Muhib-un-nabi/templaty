@@ -23,6 +23,8 @@ import { NotificationManager } from '../../../../components/common/react-notific
 import Editor from '../../snippets/Editor/index';
 import filesTypes from '../../../../constants/filesTypes';
 
+import { checkLimit } from '../../../../components/limit';
+
 function downloadString({
   text = 'Empty File',
   fileName = new Date(),
@@ -43,7 +45,7 @@ function downloadString({
   }, 1500);
 }
 
-const Download = ({ dataRef, downloadModel, setDownloadModel, user }) => {
+const Download = ({ dataRef, downloadModel, setDownloadModel, user, team }) => {
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [fileType, setFileType] = useState([]);
@@ -133,7 +135,16 @@ const Download = ({ dataRef, downloadModel, setDownloadModel, user }) => {
       <ModalHeader className=" email-header">
         <div className="w-100 d-flex justify-content-between">
           <IntlMessages id="download" />
-          <div className="glyph" type="button" onClick={download}>
+          <div
+            className="glyph"
+            type="button"
+            onClick={() =>
+              checkLimit({
+                cb: download,
+                checkFor: 'actions',
+                team
+              })
+            }>
             <i className="glyph-icon iconsminds-download h4 text-primary mx-3" />
           </div>
         </div>
@@ -177,7 +188,13 @@ const Download = ({ dataRef, downloadModel, setDownloadModel, user }) => {
 
         <Button
           id="fdsdahflkdshiefwlu"
-          onClick={download}
+          onClick={() =>
+            checkLimit({
+              cb: download,
+              checkFor: 'actions',
+              team
+            })
+          }
           color="primary"
           className={`btn-shadow  w-100 btn-multiple-state ${
             loading ? 'show-spinner' : ''

@@ -23,7 +23,7 @@ import {
 import habdelGetData from '../../../../helpers/habdelGetData';
 import ReactAutoSuggest from '../../../../components/common/ReactAutoSuggest';
 
-// import SnippetItem from '../Template/SnippetItem';
+import { checkLimit } from '../../../../components/limit';
 
 const AddTemplate = ({
   snippets,
@@ -31,6 +31,7 @@ const AddTemplate = ({
   setFormVisible,
   template,
   user,
+  team,
   setModal,
   addTemplate,
   loading,
@@ -73,7 +74,12 @@ const AddTemplate = ({
       if (findExistingTemplate) {
         updateTemplate(newTemplate, findExistingTemplate._id);
       } else {
-        await addTemplate(newTemplate);
+        checkLimit({
+          cb: addTemplate,
+          cbData: newTemplate,
+          checkFor: 'templates',
+          team
+        });
       }
 
       await setFormVisible(false);
@@ -191,11 +197,12 @@ const AddTemplate = ({
 
 const mapStateToProps = ({
   template: { template, loading },
-  user: { user }
+  user: { user, team }
 }) => ({
   template,
   user,
-  loading
+  loading,
+  team
 });
 
 export default connect(mapStateToProps, {

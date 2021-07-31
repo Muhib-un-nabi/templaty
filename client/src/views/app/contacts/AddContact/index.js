@@ -38,6 +38,8 @@ import {
   setLoading
 } from '../../../../redux/contacts/action';
 
+import { checkLimit } from '../../../../components/limit';
+
 const index = ({
   inputs: { custom, global },
   match,
@@ -46,7 +48,8 @@ const index = ({
   getInputField,
   history,
   loading,
-  setLoading
+  setLoading,
+  team
 }) => {
   const [GlobalInput, setGlobalInput] = useState(global);
   const [customInput, setCustomInput] = useState(custom);
@@ -93,7 +96,16 @@ const index = ({
         <Colxx xxs="12">
           <Card>
             <CardBody>
-              <Form onSubmit={submitHandler}>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  checkLimit({
+                    cb: submitHandler,
+                    cbData: e,
+                    checkFor: 'contacts',
+                    team
+                  });
+                }}>
                 {!loading &&
                   GlobalInput.map((inputData) => (
                     <FormGroup key={`customInput__${inputData.id}`}>
@@ -171,9 +183,13 @@ const index = ({
   );
 };
 
-const mapStateToProps = ({ contacts: { inputs, loading } }) => ({
+const mapStateToProps = ({
+  contacts: { inputs, loading },
+  user: { team }
+}) => ({
   inputs,
-  loading
+  loading,
+  team
 });
 
 export default connect(mapStateToProps, {

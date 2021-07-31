@@ -20,10 +20,13 @@ import CustomSelectInput from '../../../../components/common/CustomSelectInput';
 import { NotificationManager } from '../../../../components/common/react-notifications';
 import Editor from '../../snippets/Editor/index';
 
+import { checkLimit } from '../../../../components/limit';
+
 const Email = ({
   contacts,
   value,
   user,
+  team,
 
   smtp,
   smtpLoading,
@@ -133,7 +136,16 @@ const Email = ({
         <div className="w-100 d-flex justify-content-between">
           <IntlMessages id="email.send" />
           <div className="d-flex">
-            <div className="glyph" type="button" onClick={sendMail}>
+            <div
+              className="glyph"
+              type="button"
+              onClick={() =>
+                checkLimit({
+                  cb: sendMail,
+                  checkFor: 'actions',
+                  team
+                })
+              }>
               <i className="glyph-icon iconsminds-mail-send h4 text-primary mx-3" />
             </div>
             <div className="glyph" type="button" onClick={reset}>
@@ -228,7 +240,13 @@ const Email = ({
           </>
         )}
         <Button
-          onClick={sendMail}
+          onClick={() =>
+            checkLimit({
+              cb: sendMail,
+              checkFor: 'actions',
+              team
+            })
+          }
           disabled={loading}
           color="primary"
           className={`btn-shadow  w-100 btn-multiple-state ${

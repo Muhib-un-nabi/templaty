@@ -53,6 +53,8 @@ import {
 import habdelGetData from '../../../../helpers/habdelGetData';
 import Editor from '../Editor/index';
 
+import { checkLimit } from '../../../../components/limit';
+
 const index = ({
   getPlaceholders,
   placeholders,
@@ -71,7 +73,8 @@ const index = ({
   snippetLoading,
   getInputField,
   setContactLoading,
-  contactLoading
+  contactLoading,
+  team
 }) => {
   console.log(custom, global);
   const [discription, setDiscription] = useState('');
@@ -137,7 +140,16 @@ const index = ({
         <Colxx xxs="12">
           <Card>
             <CardBody>
-              <Form onSubmit={submitHandler}>
+              <Form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  checkLimit({
+                    cb: submitHandler,
+                    cbData: e,
+                    checkFor: 'snippets',
+                    team
+                  });
+                }}>
                 {GlobalInput.map((inputData) => (
                   <FormGroup key={`customInput__${inputData.id}`}>
                     <Label htmlFor={`customInput__${inputData.id}`}>
@@ -216,7 +228,8 @@ const mapStateToProps = ({
   placeholders: { placeholders, loading: placeholderLoading },
   types: { types, loading: typesLoading },
   contacts: { inputs, loading: contactLoading },
-  snippets: { loading: snippetLoading }
+  snippets: { loading: snippetLoading },
+  user: { team }
 }) => ({
   inputs,
   placeholders,
@@ -224,7 +237,8 @@ const mapStateToProps = ({
   placeholderLoading,
   typesLoading,
   snippetLoading,
-  contactLoading
+  contactLoading,
+  team
 });
 
 export default connect(mapStateToProps, {

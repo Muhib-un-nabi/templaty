@@ -7,7 +7,10 @@ import { Colxx } from '../../../../components/common/CustomBootstrap';
 import IntlMessages from '../../../../helpers/IntlMessages';
 import { adminRoot } from '../../../../constants/defaultValues';
 
+import { checkLimit } from '../../../../components/limit';
+
 function SnippetsGroups({
+  team,
   data,
   items,
   setItems,
@@ -68,6 +71,7 @@ function SnippetsGroups({
       }}>
       {items.map((item) => (
         <DroppableList
+          team={team}
           key={item.id}
           {...item}
           filter={filter}
@@ -80,6 +84,7 @@ function SnippetsGroups({
 }
 
 function DroppableList({
+  team,
   id,
   items,
   colSize,
@@ -135,7 +140,14 @@ function DroppableList({
                   color="primary"
                   className="mb-2 mx-2"
                   outline
-                  onClick={() => history.push(`${adminRoot}/snippets/add`)}>
+                  onClick={() =>
+                    checkLimit({
+                      cb: history.push,
+                      cbData: `${adminRoot}/snippets/add`,
+                      checkFor: 'snippets',
+                      team
+                    })
+                  }>
                   <IntlMessages id="menu.snippets-add" />
                 </Button>
               )}

@@ -30,6 +30,8 @@ import {
 } from '../../../../redux/snippets/action';
 import habdelGetData from '../../../../helpers/habdelGetData';
 
+import { checkLimit } from '../../../../components/limit';
+
 import SnippetsItem from './SnippetsItem';
 import ListItem from '../../../../components/listItem/index';
 
@@ -40,6 +42,7 @@ const Placeholders = ({
   deleteSnippet,
   snippets,
   user,
+  team,
   setLoading
 }) => {
   const [Snippets, setSnippets] = useState(snippets);
@@ -66,7 +69,14 @@ const Placeholders = ({
                 color="primary"
                 size="lg"
                 className="top-right-button mr-1"
-                onClick={() => history.push(`${adminRoot}/snippets/add`)}>
+                onClick={() =>
+                  checkLimit({
+                    cb: history.push,
+                    cbData: `${adminRoot}/snippets/add`,
+                    checkFor: 'snippets',
+                    team
+                  })
+                }>
                 <IntlMessages id="menu.snippets-add" />
               </Button>
             </div>
@@ -137,9 +147,10 @@ const Placeholders = ({
   );
 };
 
-const mapStateToProps = ({ snippets: { snippets }, user: { user } }) => ({
+const mapStateToProps = ({ snippets: { snippets }, user: { user, team } }) => ({
   snippets,
-  user
+  user,
+  team
 });
 
 export default connect(mapStateToProps, {

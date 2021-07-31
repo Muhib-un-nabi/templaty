@@ -31,6 +31,8 @@ import {
 import ContactItem from './ContactItem';
 import habdelGetData from '../../../../helpers/habdelGetData';
 
+import { checkLimit } from '../../../../components/limit';
+
 import ListItem from '../../../../components/listItem/index';
 
 const Contacts = ({
@@ -38,6 +40,7 @@ const Contacts = ({
   history,
   contacts,
   user,
+  team,
   deleteContact,
   getContacts,
   loading,
@@ -79,7 +82,14 @@ const Contacts = ({
                 color="primary"
                 size="lg"
                 className="top-right-button ml-1"
-                onClick={() => history.push(`${adminRoot}/contacts/add`)}>
+                onClick={() =>
+                  checkLimit({
+                    cb: history.push,
+                    cbData: `${adminRoot}/contacts/add`,
+                    checkFor: 'contacts',
+                    team
+                  })
+                }>
                 <IntlMessages id="menu.contacts-add" />
               </Button>
             </div>
@@ -150,10 +160,11 @@ const Contacts = ({
 
 const mapStateToProps = ({
   contacts: { contacts },
-  user: { user, loading }
+  user: { user, loading, team }
 }) => ({
   contacts,
   user,
+  team,
   loading
 });
 

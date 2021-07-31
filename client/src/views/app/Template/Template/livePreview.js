@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { Card, CardBody, CardTitle, Button } from 'reactstrap';
 import { Colxx } from '../../../../components/common/CustomBootstrap';
 
+import { checkLimit } from '../../../../components/limit';
+
 const LivePreview = ({
   refrance,
   debugMode,
   hasSnippet,
+  team,
 
   // cantrooles
   setEmailModel,
@@ -29,20 +32,41 @@ const LivePreview = ({
                 <div
                   className="glyph my-2"
                   type="button"
-                  onClick={() => setCopyModel(true)}>
+                  onClick={() =>
+                    checkLimit({
+                      cb: setCopyModel,
+                      cbData: true,
+                      checkFor: 'actions',
+                      team
+                    })
+                  }>
                   <i className="glyph-icon iconsminds-file-copy h4 text-primary " />
                 </div>
                 <div
                   className="glyp my-2"
                   type="button"
-                  onClick={() => setDownloadModel(true)}>
+                  onClick={() =>
+                    checkLimit({
+                      cb: setDownloadModel,
+                      cbData: true,
+                      checkFor: 'actions',
+                      team
+                    })
+                  }>
                   <i className="glyph-icon iconsminds-download h4 text-primary " />
                 </div>
 
                 <div
                   className="glyph my-2"
                   type="button"
-                  onClick={() => setEmailModel(true)}>
+                  onClick={() =>
+                    checkLimit({
+                      cb: setEmailModel,
+                      cbData: true,
+                      checkFor: 'actions',
+                      team
+                    })
+                  }>
                   <i className="glyph-icon iconsminds-mail-send h4 text-primary " />
                 </div>
               </div>

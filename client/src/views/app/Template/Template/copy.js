@@ -14,11 +14,13 @@ import IntlMessages from '../../../../helpers/IntlMessages';
 
 import { NotificationManager } from '../../../../components/common/react-notifications';
 
+import { checkLimit } from '../../../../components/limit';
+
 import { updataPakageActionEmmiter } from '../../../../webSocket/index';
 
 import Editor from '../../snippets/Editor/index';
 
-const Copy = ({ dataRef, copyModel, setCopyModel, user }) => {
+const Copy = ({ dataRef, copyModel, setCopyModel, user, team }) => {
   const [loading, setLoading] = useState(false);
   const [copyAsText, setCopyAsText] = useState(true);
 
@@ -78,7 +80,16 @@ const Copy = ({ dataRef, copyModel, setCopyModel, user }) => {
         <div className="w-100 d-flex justify-content-between">
           <IntlMessages id="copy" />
           <div className="d-flex">
-            <div className="glyph" type="button" onClick={copy}>
+            <div
+              className="glyph"
+              type="button"
+              onClick={() =>
+                checkLimit({
+                  cb: copy,
+                  checkFor: 'actions',
+                  team
+                })
+              }>
               <i className="glyph-icon iconsminds-file-copy h4 text-primary mx-3" />
             </div>
           </div>
@@ -114,7 +125,13 @@ const Copy = ({ dataRef, copyModel, setCopyModel, user }) => {
         </>
 
         <Button
-          onClick={copy}
+          onClick={() =>
+            checkLimit({
+              cb: copy,
+              checkFor: 'actions',
+              team
+            })
+          }
           disabled={loading}
           color="primary"
           className={`btn-shadow  w-100 btn-multiple-state ${

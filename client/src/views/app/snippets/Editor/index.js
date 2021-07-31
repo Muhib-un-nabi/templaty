@@ -5,18 +5,10 @@ import 'react-quill/dist/quill.bubble.css';
 
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Row,
-  Card,
-  CardBody,
-  CardTitle,
   Dropdown,
   DropdownToggle,
   DropdownItem,
-  DropdownMenu,
-  ButtonDropdown,
-  Button,
-  CardSubtitle,
-  UncontrolledDropdown
+  DropdownMenu
 } from 'reactstrap';
 import IntlMessages from '../../../../helpers/IntlMessages';
 
@@ -176,24 +168,26 @@ const Index = ({ value, setValue, placeholderslist, contactslist }) => {
 
   const removeVisibility = (ele) => ele.id !== 'visibility-input';
   // Adding Email Placeholder in insert-contact
-  contactslist = [
-    ...contactslist.filter(removeVisibility),
-    {
-      id: 'email',
-      type: {
-        label: 'Text Area',
-        value: '1',
-        id: 1
-      },
-      data: {
-        key: 'ec09cxzcxzxcz-bf99-4c83-a94d-3a93e45c6043',
-        name: 'Email',
-        options: [],
-        value: ''
-      },
-      chosen: false
-    }
-  ];
+  if (contactslist) {
+    contactslist = [
+      ...contactslist.filter(removeVisibility),
+      {
+        id: 'email',
+        type: {
+          label: 'Text Area',
+          value: '1',
+          id: 1
+        },
+        data: {
+          key: 'ec09cxzcxzxcz-bf99-4c83-a94d-3a93e45c6043',
+          name: 'Email',
+          options: [],
+          value: ''
+        },
+        chosen: false
+      }
+    ];
+  }
   useEffect(() => {
     editorContainerRef.current.innerHTML = '';
     quill = new Quill(editorContainerRef.current, {

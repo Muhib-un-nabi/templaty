@@ -65,6 +65,7 @@ const Template = ({
   snippets,
   loading,
   user,
+  team,
   getTypes,
   setTypeLoading,
   types,
@@ -376,18 +377,21 @@ const Template = ({
             emailModel={emailModel}
             setEmailModel={setEmailModel}
             user={user}
+            team={team}
           />
           <Download
             dataRef={snippetHrmlRef}
             downloadModel={downloadModel}
             setDownloadModel={setDownloadModel}
             user={user}
+            team={team}
           />
           <Copy
             copyModel={copyModel}
             dataRef={snippetHrmlRef}
             setCopyModel={setCopyModel}
             user={user}
+            team={team}
           />
           <Separator className="mb-5" />
           <Row>
@@ -449,6 +453,7 @@ const Template = ({
                     isAllActive={isAllActive}
                     data={loadTemplate()}
                     history={history}
+                    team={team}
                   />
                 )}
                 {snippets.length === 0 && loading && (
@@ -488,6 +493,7 @@ const Template = ({
                       setEmailModel={setEmailModel}
                       setDownloadModel={setDownloadModel}
                       setCopyModel={setCopyModel}
+                      team={team}
                     />
                   </>
                 )}
@@ -507,12 +513,13 @@ const Template = ({
 const mapStateToProps = ({
   snippets: { snippets, loading },
   types: { types },
-  user: { user },
+  user: { user, team },
   contacts: { contacts, inputs, contactLoading },
   smtp: { smtp, loading: smtpLoading }
 }) => ({
   snippets,
   user,
+  team,
   loading,
   types,
   contacts,
