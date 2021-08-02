@@ -17,6 +17,9 @@ import io, { joinTeam } from '../../webSocket';
 const Template = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './Template')
 );
+const Coupons = React.lazy(() =>
+  import(/* webpackChunkName: "viwes-gogo" */ './Coupons')
+);
 
 const Snippets = React.lazy(() =>
   import(/* webpackChunkName: "viwes-gogo" */ './snippets')
@@ -98,6 +101,11 @@ const App = ({
             <Route
               path={`${match.url}/account`}
               render={(props) => <Account {...props} />}
+            />
+
+            <Route
+              path={`${match.url}/Coupons`}
+              render={(props) => <Coupons {...props} />}
             />
 
             <Redirect to="/error" />

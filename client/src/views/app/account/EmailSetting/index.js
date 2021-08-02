@@ -33,6 +33,8 @@ import EmailSettingFrom from './form';
 const EmailSetting = ({
   match,
   user,
+  team,
+
   history,
   getSMTPS,
   setLoading,
@@ -46,6 +48,13 @@ const EmailSetting = ({
   const [teamSMTPdefaultValues, setTeamSMTPdefaultValues] = useState();
   const [userSMTPdefaultValues, setUserSMTPdefaultValues] = useState();
   const [isUpdateValue, setIsUpdateValue] = useState(false);
+
+  const [isTeam, setIsTeam] = useState(false);
+  useState(() => {
+    if (team && team.package) {
+      setIsTeam(team.package.team);
+    }
+  }, [team]);
 
   useEffect(() => {
     if (smtp && smtp.length !== 0) {
@@ -116,20 +125,22 @@ const EmailSetting = ({
                       <IntlMessages id="smtp.user" />
                     </NavLink>
                   </NavItem>
-                  <NavItem className="w-50 text-center">
-                    <NavLink
-                      to="#"
-                      location={{}}
-                      className={classnames({
-                        active: activeTab === '2',
-                        'nav-link': true
-                      })}
-                      onClick={() => {
-                        setActiveState('2');
-                      }}>
-                      <IntlMessages id="smtp.team" />
-                    </NavLink>
-                  </NavItem>
+                  {isTeam && (
+                    <NavItem className="w-50 text-center">
+                      <NavLink
+                        to="#"
+                        location={{}}
+                        className={classnames({
+                          active: activeTab === '2',
+                          'nav-link': true
+                        })}
+                        onClick={() => {
+                          setActiveState('2');
+                        }}>
+                        <IntlMessages id="smtp.team" />
+                      </NavLink>
+                    </NavItem>
+                  )}
                 </Nav>
               </CardHeader>
 
@@ -152,35 +163,37 @@ const EmailSetting = ({
                     </Colxx>
                   </Row>
                 </TabPane>
-                <TabPane tabId="2">
-                  <Row>
-                    <Colxx sm="12">
-                      <CardBody>
-                        <CardTitle className="mb-4">
-                          {(user.role === 'admin' && (
-                            <IntlMessages id="smtp.configre" />
-                          )) || (
-                            <>
-                              <IntlMessages id="smtp.team" />{' '}
-                              <b>
-                                {' '}
-                                (<IntlMessages id="readonly" />)
-                              </b>
-                            </>
+                {isTeam && (
+                  <TabPane tabId="2">
+                    <Row>
+                      <Colxx sm="12">
+                        <CardBody>
+                          <CardTitle className="mb-4">
+                            {(user.role === 'admin' && (
+                              <IntlMessages id="smtp.configre" />
+                            )) || (
+                              <>
+                                <IntlMessages id="smtp.team" />{' '}
+                                <b>
+                                  {' '}
+                                  (<IntlMessages id="readonly" />)
+                                </b>
+                              </>
+                            )}
+                          </CardTitle>
+                          {isUpdateValue && (
+                            <EmailSettingFrom
+                              history={history}
+                              onSubmitHandler={addNewSmtpAccount}
+                              defaultValues={teamSMTPdefaultValues}
+                              SMTPfor="team"
+                            />
                           )}
-                        </CardTitle>
-                        {isUpdateValue && (
-                          <EmailSettingFrom
-                            history={history}
-                            onSubmitHandler={addNewSmtpAccount}
-                            defaultValues={teamSMTPdefaultValues}
-                            SMTPfor="team"
-                          />
-                        )}
-                      </CardBody>
-                    </Colxx>
-                  </Row>
-                </TabPane>
+                        </CardBody>
+                      </Colxx>
+                    </Row>
+                  </TabPane>
+                )}
               </TabContent>
             </Card>
           </Colxx>
@@ -190,8 +203,12 @@ const EmailSetting = ({
   );
 };
 
-const mapStateToProps = ({ user: { user }, smtp: { smtp, loading } }) => ({
+const mapStateToProps = ({
+  user: { user, team },
+  smtp: { smtp, loading }
+}) => ({
   user,
+  team,
   smtp,
   loading
 });

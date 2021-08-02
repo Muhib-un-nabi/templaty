@@ -1,6 +1,11 @@
 const mongoose = require('mongoose');
 
 const teamSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    default: 'Team'
+  },
+
   admin: {
     type: mongoose.Schema.ObjectId,
     ref: 'User',
@@ -12,6 +17,18 @@ const teamSchema = new mongoose.Schema({
       ref: 'User'
     }
   ],
+  coupon: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Coupon'
+  },
+  subscription: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'Subscription'
+  },
+  active: {
+    type: Boolean,
+    default: true
+  },
   package: {
     type: Object,
     default: {

@@ -17,7 +17,9 @@ import {
   SET_LOADING,
   IS_LOGGED_IN,
   GET_ME,
-  UPDATE_TEAM_DETAILS
+  UPDATE_TEAM_DETAILS,
+  CHECK_CPUPON,
+  GET_COUPON
 } from './types';
 
 import { NotificationManager } from '../../components/common/react-notifications';
@@ -250,6 +252,30 @@ export const resetPassword = (token, dataBody) => async (dispatch) => {
     NotificationManager.error(
       'Warning message',
       'Wrong Email and Password',
+      3000,
+      null,
+      null
+    );
+    throw new Error('Somthing went Wrong, Please Try again');
+  }
+};
+
+// CheckCopuon Validation
+export const checkCouponValidation = (coupon) => async (dispatch) => {
+  try {
+    const { data } = await serverApi.post(
+      `coupon/valid`,
+      { coupon },
+      authHeader()
+    );
+    dispatch({
+      type: CHECK_CPUPON,
+      payload: data.data.data
+    });
+  } catch (err) {
+    NotificationManager.error(
+      'Warning message',
+      'Wrong Coupon Code',
       3000,
       null,
       null

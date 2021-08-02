@@ -35,7 +35,10 @@ exports.updataPakageAction = async teamID => {
       ['current.actions']: 1
     }
   });
+  console.log(updatedTemDetails.current.actions);
   await global.io
     .to(teamIdString)
-    .emit('pakckage updated', { actions: updatedTemDetails.current.actions });
+    .emit('pakckage updated', {
+      actions: updatedTemDetails.current.actions + 1
+    });
 };

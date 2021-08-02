@@ -6,6 +6,13 @@ export const UserRole = {
 Menu Types:
 "menu-default", "menu-sub-hidden", "menu-hidden"
 */
+
+export const rolse = {
+  admin: 'admin',
+  user: 'user',
+  superAdmin: 'super-admin'
+};
+
 export const defaultMenuType = 'menu-default';
 
 export const subHiddenBreakpoint = 1440;

@@ -1,12 +1,11 @@
 const express = require('express');
 const {
-  createCoupon,
-  deleteCoupon,
-  getCoupon,
-  getCoupons,
-  updateCoupon,
-  checkCoupn
-} = require('../controllers/couponCantroller');
+  createSubscription,
+  deleteSubscription,
+  getSubscription,
+  getSubscriptions,
+  updateSubscription
+} = require('../controllers/subscriptionCantroller');
 const authController = require('../controllers/authController');
 
 const router = express.Router();
@@ -14,20 +13,20 @@ const router = express.Router();
 // Protect all routes after this middleware
 router.use(authController.protect);
 
-router.route('/valid').post(checkCoupn);
+// router.route('/valid').post(checkCoupn);
 
 //  Restricted Only  Use Super-admin
 router.use(authController.restrictTo('super-admin'));
 
 router
   .route('/')
-  .post(createCoupon)
-  .get(getCoupons);
+  .post(createSubscription)
+  .get(getSubscriptions);
 
 router
   .route('/:id')
-  .get(getCoupon)
-  .patch(updateCoupon)
-  .delete(deleteCoupon);
+  .get(getSubscription)
+  .patch(updateSubscription)
+  .delete(deleteSubscription);
 
 module.exports = router;

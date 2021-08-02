@@ -139,6 +139,19 @@ module.exports = {
   'type.add': 'Add Type',
   'type.update': 'Update Type',
 
+  coupon: 'Coupon',
+  'menu.coupons': 'Coupons',
+  'coupon.apply': 'Apply Coupon',
+  'coupon.valid': 'Valid Coupon',
+  'coupon.in-valid': 'invalid Coupon',
+  'coupon.add': 'Add Coupon',
+
+  'menu.subscriptions': 'Subscriptions',
+
+  'menu.packages': 'Packages',
+
+  'menu.teams': 'Teams',
+
   remaning: 'Remaining',
 
   'alert.success-forget-pass-msg': 'Reset Password Token Send To your email',

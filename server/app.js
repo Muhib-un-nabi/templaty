@@ -27,6 +27,7 @@ const SMTPRouter = require('./routes/SMTPRouter');
 
 const packageRouter = require('./routes/packageRouter');
 const couponRouter = require('./routes/couponRouter');
+const subscriptionRouter = require('./routes/subscriptionRouter');
 const notificationRouter = require('./routes/notificationRouter');
 
 app.options('*', cors());
@@ -100,8 +101,10 @@ app.use('/api/placeholders', placeholdersRouter);
 app.use('/api/templates', templateRouter);
 app.use('/api/types', typesRouter);
 
-app.use('/api/package', packageRouter);
-app.use('/api/coupon', couponRouter);
+app.use('/api/packages', packageRouter);
+app.use('/api/coupons', couponRouter);
+app.use('/api/subscriptions', couponRouter);
+
 app.use('/api/notification', notificationRouter);
 
 app.all('/api', (req, res, next) => {

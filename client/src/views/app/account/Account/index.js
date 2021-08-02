@@ -43,6 +43,8 @@ import IntlMessages from '../../../../helpers/IntlMessages';
 
 import GradientWithRadialProgressCard from '../../../../components/cards/GradientWithRadialProgressCard';
 
+import Coupon from './Coupon';
+
 const Account = ({
   intl,
   match,
@@ -130,7 +132,9 @@ const Account = ({
           </Colxx>
         </Row>
       )}
-
+      <Row>
+        <Coupon />
+      </Row>
       {user && (
         <Row>
           <Team history={history} />

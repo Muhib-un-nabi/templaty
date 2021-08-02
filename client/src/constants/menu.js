@@ -1,7 +1,37 @@
-import { adminRoot } from './defaultValues';
+import { adminRoot, rolse } from './defaultValues';
 // import { UserRole } from '../helpers/authHelper';
 
 const data = [
+  {
+    id: 'subscriptions',
+    icon: 'iconsminds-shopping-cart',
+    roles: [rolse.superAdmin],
+    label: 'menu.subscriptions',
+    to: `${adminRoot}/subscriptions`
+  },
+
+  {
+    id: 'teams',
+    icon: 'iconsminds-conference',
+    roles: [rolse.superAdmin],
+    label: 'menu.teams',
+    to: `${adminRoot}/teams`
+  },
+
+  {
+    id: 'packages',
+    icon: 'iconsminds-box-close',
+    roles: [rolse.superAdmin],
+    label: 'menu.packages',
+    to: `${adminRoot}/packages`
+  },
+  {
+    id: 'coupons',
+    icon: 'simple-icon-tag',
+    roles: [rolse.superAdmin],
+    label: 'menu.coupons',
+    to: `${adminRoot}/coupons`
+  },
   {
     id: 'templates',
     icon: 'simple-icon-notebook',

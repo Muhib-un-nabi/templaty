@@ -14,6 +14,7 @@ import template from './template/reducer';
 import types from './types/reducer';
 import smtp from './SMTP/reducer';
 import packages from './packages/reducer';
+import coupons from './coupons/reducer';
 
 const reducers = combineReducers({
   menu,
@@ -26,6 +27,7 @@ const reducers = combineReducers({
   types,
   smtp,
   packages,
+  coupons,
   account: () => ({ setting: [] })
 });
 

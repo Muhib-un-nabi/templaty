@@ -5,29 +5,43 @@ const packageSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Pakage Name Is Required']
   },
+
+  // Details
+  team: {
+    type: String,
+    default: false
+  },
   duration: {
     type: Number,
     default: 1
   },
+  perUser: {
+    type: Boolean,
+    default: false
+  },
+  // Limitations
   price: {
-    type: Number,
+    type: String,
     default: 0.0
   },
   users: {
-    type: Number,
+    type: String,
     default: 1
   },
   snippets: {
-    type: Number,
+    type: String,
     default: 10
   },
   templates: {
-    type: Number,
+    type: String,
     default: 10
   },
-
+  contacts: {
+    type: String,
+    default: 10
+  },
   actions: {
-    type: Number,
+    type: String,
     default: 100
   }
 });

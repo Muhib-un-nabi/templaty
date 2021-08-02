@@ -17,7 +17,9 @@ import {
   SET_LOADING,
   IS_LOGGED_IN,
   GET_ME,
-  UPDATE_TEAM_DETAILS
+  UPDATE_TEAM_DETAILS,
+  CHECK_CPUPON,
+  GET_COUPON
 } from './types';
 
 const INITIAL_STATE = {
@@ -83,6 +85,14 @@ export default (state = INITIAL_STATE, action) => {
         user: action.payload.user,
         loading: false,
         isloggedin: true
+      };
+    case CHECK_CPUPON:
+      return {
+        ...state,
+        team: {
+          ...state.team,
+          package: action.payload
+        }
       };
     default:
       return state;

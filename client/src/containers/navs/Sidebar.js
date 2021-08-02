@@ -339,10 +339,13 @@ class Sidebar extends Component {
 
   // eslint-disable-next-line no-shadow
   filteredList = (menuItems) => {
-    const { currentUser } = this.props;
+    const currentUser = this.props.user;
+    if (!currentUser) return menuItems;
     if (currentUser) {
       return menuItems.filter(
-        (x) => (x.roles && x.roles.includes(currentUser.role)) || !x.roles
+        (userRoleFor) =>
+          (userRoleFor.roles && userRoleFor.roles.includes(currentUser.role)) ||
+          !userRoleFor.roles
       );
     }
     return menuItems;
@@ -357,7 +360,12 @@ class Sidebar extends Component {
           <div className="scroll">
             <PerfectScrollbar
               options={{ suppressScrollX: true, wheelPropagation: false }}>
-              <Nav vertical className="list-unstyled">
+              <Nav
+                vertical
+                className="list-unstyled"
+                style={{
+                  visibility: this.props.user ? 'visible' : 'hidden'
+                }}>
                 {menuItems &&
                   this.filteredList(menuItems).map((item) => {
                     return (
@@ -374,7 +382,7 @@ class Sidebar extends Component {
                             href={item.to}
                             rel="noopener noreferrer"
                             target="_blank">
-                            <i className={item.icon} />{' '}
+                            <i className={item.icon} />
                             <IntlMessages id={item.label} />
                           </a>
                         ) : (
@@ -382,7 +390,7 @@ class Sidebar extends Component {
                             to={item.to}
                             onClick={(e) => this.openSubMenu(e, item)}
                             data-flag={item.id}>
-                            <i className={item.icon} />{' '}
+                            <i className={item.icon} />
                             <IntlMessages id={item.label} />
                           </NavLink>
                         )}
@@ -515,7 +523,7 @@ class Sidebar extends Component {
   }
 }
 
-const mapStateToProps = ({ menu }) => {
+const mapStateToProps = ({ menu, user: { user } }) => {
   const {
     containerClassnames,
     subHiddenBreakpoint,
@@ -529,7 +537,8 @@ const mapStateToProps = ({ menu }) => {
     subHiddenBreakpoint,
     menuHiddenBreakpoint,
     menuClickCount,
-    selectedMenuHasSubItems
+    selectedMenuHasSubItems,
+    user
   };
 };
 export default withRouter(
